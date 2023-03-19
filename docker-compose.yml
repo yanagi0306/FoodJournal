@@ -2,6 +2,7 @@ version: "3.9"
 volumes:
   db-store:
   psysh-store:
+  pgadmin4_volume:
 services:
   app:
     build:
@@ -67,12 +68,23 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD:-password}
       - POSTGRES_HOST=${DB_HOST:-db}
       - POSTGRES_CONFIG_FILE=${POSTGRES_CONFIG_FILE:-/etc/postgresql/postgresql.conf}
+    restart: always
 
-
-  mailhog:
-    image: mailhog/mailhog
+  pgadmin4:
+    image: dpage/pgadmin4:5.0
     ports:
-      - target: 8025
-        published: ${MAILHOG_PUBLISHED_PORT:-8025}
-        protocol: tcp
-        mode: host
+      - "8000:8000"
+    volumes:
+      - pgadmin4_volume:/var/lib/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - db
+    restart: always
+
+  mail:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
+      - "1025:1025"
