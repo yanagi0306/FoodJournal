@@ -30,7 +30,7 @@ return new class extends Migration
             $table->collation = 'utf8_general_ci';
 
             // テーブルコメントの設定
-            DB::statement("ALTER TABLE `income_type` COMMENT '収入タイプテーブル'");
+            DB::statement("ALTER TABLE income_type COMMENT '収入タイプテーブル'");
         });
     }
 

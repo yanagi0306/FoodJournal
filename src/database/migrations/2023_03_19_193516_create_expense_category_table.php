@@ -33,7 +33,7 @@ return new class extends Migration
             $table->collation = 'utf8_general_ci';
 
             // テーブルコメントの設定
-            DB::statement("ALTER TABLE `expense_category` COMMENT '支出カテゴリテーブル'");
+            DB::statement("ALTER TABLE expense_category COMMENT '支出カテゴリテーブル'");
         });
     }
 

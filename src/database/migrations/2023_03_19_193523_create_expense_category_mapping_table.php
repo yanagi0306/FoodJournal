@@ -38,7 +38,7 @@ return new class extends Migration
             $table->collation = 'utf8_general_ci';
 
             // テーブルコメントの設定
-            DB::statement("ALTER TABLE `expense_category_mapping` COMMENT '支出カテゴリマッピング'");
+            DB::statement("ALTER TABLE expense_category_mapping COMMENT '支出カテゴリマッピング'");
         });
     }
 

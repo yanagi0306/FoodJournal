@@ -33,7 +33,7 @@ return new class extends Migration
             $table->collation = 'utf8_general_ci';
 
             // テーブルコメントの設定
-            DB::statement("ALTER TABLE `order_product` COMMENT '注文商品テーブル'");
+            DB::statement("ALTER TABLE order_product COMMENT '注文商品テーブル'");
         });
     }
 
