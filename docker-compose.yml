@@ -71,14 +71,15 @@ services:
     restart: always
 
   pgadmin4:
-    image: dpage/pgadmin4:5.0
+    image: dpage/pgadmin4:6.5
     ports:
-      - "8000:8000"
+      - "8080:80"
     volumes:
       - pgadmin4_volume:/var/lib/pgadmin
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - PGADMIN_LISTEN_PORT=${PGADMIN_LISTEN_PORT}
     depends_on:
       - db
     restart: always
