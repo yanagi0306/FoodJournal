@@ -8,6 +8,8 @@ services:
       context: .
       dockerfile: ./infra/docker/php/Dockerfile
       target: ${APP_BUILD_TARGET:-development}
+    ports:
+      - "2222:22"
     volumes:
       - type: bind
         source: ./src
@@ -18,14 +20,15 @@ services:
         volume:
           nocopy: true
     environment:
-      - APP_DEBUG=${APP_DEBUG:-true}
-      - APP_ENV=${APP_ENV:-local}
-      - APP_URL=${APP_URL:-http://localhost}
+      - APP_NAME=${APP_NAME}
+      - APP_DEBUG=${APP_DEBUG}
+      - APP_ENV=${APP_ENV}
+      - APP_URL=${APP_URL}
       - LOG_CHANNEL=${LOG_CHANNEL:-stderr}
       - LOG_STDERR_FORMATTER=${LOG_STDERR_FORMATTER:-Monolog\Formatter\JsonFormatter}
-      - DB_CONNECTION=${DB_CONNECTION:-mysql}
-      - DB_HOST=${DB_HOST:-db}
-      - DB_PORT=${DB_PORT:-5432}
+      - DB_CONNECTION=${DB_CONNECTION}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -52,7 +55,6 @@ services:
       - target: 5432
         published: ${DB_PUBLISHED_PORT:-5432}
         protocol: tcp
-        mode: host
     volumes:
       - type: volume
         source: db-store
@@ -60,9 +62,10 @@ services:
         volume:
           nocopy: true
     environment:
-      - POSTGRES_DB=${DB_DATABASE:-laravel}
+      - POSTGRES_DB=${DB_DATABASE:-FoodJournal}
       - POSTGRES_USER=${DB_USERNAME:-admin}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-password}
+      - POSTGRES_HOST=${DB_HOST:-db}
       - POSTGRES_CONFIG_FILE=${POSTGRES_CONFIG_FILE:-/etc/postgresql/postgresql.conf}
 
 

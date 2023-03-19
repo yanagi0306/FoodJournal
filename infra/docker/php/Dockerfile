@@ -2,8 +2,20 @@ FROM php:8.1-fpm-bullseye AS base
 
 WORKDIR /workspace
 
+# adminユーザーの作成
+RUN useradd -m admin && echo "admin:password" | chpasswd
+
+# root権限 password追加
+RUN echo 'root:password' |chpasswd
+
+# adminユーザー password追加
+RUN echo "admin:password" | chpasswd
+
+RUN echo "admin   ALL=(ALL)       ALL" >> /etc/sudoers
+RUN echo "admin   ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+
 # タイムゾーンを設定
-ENV TZ=UTC \
+ENV TZ=Asia/Tokyo \
   # ロケールを設定
   LANG=en_US.UTF-8 \
   LANGUAGE=en_US:en \
@@ -17,12 +29,25 @@ COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
 # 必要なパッケージをインストール
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
+    coreutils \
+    findutils \
+    grep \
+    curl \
+    wget \
+    less \
+    vim \
+    nano \
     locales \
     git \
     unzip \
     libzip-dev \
     libicu-dev \
     libonig-dev \
+    postgresql-client \
+    postgresql \
+    postgresql-server-dev-all \
+    libpq-dev \
+    iputils-ping \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   # ロケールを設定
@@ -31,12 +56,15 @@ RUN apt-get update \
   # PHP拡張をインストール
   && docker-php-ext-install \
     intl \
-    pdo_mysql \
+    pdo_pgsql \
     zip \
     bcmath \
   # Composerの設定
   && composer config -g process-timeout 3600 \
   && composer config -g repos.packagist composer https://packagist.org
+
+# パスにPostgreSQLの実行可能ファイルのディレクトリを追加
+ENV PATH="/usr/lib/postgresql/13/bin:${PATH}"
 
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get -y install --no-install-recommends nodejs
@@ -73,10 +101,25 @@ RUN composer install -q -n --no-ansi --no-dev --no-scripts --no-progress --prefe
   && php artisan optimize:clear \
   # Laravelの最適化
   && php artisan optimize \
-  # Laravel Breezeのインストール
-  && composer require laravel/breeze:^1 --dev \
   # npmパッケージのインストール
   && npm install \
   # npmパッケージのビルド
   && npm run dev
 
+RUN apt-get update && apt-get install -y openssh-server openssh-client
+
+# SSHサーバーのインストール
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends openssh-server && \
+    rm -rf /var/lib/apt/lists/* && \
+    sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/" /etc/ssh/sshd_config && \
+    sed -i "s/#PasswordAuthentication yes/PasswordAuthentication yes/" /etc/ssh/sshd_config && \
+    mkdir /run/sshd
+
+# SSHのポートを公開
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]
+
+# apt-getのキャッシュを削除
+RUN rm -rf /var/lib/apt/lists/*
