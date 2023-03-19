@@ -33,7 +33,7 @@ return new class extends Migration
             $table->collation = 'utf8_general_ci';
 
             // テーブルコメントの設定
-            DB::statement("ALTER TABLE customer_type COMMENT '客層テーブル'");
+            DB::statement("ALTER TABLE customer_type = COMMENT '客層テーブル'");
         });
     }
 

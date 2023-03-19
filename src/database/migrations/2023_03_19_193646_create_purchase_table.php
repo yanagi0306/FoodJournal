@@ -35,7 +35,7 @@ return new class extends Migration
             $table->collation = 'utf8_general_ci';
 
             // テーブルコメントの設定
-            DB::statement("ALTER TABLE purchase COMMENT '仕入情報テーブル'");
+            DB::statement("ALTER TABLE purchase = COMMENT '仕入情報テーブル'");
         });
     }
 

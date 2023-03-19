@@ -39,7 +39,7 @@ return new class extends Migration {
             $table->collation = 'utf8_general_ci';
 
             // テーブルコメントの設定
-            DB::statement("ALTER TABLE users COMMENT 'ユーザーテーブル'");
+            DB::statement("ALTER TABLE users = COMMENT 'ユーザーテーブル'");
         });
     }
 

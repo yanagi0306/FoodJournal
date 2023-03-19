@@ -32,7 +32,7 @@ return new class extends Migration {
             $table->collation = 'utf8_general_ci';
 
             // テーブルコメントの設定
-            DB::statement("ALTER TABLE parent_income_category COMMENT '親収入カテゴリテーブル'");
+            DB::statement("ALTER TABLE parent_income_category = COMMENT '親収入カテゴリテーブル'");
         });
     }
 
