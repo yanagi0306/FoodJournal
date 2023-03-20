@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -41,9 +40,9 @@ return new class extends Migration
             $table->charset = 'utf8';
             $table->collation = 'utf8_general_ci';
 
-            // テーブルコメントの設定
-            DB::statement("ALTER TABLE product_master = COMMENT '商品マスタテーブル'");
         });
+        // テーブルコメントの設定
+        DB::statement("COMMENT ON TABLE product_master IS '商品マスタテーブル'");
     }
 
     /**

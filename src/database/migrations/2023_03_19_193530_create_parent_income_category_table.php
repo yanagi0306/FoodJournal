@@ -17,7 +17,7 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('親収入カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->integer('cat_cd')->comment('親収入カテゴリコード');
+            $table->string('cat_cd', 3)->comment('親収入カテゴリコード');
             $table->string('cat_name', 8)->comment('親収入カテゴリ名');
             $table->timestamps();
 
@@ -31,9 +31,9 @@ return new class extends Migration {
             $table->charset = 'utf8';
             $table->collation = 'utf8_general_ci';
 
-            // テーブルコメントの設定
-            DB::statement("ALTER TABLE parent_income_category = COMMENT '親収入カテゴリテーブル'");
         });
+        // テーブルコメントの設定
+        DB::statement("COMMENT ON TABLE parent_income_category IS '親収入カテゴリテーブル'");
     }
 
     /**

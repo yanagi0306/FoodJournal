@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -18,7 +17,7 @@ return new class extends Migration
             // カラム定義
             $table->id()->autoIncrement()->comment('客層ID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->string('type_cd',3)->comment('客層コード');
+            $table->string('type_cd', 3)->comment('客層コード');
             $table->string('type_name', 15)->comment('客層名');
             $table->timestamps();
 
@@ -32,9 +31,9 @@ return new class extends Migration
             $table->charset = 'utf8';
             $table->collation = 'utf8_general_ci';
 
-            // テーブルコメントの設定
-            DB::statement("ALTER TABLE customer_type = COMMENT '客層テーブル'");
         });
+        // テーブルコメントの設定
+        DB::statement("COMMENT ON TABLE customer_type IS '客層テーブル'");
     }
 
     /**

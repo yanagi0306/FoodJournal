@@ -35,9 +35,9 @@ return new class extends Migration {
             $table->charset = 'utf8';
             $table->collation = 'utf8_general_ci';
 
-            // テーブルコメントの設定
-            DB::statement("ALTER TABLE store = COMMENT '店舗情報テーブル'");
         });
+        // テーブルコメントの設定
+        DB::statement("COMMENT ON TABLE store IS '店舗情報テーブル'");
     }
 
     /**

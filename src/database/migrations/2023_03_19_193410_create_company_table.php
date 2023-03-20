@@ -29,9 +29,9 @@ return new class extends Migration {
             $table->charset = 'utf8';
             $table->collation = 'utf8_general_ci';
 
-            // テーブルコメントの設定
-            DB::statement("ALTER TABLE company COMMENT = '会社情報テーブル'");
         });
+        // テーブルコメントの設定
+        DB::statement("COMMENT ON TABLE company IS '会社情報テーブル'");
     }
 
     /**

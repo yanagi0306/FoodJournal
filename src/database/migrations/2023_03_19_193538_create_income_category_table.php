@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -18,7 +17,7 @@ return new class extends Migration
             // カラム定義
             $table->id()->autoIncrement()->comment('収入カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->integer('cat_cd')->comment('収入カテゴリコード');
+            $table->string('cat_cd', 3)->comment('収入カテゴリコード');
             $table->string('cat_name', 8)->comment('収入カテゴリ名');
             $table->timestamps();
 
@@ -32,9 +31,9 @@ return new class extends Migration
             $table->charset = 'utf8';
             $table->collation = 'utf8_general_ci';
 
-            // テーブルコメントの設定
-            DB::statement("ALTER TABLE income_category = COMMENT '収入カテゴリテーブル'");
         });
+        // テーブルコメントの設定
+        DB::statement("COMMENT ON TABLE income_category IS '収入カテゴリテーブル'");
     }
 
     /**
