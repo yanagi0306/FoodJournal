@@ -17,7 +17,7 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('予算ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
-            $table->unsignedBigInteger('income_category_mapping_id')->comment('収入カテゴリマッピングID');
+            $table->unsignedBigInteger('income_category_id')->comment('収入カテゴリID');
             $table->date('budget_month')->comment('予算年月');
             $table->integer('budget_amount')->comment('予算額');
             $table->date('confirmed_date')->nullable()->comment('確定日');
@@ -25,11 +25,11 @@ return new class extends Migration {
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['store_id', 'income_category_mapping_id', 'budget_month']);
+            $table->unique(['store_id', 'income_category_id', 'budget_month']);
 
             // 外部キー制約の設定
             $table->foreign('store_id')->references('id')->on('store')->onDelete('cascade');
-            $table->foreign('income_category_mapping_id')->references('id')->on('income_category_mapping')->onDelete('cascade');
+            $table->foreign('income_category_id')->references('id')->on('income_category')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';

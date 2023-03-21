@@ -16,6 +16,7 @@ return new class extends Migration {
         Schema::create('purchase_product_master', function (Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('仕入商品マスタID');
+            $table->unsignedBigInteger('company_id')->comment('会社ID');
             $table->unsignedBigInteger('purchase_supplier_id')->comment('仕入業者ID');
             $table->unsignedBigInteger('parent_purchase_category_id')->comment('仕入親カテゴリID');
             $table->unsignedBigInteger('purchase_category_id')->comment('仕入カテゴリID');
@@ -25,9 +26,10 @@ return new class extends Migration {
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['purchase_supplier_id', 'product_cd']);
+            $table->unique(['purchase_supplier_id', 'company_id','product_cd']);
 
             // 外部キー制約の設定
+            $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
             $table->foreign('purchase_supplier_id')->references('id')->on('purchase_supplier')->onDelete('cascade');
             $table->foreign('parent_purchase_category_id')->references('id')->on('parent_purchase_category')->onDelete('cascade');
             $table->foreign('purchase_category_id')->references('id')->on('purchase_category')->onDelete('cascade');

@@ -16,16 +16,16 @@ return new class extends Migration {
         Schema::create('product_category', function (Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('商品カテゴリID');
-            $table->unsignedBigInteger('store_id')->comment('店舗ID');
+            $table->unsignedBigInteger('company_id')->comment('会社ID');
             $table->string('cat_cd', 4)->comment('商品カテゴリコード');
             $table->string('cat_name', 8)->comment('商品カテゴリ名');
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['store_id', 'cat_cd']);
+            $table->unique(['company_id', 'cat_cd']);
 
             // 外部キー制約の設定
-            $table->foreign('store_id')->references('id')->on('store')->onDelete('cascade');
+            $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';
@@ -33,7 +33,7 @@ return new class extends Migration {
 
         });
         // テーブルコメントの設定
-        DB::statement("COMMENT ON TABLE product_category IS '商品カテゴリ'");
+        DB::statement("COMMENT ON TABLE product_category IS '商品マスタカテゴリ'");
     }
 
     /**

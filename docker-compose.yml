@@ -10,7 +10,8 @@ services:
       dockerfile: ./infra/docker/php/Dockerfile
       target: ${APP_BUILD_TARGET:-development}
     ports:
-      - "2222:22"
+      - "2222:22"   # ssh
+      - "5173:5173" # vite
     volumes:
       - type: bind
         source: ./src

@@ -100,11 +100,7 @@ RUN composer install -q -n --no-ansi --no-dev --no-scripts --no-progress --prefe
   # Laravelのキャッシュをクリア
   && php artisan optimize:clear \
   # Laravelの最適化
-  && php artisan optimize \
-  # npmパッケージのインストール
-  && npm install \
-  # npmパッケージのビルド
-  && npm run dev
+  && php artisan optimize
 
 # apt-getのキャッシュを削除
 RUN rm -rf /var/lib/apt/lists/*

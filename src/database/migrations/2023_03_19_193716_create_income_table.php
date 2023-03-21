@@ -17,7 +17,7 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('収入ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
-            $table->unsignedBigInteger('income_category_mapping_id')->comment('収入カテゴリマッピングID');
+            $table->unsignedBigInteger('income_category_id')->comment('収入カテゴリID');
             $table->integer('amount')->comment('収入金額');
             $table->date('date')->comment('収入年月');
             $table->string('comment', 255)->nullable()->comment('コメント');
@@ -25,7 +25,7 @@ return new class extends Migration {
 
             // 外部キー制約の設定
             $table->foreign('store_id')->references('id')->on('store')->onDelete('cascade');
-            $table->foreign('income_category_mapping_id')->references('id')->on('income_category_mapping')->onDelete('cascade');
+            $table->foreign('income_category_id')->references('id')->on('income_category')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';

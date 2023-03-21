@@ -17,7 +17,7 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('支出ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
-            $table->unsignedBigInteger('expense_category_mapping_id')->comment('支出カテゴリマッピングID');
+            $table->unsignedBigInteger('expense_category_id')->comment('支出カテゴリID');
             $table->integer('amount')->comment('支出金額');
             $table->date('date')->comment('支出年月');
             $table->string('comment', 255)->nullable()->comment('コメント');
@@ -25,7 +25,7 @@ return new class extends Migration {
 
             // 外部キー制約の設定
             $table->foreign('store_id')->references('id')->on('store')->onDelete('cascade');
-            $table->foreign('expense_category_mapping_id')->references('id')->on('expense_category_mapping')->onDelete('cascade');
+            $table->foreign('expense_category_id')->references('id')->on('expense_category')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';

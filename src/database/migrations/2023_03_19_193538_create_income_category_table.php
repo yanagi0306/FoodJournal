@@ -17,15 +17,19 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('収入カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
+            $table->unsignedBigInteger('parent_income_category_id')->comment('親収入カテゴリID');
+            $table->unsignedBigInteger('income_type_id')->comment('収入タイプID');
             $table->string('cat_cd', 3)->comment('収入カテゴリコード');
             $table->string('cat_name', 8)->comment('収入カテゴリ名');
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['company_id', 'cat_cd']);
+            $table->unique(['company_id', 'parent_income_category_id', 'cat_name']);
 
             // 外部キー制約の設定
             $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
+            $table->foreign('parent_income_category_id')->references('id')->on('parent_income_category')->onDelete('cascade');
+            $table->foreign('income_type_id')->references('id')->on('income_type')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';

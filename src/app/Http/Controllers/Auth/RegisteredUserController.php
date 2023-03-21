@@ -14,6 +14,7 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 
+// ユーザー登録コントローラー
 class RegisteredUserController extends Controller
 {
     /**
