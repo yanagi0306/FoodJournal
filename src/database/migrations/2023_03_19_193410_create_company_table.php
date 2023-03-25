@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('会社ID');
             $table->string('company_name', 30)->comment('会社名');
             $table->string('company_cd', 4)->comment('会社コード');
-            $table->string('purchase_store_cd', 4)->comment('仕入会社コード');
+            $table->string('purchase_company_cd', 8)->comment('仕入会社コード');
             $table->string('mail', 255)->nullable()->comment('メールアドレス');
             $table->timestamps();
 

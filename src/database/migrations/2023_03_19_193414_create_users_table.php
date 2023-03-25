@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('company_id')->comment('会社ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
             $table->string('name', 30)->comment('ユーザー名');
+            $table->string('login_id', 15)->comment('ログインID');
             $table->string('email')->unique()->comment('メールアドレス');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 30)->comment('パスワード');
@@ -28,7 +29,7 @@ return new class extends Migration {
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['company_id', 'store_id']);
+            $table->unique(['login_id']);
 
             // 外部キー制約の設定
             $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
