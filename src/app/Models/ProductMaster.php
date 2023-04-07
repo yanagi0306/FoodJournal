@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ProductMaster extends Model
+class ProductMaster extends BaseModel
 {
     use HasFactory;
 
@@ -73,7 +73,7 @@ class ProductMaster extends Model
      * order_productテーブル リレーション設定
      * @return HasMany
      */
-    public function orderProducts(): HasMany
+    public function order_products(): HasMany
     {
         return $this->hasMany(OrderProduct::class);
     }

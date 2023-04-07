@@ -7,13 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ProductCategory extends Model
+class ProductCategory extends BaseModel
 {
     use HasFactory;
 
     protected $table = 'product_category';
-
-    private mixed $id;
 
     protected $fillable = [
         'company_id',
@@ -34,7 +32,7 @@ class ProductCategory extends Model
      * purchase_product_masterテーブル リレーション設定
      * @return HasMany
      */
-    public function purchaseProductMasters(): HasMany
+    public function purchase_product_masters(): HasMany
     {
         return $this->hasMany(PurchaseProductMaster::class, 'category1_id', 'id')
             ->orWhere('category2_id', $this->id)

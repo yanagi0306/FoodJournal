@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ParentPurchaseCategory extends Model
+class ParentPurchaseCategory extends BaseModel
 {
     use HasFactory;
 

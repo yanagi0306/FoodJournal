@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
-class ExpenseType extends Model
+class ExpenseType extends BaseModel
 {
     use HasFactory;
 
@@ -23,7 +23,7 @@ class ExpenseType extends Model
      * expense_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function expenseCategories(): HasMany
+    public function expense_categories(): HasMany
     {
         return $this->hasMany(ExpenseCategory::class);
     }

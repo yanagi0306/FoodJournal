@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Purchase extends Model
+class Purchase extends BaseModel
 {
     use HasFactory;
 
@@ -32,7 +32,7 @@ class Purchase extends Model
      * purchase_supplierテーブル リレーション設定
      * @return BelongsTo
      */
-    public function purchaseSupplier(): BelongsTo
+    public function purchase_supplier(): BelongsTo
     {
         return $this->belongsTo(PurchaseSupplier::class);
     }

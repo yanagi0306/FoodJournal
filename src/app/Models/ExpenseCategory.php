@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ExpenseCategory extends Model
+class ExpenseCategory extends BaseModel
 {
     use HasFactory;
 
@@ -33,7 +33,7 @@ class ExpenseCategory extends Model
      * parent_expense_categoryテーブル リレーション設定
      * @return BelongsTo
      */
-    public function parentExpenseCategory(): BelongsTo
+    public function parent_expense_category(): BelongsTo
     {
         return $this->belongsTo(ParentExpenseCategory::class);
     }
@@ -42,7 +42,7 @@ class ExpenseCategory extends Model
      * expense_typeテーブル リレーション設定
      * @return BelongsTo
      */
-    public function expenseType(): BelongsTo
+    public function expense_type(): BelongsTo
     {
         return $this->belongsTo(ExpenseType::class);
     }
@@ -60,7 +60,7 @@ class ExpenseCategory extends Model
      * expense_budgetテーブル リレーション設定
      * @return HasMany
      */
-    public function expenseBudgets(): HasMany
+    public function expense_budgets(): HasMany
     {
         return $this->hasMany(ExpenseBudget::class);
     }

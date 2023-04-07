@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class PaymentMethod extends Model
+class PaymentMethod extends BaseModel
 {
     use HasFactory;
 
@@ -34,7 +34,7 @@ class PaymentMethod extends Model
      * order_paymentテーブル リレーション設定
      * @return HasMany
      */
-    public function orderPayments(): HasMany
+    public function order_payments(): HasMany
     {
         return $this->hasMany(OrderPayment::class);
     }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OrderPayment extends Model
+class OrderPayment extends BaseModel
 {
     use HasFactory;
 
@@ -31,7 +31,7 @@ class OrderPayment extends Model
      * payment_methodテーブル リレーション設定
      * @return BelongsTo
      */
-    public function paymentMethod(): BelongsTo
+    public function payment_method(): BelongsTo
     {
         return $this->belongsTo(PaymentMethod::class);
     }

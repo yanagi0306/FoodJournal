@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class IncomeBudget extends Model
+class IncomeBudget extends BaseModel
 {
     use HasFactory;
 
@@ -34,7 +34,7 @@ class IncomeBudget extends Model
      * income_categoryテーブル リレーション設定
      * @return BelongsTo
      */
-    public function incomeCategory(): BelongsTo
+    public function income_category(): BelongsTo
     {
         return $this->belongsTo(IncomeCategory::class);
     }

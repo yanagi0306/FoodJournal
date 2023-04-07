@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ParentIncomeCategory extends Model
+class ParentIncomeCategory extends BaseModel
 {
     use HasFactory;
 
@@ -32,7 +32,7 @@ class ParentIncomeCategory extends Model
      * income_category リレーション設定
      * @return HasMany
      */
-    public function IncomeCategories(): HasMany
+    public function Income_categories(): HasMany
     {
         return $this->hasMany(IncomeCategory::class);
     }

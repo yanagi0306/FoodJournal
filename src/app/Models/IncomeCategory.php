@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class IncomeCategory extends Model
+class IncomeCategory extends BaseModel
 {
     use HasFactory;
 
@@ -33,7 +33,7 @@ class IncomeCategory extends Model
      * parent_income_categoryテーブル リレーション設定
      * @return BelongsTo
      */
-    public function parentIncomeCategory(): BelongsTo
+    public function parent_income_category(): BelongsTo
     {
         return $this->belongsTo(ParentIncomeCategory::class);
     }
@@ -42,7 +42,7 @@ class IncomeCategory extends Model
      * income_typeテーブル リレーション設定
      * @return BelongsTo
      */
-    public function incomeType(): BelongsTo
+    public function income_type(): BelongsTo
     {
         return $this->belongsTo(IncomeType::class);
     }
@@ -69,7 +69,7 @@ class IncomeCategory extends Model
      * income_budgetテーブル リレーション設定
      * @return HasMany
      */
-    public function incomeBudgets(): HasMany
+    public function income_budgets(): HasMany
     {
         return $this->hasMany(IncomeBudget::class);
     }

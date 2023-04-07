@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OrderProduct extends Model
+class OrderProduct extends BaseModel
 {
     use HasFactory;
 
@@ -33,7 +33,7 @@ class OrderProduct extends Model
      * product_masterテーブル リレーション設定
      * @return BelongsTo
      */
-    public function productMaster(): BelongsTo
+    public function product_master(): BelongsTo
     {
         return $this->belongsTo(ProductMaster::class);
     }
