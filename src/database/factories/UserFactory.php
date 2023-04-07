@@ -7,6 +7,7 @@ use App\Models\Store;
 use App\Models\User;
 use App\Traits\Counter;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -28,13 +29,12 @@ class UserFactory extends Factory
         return [
             'company_id' => Company::factory(),
             'store_id' => Store::factory(),
-            'name'=> $this->faker->name,
-            //'login_id' => $this->faker->uuid,
+            'name' => '高柳 徹',
             'login_id' => '1111',
-            'permission'=> 3,
+            'permission' => 3,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => 'password', // password
+            'password' => Hash::make('1111'),// ハッシュ必須
             'remember_token' => Str::random(10),
         ];
     }

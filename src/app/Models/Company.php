@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Company extends Model
+class Company extends BaseModel
 {
     use HasFactory;
 
@@ -32,7 +31,7 @@ class Company extends Model
      * customer_typeテーブル リレーション設定
      * @return HasMany
      */
-    public function customerTypes(): HasMany
+    public function customer_types(): HasMany
     {
         return $this->hasMany(CustomerType::class);
     }
@@ -59,7 +58,7 @@ class Company extends Model
      * purchase_supplierテーブル リレーション設定
      * @return HasMany
      */
-    public function purchaseSuppliers(): HasMany
+    public function purchase_suppliers(): HasMany
     {
         return $this->hasMany(PurchaseSupplier::class);
     }
@@ -68,7 +67,7 @@ class Company extends Model
      * parent_expense_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function parentExpenseCategories(): HasMany
+    public function parent_expense_categories(): HasMany
     {
         return $this->hasMany(ParentExpenseCategory::class);
     }
@@ -77,7 +76,7 @@ class Company extends Model
      * expense_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function expenseCategories(): HasMany
+    public function expense_categories(): HasMany
     {
         return $this->hasMany(ExpenseCategory::class);
     }
@@ -86,7 +85,7 @@ class Company extends Model
      * parent_income_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function parentIncomeCategories(): HasMany
+    public function parent_income_categories(): HasMany
     {
         return $this->hasMany(ParentIncomeCategory::class);
     }
@@ -95,7 +94,7 @@ class Company extends Model
      * income_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function incomeCategories(): HasMany
+    public function income_categories(): HasMany
     {
         return $this->hasMany(IncomeCategory::class);
     }
@@ -104,7 +103,7 @@ class Company extends Model
      * parent_purchase_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function parentPurchaseCategories(): HasMany
+    public function parent_purchase_categories(): HasMany
     {
         return $this->hasMany(ParentPurchaseCategory::class);
     }
@@ -113,7 +112,7 @@ class Company extends Model
      * purchase_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function purchaseCategories(): HasMany
+    public function purchase_categories(): HasMany
     {
         return $this->hasMany(PurchaseCategory::class);
     }
@@ -122,7 +121,7 @@ class Company extends Model
      * purchase_product_masterテーブル リレーション設定
      * @return HasMany
      */
-    public function purchaseProductMasters(): HasMany
+    public function purchase_product_masters(): HasMany
     {
         return $this->hasMany(PurchaseProductMaster::class);
     }

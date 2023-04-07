@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->string('login_id', 15)->comment('ログインID');
             $table->string('email')->unique()->comment('メールアドレス');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password', 30)->comment('パスワード');
+            $table->string('password')->comment('パスワード');
             $table->integer('permission')->nullable()->comment('権限（null:ロックアカウント、1:一般、2:店舗管理者、3:会社管理者）');
             $table->rememberToken();
             $table->timestamps();

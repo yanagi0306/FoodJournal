@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Store extends Model
+class Store extends BaseModel
 {
     use HasFactory;
 
@@ -44,7 +43,7 @@ protected $table = 'store';
      * product_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function productCategories(): HasMany
+    public function product_categories(): HasMany
     {
         return $this->hasMany(ProductCategory::class);
     }
@@ -71,7 +70,7 @@ protected $table = 'store';
      * purchase_productテーブル リレーション設定
      * @return HasMany
      */
-    public function purchaseProducts(): HasMany
+    public function purchase_products(): HasMany
     {
         return $this->hasMany(PurchaseProduct::class);
     }
@@ -89,7 +88,7 @@ protected $table = 'store';
      * expense_budgetテーブル リレーション設定
      * @return HasMany
      */
-    public function expenseBudgets(): HasMany
+    public function expense_budgets(): HasMany
     {
         return $this->hasMany(ExpenseBudget::class);
     }
@@ -107,7 +106,7 @@ protected $table = 'store';
      * income_budgetテーブル リレーション設定
      * @return HasMany
      */
-    public function incomeBudgets(): HasMany
+    public function income_budgets(): HasMany
     {
         return $this->hasMany(IncomeBudget::class);
     }

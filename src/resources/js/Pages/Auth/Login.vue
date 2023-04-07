@@ -4,6 +4,8 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import {useForm} from '@inertiajs/vue3';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { Head } from '@inertiajs/vue3';
+
 
 defineProps({
     canResetPassword: Boolean,
@@ -24,13 +26,14 @@ const submit = () => {
 </script>
 
 <template>
+    <Head title="Login" />
     <div class="ly_login_container">
         <header class="ly_login_header">
             <div class="navbar navbar-light border-bottom p-1">
                 <div class="container-fluid">
                     <div class="d-flex flex-row bd-highlight">
                         <div class="p-1 mx-3 bd-highlight">
-                            <img src="/images/food_journal_logo.png" class="navbar-brand-img" alt="alis_logo" width="175" height="29">
+                            <img src="/images/food_journal_logo.png" class="navbar-brand-img" alt="alis_logo" width="195" height="31">
                         </div>
                     </div>
                 </div>
