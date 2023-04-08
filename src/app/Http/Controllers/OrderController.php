@@ -4,82 +4,53 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Inertia\Inertia;
 
+/**
+ * Class OrderController
+ * 売上コントローラー
+ * @package App\Http\Controllers
+ */
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 売上実績トップページを表示する
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
-        //
+        // ここに支出予算一覧画面のロジックを追加します
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 売上実績をアップロードする
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function create()
+    public function upload(): void
     {
-        //
+        // ここにアップロード処理のロジックを追加します
     }
 
     /**
-     * Store a newly created resource in storage.
+     * アップロード履歴をダウンロードする
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function store(Request $request)
+    public function download_upload_history(): void
     {
-        //
+        // ここにダウンロード処理のロジックを追加します
     }
 
     /**
-     * Display the specified resource.
+     * 売上参照画面を表示する
      *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function show(Order $order)
+    public function search(): void
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Order $order)
-    {
-        //
+        // ここに売上参照画面のロジックを追加します
     }
 }
