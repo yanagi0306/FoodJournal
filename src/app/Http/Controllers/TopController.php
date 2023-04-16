@@ -20,7 +20,7 @@ class TopController extends Controller
      * @param Request $request
      * @return \Inertia\Response
      */
-    public function __invoke(Request $request): \Inertia\Response
+    public function index(Request $request): \Inertia\Response
     {
         return Inertia::render('Top');
     }

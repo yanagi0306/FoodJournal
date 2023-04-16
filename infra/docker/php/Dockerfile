@@ -24,6 +24,13 @@ ENV TZ=Asia/Tokyo \
   COMPOSER_ALLOW_SUPERUSER=1 \
   COMPOSER_HOME=/composer
 
+# アプリケーションlog用のディレクトリ作成
+# /upload_buckup 配下
+RUN mkdir -p /logs \
+  && mkdir -p /logs/laravel \
+  && chown -R www-data:www-data /logs \
+  && chmod -R 775 /logs
+
 COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
 
 # 必要なパッケージをインストール
@@ -70,11 +77,19 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get -y install --no-install-recommends nodejs
 RUN npm install -g npm
 
+
+
+# apt-getのキャッシュを削除
+RUN rm -rf /var/lib/apt/lists/*
+
+
 # 開発環境用のDockerfile
 FROM base AS development
 
 # PHPの設定ファイルをコピー
 COPY ./infra/docker/php/php.development.ini /usr/local/etc/php/php.ini
+
+
 
 # Xdebugをインストール
 FROM development AS development-xdebug
@@ -90,17 +105,8 @@ FROM base AS deploy
 
 # PHPの設定ファイルをコピー
 COPY ./infra/docker/php/php.deploy.ini /usr/local/etc/php/php.ini
-# アプリケーションのソースコードをコピー
-COPY ./src /workspace
 
-# Composerを使って必要なパッケージをインストール
-RUN composer install -q -n --no-ansi --no-dev --no-scripts --no-progress --prefer-dist \
-  # storageとbootstrap/cacheディレクトリを書き込み可能に変更
-  && chmod -R 777 storage bootstrap/cache \
-  # Laravelのキャッシュをクリア
-  && php artisan optimize:clear \
-  # Laravelの最適化
-  && php artisan optimize
 
-# apt-getのキャッシュを削除
-RUN rm -rf /var/lib/apt/lists/*
+
+
+

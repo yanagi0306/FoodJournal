@@ -21,12 +21,15 @@ services:
         target: /root/.config/psysh
         volume:
           nocopy: true
+      - type: bind
+        source: ./data
+        target: /data
     environment:
       - APP_NAME=${APP_NAME}
       - APP_DEBUG=${APP_DEBUG}
       - APP_ENV=${APP_ENV}
       - APP_URL=${APP_URL}
-      - LOG_CHANNEL=${LOG_CHANNEL:-stderr}
+      - LOG_CHANNEL=${LOG_CHANNEL:-daily}
       - LOG_STDERR_FORMATTER=${LOG_STDERR_FORMATTER:-Monolog\Formatter\JsonFormatter}
       - DB_CONNECTION=${DB_CONNECTION}
       - DB_HOST=${DB_HOST}
@@ -34,6 +37,12 @@ services:
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
+    command: >
+      sh -c "chown -R www-data:www-data /workspace &&
+      chmod -R 775 /workspace &&
+      chown -R www-data:www-data /data &&
+      chmod -R 775 /data &&
+      php-fpm"
 
   web:
     build:

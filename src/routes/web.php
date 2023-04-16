@@ -15,6 +15,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\TopController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\ShareAuthenticatedUser;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,9 +40,9 @@ Route::middleware('auth')->group(function () {
         ->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified',  ShareAuthenticatedUser::class])->group(function () {
     // トップページ
-    Route::get('/', TopController::class)
+    Route::get('/', TopController::class . '@index')
         ->name('top.index');
 
     // 実績管理

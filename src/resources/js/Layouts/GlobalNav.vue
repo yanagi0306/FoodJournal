@@ -7,48 +7,48 @@ const menus = [
     {
         title: {name: "実績管理", icon: 'svgListAltRegular'},
         links: [
-            {name: "売上実績", path: 'logout'},
-            {name: "仕入実績", path: 'logout'},
-            {name: "月次収入", path: 'logout'},
-            {name: "月次支出", path: 'logout'},
-            {name: "日次収入", path: 'logout'},
-            {name: "日次支出", path: 'logout'}
+            {name: "売上実績", path: 'orders.index'},
+            {name: "仕入実績", path: 'top.index'},
+            {name: "月次収入", path: 'top.index'},
+            {name: "月次支出", path: 'top.index'},
+            {name: "日次収入", path: 'top.index'},
+            {name: "日次支出", path: 'top.index'}
         ],
     },
     {
         title: {name: "予算管理", icon: 'svgFaBook'},
         links: [
-            {name: "収入予算", path: 'logout'},
-            {name: "支出予算", path: 'logout'},
-            {name: "収入予算一括登録", path: 'logout'},
-            {name: "支出予算一括登録", path: 'logout'}
+            {name: "収入予算", path: 'top.index'},
+            {name: "支出予算", path: 'top.index'},
+            {name: "収入予算一括登録", path: 'top.index'},
+            {name: "支出予算一括登録", path: 'top.index'}
         ],
     },
     {
         title: {name: "帳簿管理", icon: 'svgChartBarRegular'},
         links: [
-            {name: "月次情報", path: 'logout'},
-            {name: "日次情報", path: 'logout'}
+            {name: "月次情報", path: 'top.index'},
+            {name: "日次情報", path: 'top.index'}
         ],
     },
     {
         title: {name: "商品マスタ管理", icon: 'svgProductSolid'},
         links: [
-            {name: "商品マスタ登録", path: 'logout'},
-            {name: "商品マスタカテゴリ登録", path: 'logout'}
+            {name: "商品マスタ登録", path: 'top.index'},
+            {name: "商品マスタカテゴリ登録", path: 'top.index'}
         ],
     },
     {
         title: {name: "カテゴリ管理", icon: 'toolboxSolid'},
         links: [
-            {name: "収入カテゴリ", path: 'logout'},
-            {name: "支出カテゴリ", path: 'logout'}
+            {name: "収入カテゴリ", path: 'top.index'},
+            {name: "支出カテゴリ", path: 'top.index'}
         ],
     },
     {
         title: {name: "ユーザー管理", icon: 'svgUserCogSolid'},
         links: [
-            {name: "ユーザー管理", path: 'logout'}
+            {name: "ユーザー管理", path: 'top.index'}
         ],
     },
 ];
@@ -77,7 +77,7 @@ const menus = [
                                     v-for="link in menu.links"
                                     :key="link.name"
                                     :href="route(link.path)"
-                                    method="post"
+                                    method="get"
                                     as="button"
                                     class="dropdown-item text-muted"
                                     aria-labelledby="navbarDropdown"

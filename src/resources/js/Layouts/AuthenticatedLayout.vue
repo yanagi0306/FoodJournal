@@ -13,8 +13,8 @@ import GlobalNav from "@/Layouts/GlobalNav.vue";
 
     <div class="ly_cont">
         <div class="ly_cont_inner">
-            <main class="ly_cont_main ly_custom_ml" data-contents_ml="true">
-                <div class="ly_cont_main_inner" data-contents_ml="true">
+            <main class="ly_cont_main">
+                <div class="ly_cont_main_inner">
                     <slot/>
                 </div>
             </main>
