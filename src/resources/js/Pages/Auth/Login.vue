@@ -4,7 +4,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import {useForm} from '@inertiajs/vue3';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { Head } from '@inertiajs/vue3';
+import {Head} from '@inertiajs/vue3';
 
 
 defineProps({
@@ -20,13 +20,20 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('login'), {
-        onFinish: () => form.reset('password'),
+        onSuccess: () => {
+            form.reset('password');
+        },
+        onError: (errors) => {
+            console.error(errors);
+            alert(`Error: ${JSON.stringify(errors)}`);
+        },
     });
 };
+
 </script>
 
 <template>
-    <Head title="Login" />
+    <Head title="Login"/>
     <div class="ly_login_container">
         <header class="ly_login_header">
             <div class="navbar navbar-light border-bottom p-1">

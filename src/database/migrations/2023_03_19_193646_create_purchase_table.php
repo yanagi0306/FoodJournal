@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('仕入ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
             $table->unsignedBigInteger('purchase_supplier_id')->comment('仕入業者ID');
-            $table->string('voucher', 15)->comment('伝票番号');
+            $table->string('slip_number', 15)->comment('伝票番号');
             $table->date('date')->comment('仕入日時');
             $table->timestamps();
 

@@ -17,7 +17,7 @@ class Order extends BaseModel
         'store_id',
         'income_category_id',
         'customer_type_id',
-        'voucher',
+        'slip_number',
         'order_date',
         'payment_date',
         'men_count',

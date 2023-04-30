@@ -15,7 +15,7 @@ class Purchase extends BaseModel
     protected $fillable = [
         'store_id',
         'purchase_supplier_id',
-        'voucher',
+        'slip_number',
         'date',
     ];
 

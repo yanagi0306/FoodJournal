@@ -3,20 +3,22 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {Head, Link} from '@inertiajs/vue3';
 import {onMounted, ref} from "vue";
 import SvgIcon from "@/Components/Icons/SvgIcon.vue";
+import {Inertia} from "@inertiajs/inertia";
+
 
 const props = defineProps({
-    'uploadHistory': Array,
+    'ordersHistory': Array,
 })
 
-const filesList = ref([])
+const ordersHistory = ref([])
 
 onMounted(() => {
-    props.uploadHistory.forEach((file, index) => {
+    props.ordersHistory.forEach((file, index) => {
         const filePathParts = file.name.split('/');
         const directory = filePathParts.slice(0, -1).join('/');
         const fileName = filePathParts.slice(-1)[0];
 
-        filesList.value.push({
+        ordersHistory.value.push({
             id: index + 1,
             directory: directory,
             name: fileName,
@@ -25,12 +27,36 @@ onMounted(() => {
     })
 })
 
+const selectedFile = ref(null)
 
-const updateFile = (e) => {
-    // 日本語変換時のenter
-    if (e.keyCode === 229) return
-    Inertia.get(route('customers.index', {search: search.value}))
-    document.getElementById('inputSearch').focus();
+const onFileSelected = (event) => {
+    selectedFile.value = event.target.files[0]
+}
+
+const uploadFile = async () => {
+    if (!selectedFile.value) {
+        alert('ファイルを選択してください。')
+        return
+    }
+
+    const formData = new FormData()
+    formData.append('file', selectedFile.value)
+
+    try {
+        await Inertia.post(route('orders.upload'), formData, {
+            onSuccess: () => {
+                alert('ファイルが正常にアップロードされました。')
+                location.reload();
+            },
+            onError: (errors) => {
+                console.error(errors)
+                alert(errors.message || 'ファイルのアップロード中にエラーが発生しました。')
+            }
+        })
+    } catch (error) {
+        console.error(error)
+        alert('ファイルのアップロード中にエラーが発生しました。')
+    }
 }
 
 </script>
@@ -67,10 +93,10 @@ const updateFile = (e) => {
 
         <h3 class="sub_title">アップロード履歴</h3>
         <div class="fs12 mb-3">
-            最新のアップロード履歴5件を表示します。<br>
+            最新のアップロード履歴10件を表示します。<br>
         </div>
         <!--            アップロード履歴ある時はこちらを表示-->
-        <div v-if="filesList.length > 0">
+        <div v-if="ordersHistory.length > 0">
             <table id="standard" class="table_standard_box_2 table-70">
                 <thead>
                 <tr>
@@ -81,10 +107,10 @@ const updateFile = (e) => {
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for='file in filesList' :key="file.id">
-                    <td class="text-center">{{ file.index }}</td>
-                    <td>{{ file.created_at }}</td>
-                    <td>{{ file.name }}</td>
+                <tr v-for='order in ordersHistory' :key="file.id">
+                    <td class="text-center">{{ order.index }}</td>
+                    <td>{{ order.created_at }}</td>
+                    <td>{{ order.name }}</td>
                     <td class="text-center">
                         <input type="button" class="btn_small-blue-3" @click="downloadOrderCsv()" value="ダウンロード">
                     </td>

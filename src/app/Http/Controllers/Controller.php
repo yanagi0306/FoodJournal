@@ -2,48 +2,109 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Common;
 use App\Helpers\UserHelper;
-use App\Traits\LogTrait;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
+/**
+ * ベースコントローラークラス
+ */
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, LogTrait;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public ?string $progName = null;
-    public ?string $methodName = null;
-    public ?array $userInfo = null;
+    protected ?string $progName = null;
+    protected ?string $methodName = null;
+    protected ?array $userInfo = null;
+    protected string $logPath;
 
+
+    /**
+     * コンストラクタ
+     */
     public function __construct()
     {
-        // 共通の定数ファイルを読み込む
-        require_once __DIR__ . '/../../Constants/Constants.php';
+        $this->applyMiddleware();
+    }
 
+    /**
+     * ミドルウェアを適用する
+     */
+    private function applyMiddleware(): void
+    {
         $this->middleware(function ($request, $next) {
-            // ユーザー情報を定義
             $user = Auth::user();
-            if ($user) {
-                $this->userInfo = UserHelper::getUser($user);
-                $this->methodName = $request->route()->getActionMethod();
-                $this->progName = class_basename($request->route()->getController());
+            $this->setUserInfo($user ? UserHelper::getUser($user) : null);
+            $this->setMethodName($request->route()->getActionMethod());
+            $this->setProgName(class_basename($request->route()->getController()));
+            $this->logPath = $this->getLogPath();
+            config([
+                'logging.channels.app.logPath' => $this->logPath,
+                'logging.channels.app.userId' => $this->userInfo['id'] ?? null,
+                'logging.channels.app.progName' => $this->progName ?? null,
+            ]);
+            Log::info('[START]>>>>>>>>');
 
-                // logPathを設定
-                $this->setLogPath(
-                    LOGS_DIR . "/{$this->userInfo['company_id']}/" . $this->progName . '_' . date('Ymd') . '.log'
-                );
-
-                $this->setLog("[START/{$this->methodName}/user_id:{$this->userInfo['id']}]>>>>>>>>");
-            }
             return $next($request);
         });
     }
 
+
+    /**
+     * ユーザー情報を設定する
+     *
+     * @param ?array $userInfo ユーザー情報
+     */
+    private function setUserInfo(?array $userInfo): void
+    {
+        $this->userInfo = $userInfo;
+    }
+
+    /**
+     *
+     * @param string $methodName メソッド名
+     */
+    private function setMethodName(string $methodName): void
+    {
+        $this->methodName = $methodName;
+    }
+
+    /**
+     *
+     * @param string $progName プログラム名
+     */
+    private function setProgName(string $progName): void
+    {
+        $this->progName = $progName;
+    }
+
+    protected function getLogPath(): string
+    {
+        $date = date('Ymd');
+
+        if ($this->userInfo !== null) {
+            $logDir = Common::LOGS_DIR . "/{$this->userInfo['company_id']}";
+
+            if (!file_exists($logDir)) {
+                mkdir($logDir, 0755, true);
+            }
+
+            return $logDir . "/{$this->progName}_{$date}.log";
+        }
+
+        return "logs/app_{$date}.log";
+    }
+
+    /**
+     * デストラクタ
+     */
     public function __destruct()
     {
-        $this->setLog("[END  /{$this->methodName}/user_id:{$this->userInfo['id']}]<<<<<<<<");
+        Log::info("[END]<<<<<<<<<<");
     }
 }

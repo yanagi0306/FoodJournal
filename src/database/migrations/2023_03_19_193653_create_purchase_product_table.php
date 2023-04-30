@@ -17,7 +17,7 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('仕入商品ID');
             $table->unsignedBigInteger('purchase_id')->comment('仕入情報ID');
-            $table->unsignedBigInteger('purchase_product_master_id')->nullable()->comment('仕入商品マスタID');
+            $table->unsignedBigInteger('purchase_product_master_cd')->comment('仕入商品マスタコード');
             $table->string('product_name', 50)->comment('商品名');
             $table->integer('quantity')->comment('数量');
             $table->integer('unit_price')->comment('単価');
@@ -25,7 +25,6 @@ return new class extends Migration {
 
             // 外部キー制約の設定
             $table->foreign('purchase_id')->references('id')->on('purchase')->onDelete('cascade');
-            $table->foreign('purchase_product_master_id')->references('id')->on('purchase_product_master')->onDelete('set null');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';

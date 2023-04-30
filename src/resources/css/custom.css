@@ -3580,7 +3580,7 @@ textarea.form-control-lg {
     background-repeat: no-repeat;
     background-size: contain;
     border: 1px solid rgba(0, 0, 0, .25);
-    color-adjust: exact;
+    print-color-adjust: exact;
     height: 1.4em;
     margin-top: .05em;
     vertical-align: top;

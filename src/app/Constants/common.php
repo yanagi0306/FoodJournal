@@ -1,6 +1,9 @@
 <?php
+
+namespace App\Constants;
+
 /**
- *  共通定数ファイル
+ * 共通定数クラス
  *
  *  <<制約事項>>
  *  ・すべてapp_config.phpで呼び出して使用します。
@@ -8,9 +11,15 @@
  *  ・単独で読み込むことは禁止します。
  *  ・このファイル内で別ファイルを読み込むことは禁止します。
  */
+class Common
+{
+    /**
+     * FoodJournal ディレクトリ階層
+     */
+    const BASE_DIR = '/workspace';
+    const LOGS_DIR = '/logs';
+    const DATA_DIR = '/data';
+    const UPLOAD_DIR = '/data/upload';
+}
 
-/** ALIS ディレクトリ階層 */
-const BASE_DIR = '/workspace';
-const LOGS_DIR = '/logs';
-const DATA_DIR = '/data';
 

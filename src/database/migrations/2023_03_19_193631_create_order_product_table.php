@@ -17,7 +17,7 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('注文商品ID');
             $table->unsignedBigInteger('order_id')->comment('注文ID');
-            $table->unsignedBigInteger('product_master_id')->comment('商品マスタID');
+            $table->unsignedBigInteger('product_master_cd')->comment('商品マスタコード');
             $table->integer('quantity')->comment('数量');
             $table->integer('unit_price')->comment('単価');
             $table->string('order_options', 255)->nullable()->comment('注文オプション（細かな注文要望情報を記載）');
@@ -25,7 +25,6 @@ return new class extends Migration {
 
             // 外部キー制約の設定
             $table->foreign('order_id')->references('id')->on('order')->onDelete('cascade');
-            $table->foreign('product_master_id')->references('id')->on('product_master')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';
@@ -33,7 +32,7 @@ return new class extends Migration {
 
         });
         // テーブルコメントの設定
-        DB::statement("COMMENT ON TABLE order_product IS '注文商品テーブル'");
+        DB::statement("COMMENT ON TABLE order_product IS '注文商品マスタテーブル'");
     }
 
     /**

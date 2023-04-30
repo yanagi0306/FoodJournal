@@ -1,20 +1,27 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Services\Files;
+
+use Illuminate\Support\Facades\Log;
 
 class UploadHistory
 {
 
+    protected UploadDirectory $uploadDirectory;
+
+    public function __construct(string $type, int $companyId)
+    {
+        $uploadDirectory = new UploadDirectory($type, $companyId);
+        $this->uploadDirectory = $uploadDirectory;
+    }
+
     /**
-     * アップロード履歴から最新の5つのファイルを取得する。
-     * @param $type
-     * @param $userInfo
+     * アップロード履歴から最新の10ファイルを取得する。
      * @return array
      */
-    public static function getOrderHistory($type, $userInfo): array
+    public function getUploadHistory(): array
     {
-        $companyId = $userInfo['company_id'];
-        $uploadDir = "/data/upload_BK/{$type}/{$companyId}";
+        $uploadDir = $this->uploadDirectory->getPath();
 
         // ディレクトリが存在しない場合
         if (!file_exists($uploadDir)) {
@@ -39,8 +46,7 @@ class UploadHistory
             return $b['created_at'] - $a['created_at'];
         });
 
-        // 最新の5つのファイル/ディレクトリを取得
-        return array_slice($filesWithCreationDates, 0, 5);
+        // 最新の10ファイル/ディレクトリを取得
+        return array_slice($filesWithCreationDates, 0, 10);
     }
-
 }

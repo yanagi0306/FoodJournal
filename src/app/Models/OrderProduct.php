@@ -14,7 +14,7 @@ class OrderProduct extends BaseModel
 
     protected $fillable = [
         'order_id',
-        'product_master_id',
+        'product_master_cd',
         'quantity',
         'unit_price',
         'order_options',

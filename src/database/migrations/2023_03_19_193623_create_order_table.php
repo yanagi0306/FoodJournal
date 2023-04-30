@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
             $table->unsignedBigInteger('income_category_id')->comment('収入カテゴリID');
             $table->unsignedBigInteger('customer_type_id')->comment('客層ID');
-            $table->string('voucher', 15)->comment('伝票番号');
+            $table->string('slip_number', 15)->comment('伝票番号');
             $table->date('order_date')->comment('注文日時');
             $table->timestamp('payment_date')->nullable()->comment('決済日時');
             $table->integer('men_count')->nullable()->comment('男性客数');
@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['store_id', 'voucher']);
+            $table->unique(['store_id', 'slip_number']);
 
             // 外部キー制約の設定
             $table->foreign('store_id')->references('id')->on('store')->onDelete('cascade');

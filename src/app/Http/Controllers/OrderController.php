@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\UploadHistory;
-use App\Helpers\UserHelper;
-use App\Models\Order;
-use App\Services\Order\OrderService;
-use App\Traits\LogTrait;
+use app\Services\Usen\CsvOrderUploadService;
+use App\Services\Files\UploadHistory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Inertia\Response;
 
 /**
  * Class OrderController
@@ -18,27 +17,22 @@ use Inertia\Inertia;
  */
 class OrderController extends Controller
 {
-    protected array $uploadHistory;
-    protected OrderService $orderService;
-
-    public function __construct(OrderService $orderService)
-    {
-        parent::__construct(); //
-        $this->orderService = $orderService;
-    }
+    protected UploadHistory $uploadHistory;
+    protected array $ordersHistory;
 
     /**
      * 売上実績トップページを表示
      *
-     * @return \Inertia\Response
+     * @return Response
      */
-    public function index(): \Inertia\Response
+    public function index(): Response
     {
         // 売上情報のアップロード履歴の取得
-        $this->uploadHistory = UploadHistory::getOrderHistory('order', $this->userInfo);
+        $this->uploadHistory = new UploadHistory('order', $this->userInfo['company_id']);
+        $this->ordersHistory = $this->uploadHistory->getUploadHistory();
 
         return Inertia::render('Order/Index', [
-            'uploadHistory' => $this->uploadHistory
+            'ordersHistory' => $this->ordersHistory
         ]);
     }
 
@@ -46,28 +40,29 @@ class OrderController extends Controller
      * 売上実績をアップロード
      *
      * @param Request $request
-     * @return \Inertia\Response
+     * @return JsonResponse
      */
     public function upload(Request $request)
     {
+
         // アップロードされたファイルデータを取得
         $uploadedFile = $request->file('order_data');
 
-        // ここでは OrderService の uploadOrderData メソッドを呼び出します
-        $result = $this->orderService->uploadOrderData($uploadedFile);
+        $service = new CsvOrderUploadService();
 
-        if ($result) {
+        try {
+            $service->uploadOrder($uploadedFile);
             // 成功時の処理
-            return Inertia::render('Order/Index', [
-                'uploadHistory' => $this->uploadHistory,
-                'message' => 'アップロードに成功しました。',
+            return response()->json([
+                'message' => '売上データの登録に成功しました。',
             ]);
-        } else {
+
+        } catch (\Exception $e) {
             // 失敗時の処理
-            return Inertia::render('Order/Index', [
-                'uploadHistory' => $this->uploadHistory,
-                'message' => 'アップロードに失敗しました。',
-            ]);
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+
         }
     }
 

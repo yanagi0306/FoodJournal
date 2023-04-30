@@ -14,7 +14,7 @@ class PurchaseProduct extends BaseModel
 
     protected $fillable = [
         'purchase_id',
-        'purchase_product_master_id',
+        'purchase_product_master_cd',
         'product_name',
         'quantity',
         'unit_price',

@@ -8,17 +8,17 @@ use Monolog\Logger;
 
 trait LogTrait
 {
-    protected string $logPath;
+    protected static string $logPath;
 
     /**
      * ログの出力先を設定
-     * 使用前に設定の必要あり
+     * コンストラクタで以下の設定が必要
      *
-     * @param string $path
+     * @param ?string $path
      */
-    public function setLogPath(string $path): void
+    public static function setLogPath(?string $path): void
     {
-        $this->logPath = $path;
+        self::$logPath = $path;
     }
 
     /**
@@ -27,17 +27,16 @@ trait LogTrait
      * @param string $message ログメッセージ
      * @param string $logLevel ログレベル
      */
-    public function setLog(string $message, string $logLevel = 'info'): void
+    public static function setLog(string $message, string $logLevel = 'info'): void
     {
         // ディレクトリが存在しない場合は作成する
-        $logDir = dirname($this->logPath);
+        $logDir = dirname(self::$logPath);
         if (!file_exists($logDir)) {
             mkdir($logDir, 0755, true);
         }
 
-        // Monologの設定
-        $monolog = new Logger($this->logPath);
-        $handler = new StreamHandler($this->logPath, Logger::toMonologLevel($logLevel));
+        $monolog = new Logger(self::$logPath);
+        $handler = new StreamHandler(self::$logPath, Logger::toMonologLevel($logLevel));
         $handler->setFormatter(
             new LineFormatter("[%datetime%][%level_name%]%message%\n", 'Y/m/d H:i:s')
         );
@@ -47,5 +46,5 @@ trait LogTrait
         $monolog->$logLevel($message);
     }
 
-
 }
+

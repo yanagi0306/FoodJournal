@@ -2,10 +2,83 @@
 
 namespace App\Traits;
 
-use JetBrains\PhpStorm\NoReturn;
+use Exception;
+use Illuminate\Http\UploadedFile;
+use InvalidArgumentException;
+use RuntimeException;
 
 trait CsvTrait
 {
+    /**
+     * 配列からCSVデータ用への変換処理
+     *
+     * @param array $array CSVデータに変換する配列
+     * @param string $toEncoding 出力するCSVデータのエンコーディング
+     * @param string $fromEncoding 変換する配列のエンコーディング
+     * @param string $lineSeparator 行区切り文字
+     * @return string CSVデータ
+     */
+    public function convertArrayToCsv(
+        array  $array,
+        string $toEncoding = 'SJIS',
+        string $fromEncoding = 'UTF-8',
+        string $lineSeparator = "\n"
+    ): string
+    {
+        $escArray = [];
+        foreach ($array as $value) {
+            $value = str_replace('"', '""', $value);
+            $value = '"' . $value . '"';
+            $escArray[] = mb_convert_encoding($value, $toEncoding, $fromEncoding);
+        }
+        return implode(',', $escArray) . $lineSeparator;
+    }
+
+    /**
+     * CSVファイルを配列に変換する処理
+     *
+     * @param UploadedFile $uploadedFile アップロードされたCSVファイル
+     * @param int|null $skipRows スキップする行数
+     * @param string $delimiter カンマ区切り以外の場合の区切り文字
+     * @param string $enclosure エンクロージャ
+     * @param string $escapeChar エスケープ文字
+     * @return array CSVファイルの内容を格納した配列
+     * @throws Exception
+     */
+    public function convertCsvToArray(
+        UploadedFile $uploadedFile,
+        ?int         $skipRows = null,
+        string       $delimiter = ',',
+        string       $enclosure = '"',
+        string       $escapeChar = '\\',
+    ): array
+    {
+        $path = $uploadedFile->getPathname();
+
+        if (!file_exists($path)) {
+            throw new Exception('CSVファイルが存在しません。');
+        }
+
+        $handle = fopen($path, 'r');
+        if (!$handle) {
+            throw new Exception('CSVファイルが開けませんでした。');
+        }
+
+        $rows = [];
+        $skipCount = 0;
+        while (($data = fgetcsv($handle, 0, $delimiter, $enclosure, $escapeChar)) !== false) {
+            if (is_int($skipRows) && $skipCount < $skipRows) {
+                $skipCount++;
+                continue;
+            }
+            $rows[] = $data;
+        }
+
+        fclose($handle);
+        return $rows;
+    }
+
+
     /**
      * CSVデータを一時的に生成し、ダウンロードする処理
      *
@@ -18,7 +91,7 @@ trait CsvTrait
 
         $fp = fopen('php://output', 'w');
         foreach ($outputData as $data) {
-            fwrite($fp, $this->convertCsv($data));
+            fwrite($fp, $this->convertArrayToCsv($data));
         }
         fclose($fp);
     }
@@ -41,7 +114,9 @@ trait CsvTrait
     }
 
     /**
-     * @param string $fileName
+     * CSVダウンロード時のレスポンスヘッダー設定処理
+     *
+     * @param string $fileName ダウンロードファイル名
      */
     private function setResponseHeaders(string $fileName): void
     {
@@ -55,7 +130,9 @@ trait CsvTrait
     }
 
     /**
-     * @return string[]
+     * CSVダウンロード時のレスポンスヘッダーテンプレートを取得する処理
+     *
+     * @return string[] レスポンスヘッダーテンプレート
      */
     private function getResponseHeaderTemplate(): array
     {
@@ -69,60 +146,6 @@ trait CsvTrait
             'Connection' => 'close'
         ];
     }
-
-    /**
-     * 配列からcsvデータ用への変換
-     * @param array $array
-     * @param string $toEncoding
-     * @param string $fromEncoding
-     * @param string $lineSeparator
-     * @return string
-     */
-    public function convertCsv(
-        array  $array,
-        string $toEncoding = 'SJIS',
-        string $fromEncoding = 'UTF-8',
-        string $lineSeparator = "\n"
-    ): string
-    {
-        $escArray = [];
-        foreach ($array as $value) {
-            $value = str_replace('"', '""', $value);
-            $value = '"' . $value . '"';
-            $escArray[] = mb_convert_encoding($value, $toEncoding, $fromEncoding);
-        }
-        return implode(',', $escArray) . $lineSeparator;
-    }
-
-    /**
-     * CSVデータから配列への変換
-     * @param string $csvData
-     * @param bool $hasHeader
-     * @param string $toEncoding
-     * @param string $fromEncoding
-     * @return array
-     */
-    public function convertArray(
-        string $csvData,
-        bool   $hasHeader = true,
-        string $toEncoding = 'UTF-8',
-        string $fromEncoding = 'SJIS'
-    ): array
-    {
-        $array = [];
-        $csvData = mb_convert_encoding($csvData, $toEncoding, $fromEncoding);
-        $stream = fopen('data://text/plain;base64,' . base64_encode($csvData), 'r');
-
-        // ヘッダーがある場合は読み飛ばす
-        if ($hasHeader) {
-            fgetcsv($stream);
-        }
-
-        while (($row = fgetcsv($stream)) !== false) {
-            $array[] = $row;
-        }
-        fclose($stream);
-        return $array;
-    }
-
 }
+
+
