@@ -2,12 +2,14 @@
 
 namespace app\Services\Usen\Order\Wrappers\Payment;
 
-class ElectronicMoney
-{
-    private ?string $value;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
 
-    public function __construct(?string $value)
-    {
-        $this->value = $value;
-    }
+/**
+ * ElectronicMoney(電子マネー支払額)
+ * example inputValue:「1000」
+ * example value :「1000」
+ */
+class ElectronicMoney extends BaseWrapper
+{
+    protected bool $isCheckPositiveInteger = true;
 }

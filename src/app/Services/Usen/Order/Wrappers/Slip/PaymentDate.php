@@ -2,12 +2,14 @@
 
 namespace app\Services\Usen\Order\Wrappers\Slip;
 
-class PaymentDate
-{
-    private ?string $value;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
 
-    public function __construct(?string $value)
-    {
-        $this->value = $value;
-    }
+/**
+ * PaymentDate(伝票処理日)
+ * example inputValue:「2022/12/25  19:12:00」
+ * example value :「2022/12/25  19:12:00」
+ */
+class PaymentDate extends BaseWrapper
+{
+    protected string $permittedValueType = 'timestamp';
 }

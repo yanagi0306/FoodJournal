@@ -2,12 +2,16 @@
 
 namespace app\Services\Usen\Order\Wrappers\Slip;
 
-class CustomerSegment
-{
-    private ?string $value;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
 
-    public function __construct(?string $value)
-    {
-        $this->value = $value;
-    }
+/**
+ * CustomerSegment(客層)
+ * example inputValue:「客層:夫婦」
+ * example value :「夫婦」
+ */
+class CustomerSegment extends BaseWrapper
+{
+    protected bool $isExtractRight = false;
+    protected string $permittedValueType = 'string';
+    protected array $invalidValues = [];
 }

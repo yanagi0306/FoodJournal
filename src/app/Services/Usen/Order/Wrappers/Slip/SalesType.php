@@ -1,13 +1,17 @@
 <?php
 
-namespace app\Services\Aspit\Order\Wrappers\Slip;
+namespace app\Services\Usen\Order\Wrappers\Slip;
 
-class SalesType
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
+
+/**
+ * SalesType(販売形態)
+ * example inputValue:「01:店内」
+ * example value :「01」
+ */
+class SalesType extends BaseWrapper
 {
-    private ?string $value;
-
-    public function __construct(?string $value)
-    {
-        $this->value = $value;
-    }
+    protected string $permittedValueType = 'string';
+    protected bool $isExtractLeft = true;
+    protected array $invalidValues = [];
 }

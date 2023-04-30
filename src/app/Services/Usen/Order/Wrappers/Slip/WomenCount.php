@@ -2,12 +2,13 @@
 
 namespace app\Services\Usen\Order\Wrappers\Slip;
 
-class WomenCount
-{
-    private ?string $value;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
 
-    public function __construct(?string $value)
-    {
-        $this->value = $value;
-    }
+/**
+ * WomenCount(女性客数)
+ * example inputValue:「2」
+ * example value :「2」
+ */
+class WomenCount extends BaseWrapper
+{
 }

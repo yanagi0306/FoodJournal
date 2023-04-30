@@ -2,12 +2,15 @@
 
 namespace app\Services\Usen\Order\Wrappers\Slip;
 
-class StoreCd
-{
-    private ?string $value;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
 
-    public function __construct(?string $value)
-    {
-        $this->value = $value;
-    }
+/**
+ * StoreCd(店舗コード)
+ * example inputValue:「001:ＢＥＮＣＩＡ」
+ * example value :「001」
+ */
+class StoreCd extends BaseWrapper
+{
+    protected string $permittedValueType = 'string';
+    protected bool $isExtractLeft = true;
 }

@@ -3,51 +3,52 @@
 namespace app\Services\Usen\Order\Wrappers\Payment;
 
 use App\Exceptions\SkipImportException;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
+use Exception;
 
-class GiftCertNoChange
+/**
+ * GiftCertNoChange(商品券釣無)
+ * example giftCertAmount:支払額:「1000」
+ * example unusedAmount:支払金額差額:「100」
+ * example inputValue:「900」
+ * example value :「900」
+ */
+class GiftCertNoChange extends BaseWrapper
 {
+    protected bool $isCheckPositiveInteger = true;
+
     /**
-     * 支払い金額
+     * 支払金額
      * @var string|null
      */
     private ?string $giftCertAmount;
 
     /**
-     * 支払い金額差額
+     * 支払金額差額
      * @var string|null
      */
     private ?string $unusedAmount;
 
-    private ?string $value;
-
     /**
      * @param string|null $giftCertAmount
      * @param string|null $unusedAmount
-     * @throws SkipImportException
+     * @throws SkipImportException|Exception
      */
     public function __construct(?string $giftCertAmount, ?string $unusedAmount)
     {
         $this->giftCertAmount = $giftCertAmount !== null ? $giftCertAmount : 0;
         $this->unusedAmount = $unusedAmount !== null ? $unusedAmount : 0;
-        $this->value = $this->getUsedAmount();
+        $value = $this->getUsedAmount();
+        Parent::__construct($value);
     }
 
     /**
-     * @return string|null
-     * @throws SkipImportException 使用額が負の場合にスローされる例外。
+     * 使用金額を取得
+     * @return string|int|null
      */
-    public function getUsedAmount(): ?string
+    public function getUsedAmount(): string|int|null
     {
-        $usedAmount = (string)($this->giftCertAmount - $this->unusedAmount);
-        if ($usedAmount == 0) {
-            return null;
-
-        } elseif ($usedAmount > 0) {
-            return $usedAmount;
-
-        } else {
-            throw new SkipImportException('使用金額が負の整数');
-        }
+        return ($this->giftCertAmount - $this->unusedAmount);
     }
 }
 

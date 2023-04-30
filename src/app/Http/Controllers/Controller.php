@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\Common;
 use App\Helpers\UserHelper;
+use App\Logging\AppLogPath;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -38,16 +39,27 @@ class Controller extends BaseController
     private function applyMiddleware(): void
     {
         $this->middleware(function ($request, $next) {
+
+            if (config('logging.channels.app.userId') !== null && config('logging.channels.app.progName') !== null) {
+                return $next($request);
+            }
+
             $user = Auth::user();
             $this->setUserInfo($user ? UserHelper::getUser($user) : null);
             $this->setMethodName($request->route()->getActionMethod());
             $this->setProgName(class_basename($request->route()->getController()));
             $this->logPath = $this->getLogPath();
-            config([
-                'logging.channels.app.logPath' => $this->logPath,
-                'logging.channels.app.userId' => $this->userInfo['id'] ?? null,
-                'logging.channels.app.progName' => $this->progName ?? null,
+
+            // ログチャンネルの設定を動的に変更
+            $appLogPath = app(AppLogPath::class);
+
+            $logger = $appLogPath([
+                'logPath' => $this->logPath,
+                'userId' => $this->userInfo['id'] ?? null,
+                'progName' => $this->progName ?? null,
             ]);
+
+            Log::swap($logger);
             Log::info('[START]>>>>>>>>');
 
             return $next($request);

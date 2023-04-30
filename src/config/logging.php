@@ -121,8 +121,7 @@ return [
         'app' => [
             'driver' => 'custom',
             'via' => App\Logging\AppLogPath::class,
-            'level' => 'info',
-
+            'level' => 'debug', // デバッグレベルのログを出力するように設定
         ],
     ],
 

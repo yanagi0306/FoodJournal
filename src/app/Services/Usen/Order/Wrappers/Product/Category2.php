@@ -2,12 +2,15 @@
 
 namespace app\Services\Usen\Order\Wrappers\Product;
 
-class Category2
-{
-    private ?string $value;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
 
-    public function __construct(?string $value)
-    {
-        $this->value = $value;
-    }
+/**
+ * Category1(商品カテゴリ2)
+ * example inputValue:「デリバリー」
+ * example value :「デリバリー」
+ */
+class Category2 extends BaseWrapper
+{
+    protected string $permittedValueType = 'string';
+    protected array $invalidValues = [];
 }

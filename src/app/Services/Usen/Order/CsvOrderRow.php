@@ -2,6 +2,7 @@
 
 namespace app\Services\Usen;
 
+use Exception;
 use App\Exceptions\SkipImportException;
 use app\Services\Usen\Order\Wrappers\Product;
 use app\Services\Usen\Order\Wrappers\SkipDecision;
@@ -10,13 +11,13 @@ use app\Services\Usen\Order\Wrappers\Payment;
 
 class CsvOrderRow
 {
-    private Payment      $payment;
-    private Product      $product;
+    private Payment $payment;
+    private Product $product;
     private SkipDecision $skipDecision;
-    private Slip         $slip;
+    private Slip $slip;
 
     /**
-     * @throws SkipImportException
+     * @throws SkipImportException|Exception
      */
     public function __construct(array $row)
     {
@@ -29,15 +30,15 @@ class CsvOrderRow
             'giftCertNoChangeDiff' => $row[44],
             'giftCertWithChangeAmount' => $row[45],
             'giftCertWithChangeCashChange' => $row[46],
-            'other' => $row[47],
+            'otherPayment' => $row[47],
         ]);
 
         $this->product = new Product([
-            'productCategory1' => $row[66],
-            'productCategory2' => $row[67],
-            'productCategory3' => $row[68],
-            'productCategory4' => $row[69],
-            'productCategory5' => $row[70],
+            'Category1' => $row[66],
+            'Category2' => $row[67],
+            'Category3' => $row[68],
+            'Category4' => $row[69],
+            'Category5' => $row[70],
             'product' => $row[72],
             'productOption' => $row[73],
             'unitPrice' => $row[76],
@@ -61,6 +62,27 @@ class CsvOrderRow
             'customerSegment' => $row[64],
             'salesType' => $row[91],
         ]);
+    }
+
+    // 各クラスのインスタンスを取得するためのgetterを追加
+    public function getPayment(): Payment
+    {
+        return $this->payment;
+    }
+
+    public function getProduct(): Product
+    {
+        return $this->product;
+    }
+
+    public function getSkipDecision(): SkipDecision
+    {
+        return $this->skipDecision;
+    }
+
+    public function getSlip(): Slip
+    {
+        return $this->slip;
     }
 }
 

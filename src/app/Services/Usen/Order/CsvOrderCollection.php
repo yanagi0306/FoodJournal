@@ -4,7 +4,10 @@ namespace app\Services\Aspit;
 
 use App\Exceptions\SkipImportException;
 use App\Models\Order;
+use app\Services\Usen\CsvOrderRow;
 use ArrayIterator;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use IteratorAggregate;
 
 /**
@@ -18,11 +21,11 @@ class CsvOrderCollection implements IteratorAggregate
      * @var Order[]
      */
     private array $orders = [];
-    private CsvOrderRow $csvOrder;
 
     /**
      *
      * @param array $csvData
+     * @throws Exception
      */
     public function __construct(array $csvData)
     {
@@ -33,17 +36,20 @@ class CsvOrderCollection implements IteratorAggregate
      * CsvDataを元にOrderオブジェクトを生成し、OrderCollectionに格納する
      *
      * @param array $csvData
+     * @throws Exception
      */
     private function addOrdersFromCsv(array $csvData): void
     {
-        foreach ($csvData as $row) {
+        foreach ($csvData as $key => $row) {
             try {
+                Log::info(($key+1) . '行目取込開始');
                 $csvOrder = new CsvOrderRow($row);
                 $this->orders[] = $csvOrder;
             } catch (SkipImportException $e) {
-                // Skip this row and continue with the next one
+                Log::info($e->getMessage());
                 continue;
             }
+            Log::info(($key+1) . '行目取込完了');
         }
     }
 

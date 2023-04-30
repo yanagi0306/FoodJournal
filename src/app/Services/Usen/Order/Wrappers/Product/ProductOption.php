@@ -2,12 +2,15 @@
 
 namespace app\Services\Usen\Order\Wrappers\Product;
 
-class ProductOption
-{
-    private ?string $value;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
 
-    public function __construct(?string $value)
-    {
-        $this->value = $value;
-    }
+/**
+ * ProductOption(サブメニュー)
+ * example inputValue:「白米x1 / 厳選カンパチ60gx1」
+ * example value :「白米x1 / 厳選カンパチ60gx1」
+ */
+class ProductOption extends BaseWrapper
+{
+    protected array $invalidValues = [];
+    protected string $permittedValueType = 'string';
 }

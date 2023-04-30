@@ -2,28 +2,14 @@
 
 namespace app\Services\Usen\Order\Wrappers\Payment;
 
-use App\Exceptions\SkipImportException;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
 
-class Cash
+/**
+ * Cash(現金支払額)
+ * example inputValue:「1000」
+ * example value :「1000」
+ */
+class Cash extends BaseWrapper
 {
-    private ?string $value;
-
-    /**
-     * @param string|null $value 値
-     * @throws SkipImportException
-     */
-    public function __construct(?string $value)
-    {
-        $intValue = intval($value);
-
-        if ($intValue == 0) {
-            $this->value = null;
-
-        } elseif ($intValue > 0) {
-            $this->value = $intValue;
-
-        } else {
-            throw new SkipImportException('負の整数は許可されません');
-        }
-    }
+    protected bool $isCheckPositiveInteger = true;
 }

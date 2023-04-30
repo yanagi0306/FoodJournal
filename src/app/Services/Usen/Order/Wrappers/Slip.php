@@ -2,6 +2,8 @@
 
 namespace app\Services\Usen\Order\Wrappers;
 
+use App\Exceptions\SkipImportException;
+use Exception;
 use app\Services\Usen\Order\Wrappers\Slip\CustomerSegment;
 use app\Services\Usen\Order\Wrappers\Slip\MenCount;
 use app\Services\Usen\Order\Wrappers\Slip\OrderDate;
@@ -22,6 +24,10 @@ class Slip
     private CustomerSegment $customerSegment;
     private SalesType       $salesType;
 
+    /**
+     * @param array $row
+     * @throws SkipImportException|Exception
+     */
     public function __construct(array $row)
     {
         $this->storeCd         = new StoreCd($row['storeCd']);

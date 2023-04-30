@@ -2,12 +2,15 @@
 
 namespace app\Services\Usen\Order\Wrappers\Slip;
 
-class SlipNumber
-{
-    private ?string $value;
+use app\Services\Usen\Order\Wrappers\BaseWrapper;
 
-    public function __construct(?string $value)
-    {
-        $this->value = $value;
-    }
+/**
+ * SlipNumber(伝票番号)
+ * example inputValue:「No:202200100012152」
+ * example value :「202200100012152」
+ */
+class SlipNumber extends BaseWrapper
+{
+    protected string $permittedValueType = 'string';
+    protected bool $isExtractRight = true;
 }

@@ -12,16 +12,16 @@ class AppLogPath
     public function __invoke(array $config): Logger
     {
         $date = date('ymd');
-        $logPath      = $config['logPath'] ?? "/logs/app_{$date}.log";
-        $userId       = $config['userId'] ?? null;
-        $progName     = $config['progName'] ?? null;
+        $logPath = $config['logPath'] ?? "/logs/app_{$date}.log";
+        $userId = $config['userId'] ?? null;
+        $progName = $config['progName'] ?? null;
         $userIdFormat = ($userId !== null) ? '[userId:' . $userId . '] ' : '';
-        $format       = "[%datetime%{$userIdFormat}%level_name%%message%{$progName}:%extra.line%" . PHP_EOL;
-        $dateFormat   = 'Y-m-d H:i:s';
+        $format = "[%datetime%{$userIdFormat}%level_name% %message%{$progName}:%extra.line%" . PHP_EOL;
+        $dateFormat = 'Y-m-d H:i:s';
 
         $lineFormatter = new LineFormatter($format, $dateFormat, true, true);
 
-        $handler       = new StreamHandler($logPath, Logger::INFO);
+        $handler = new StreamHandler($logPath, Logger::DEBUG);
         $handler->setFormatter($lineFormatter);
 
         $logger = new Logger('app');
