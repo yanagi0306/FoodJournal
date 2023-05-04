@@ -1,10 +1,9 @@
 <?php
 
-namespace app\Services\Aspit;
+namespace App\Services\Usen\Order;
 
 use App\Exceptions\SkipImportException;
 use App\Models\Order;
-use app\Services\Usen\CsvOrderRow;
 use ArrayIterator;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +22,6 @@ class CsvOrderCollection implements IteratorAggregate
     private array $orders = [];
 
     /**
-     *
      * @param array $csvData
      * @throws Exception
      */
@@ -33,23 +31,31 @@ class CsvOrderCollection implements IteratorAggregate
     }
 
     /**
-     * CsvDataを元にOrderオブジェクトを生成し、OrderCollectionに格納する
-     *
+     * CsvDataを元にOrderオブジェクトを生成し、伝票番号keyにOrderCollectionに格納する
      * @param array $csvData
      * @throws Exception
      */
     private function addOrdersFromCsv(array $csvData): void
     {
-        foreach ($csvData as $key => $row) {
+        $lineNumber = 0;
+
+        foreach ($csvData as $row) {
+            $lineNumber++;
+            Log::info($lineNumber . '行目取込開始');
+
             try {
-                Log::info(($key+1) . '行目取込開始');
                 $csvOrder = new CsvOrderRow($row);
-                $this->orders[] = $csvOrder;
+
+                // 伝票番号ごとに配列に格納
+                $slipNumber                = $csvOrder->getSlip()->getSlipNumber();
+                $this->orders[$slipNumber] = $csvOrder;
+
             } catch (SkipImportException $e) {
                 Log::info($e->getMessage());
                 continue;
             }
-            Log::info(($key+1) . '行目取込完了');
+
+            Log::info(($lineNumber) . '行目取込完了');
         }
     }
 

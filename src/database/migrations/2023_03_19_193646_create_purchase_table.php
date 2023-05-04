@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['store_id', 'purchase_supplier_id', 'voucher', 'date']);
+            $table->unique(['store_id', 'purchase_supplier_id', 'slip_number', 'date']);
 
             // 外部キー制約の設定
             $table->foreign('store_id')->references('id')->on('store')->onDelete('cascade');

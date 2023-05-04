@@ -1,22 +1,25 @@
 <?php
 
-namespace app\Services\Usen\Order\Wrappers;
+namespace App\Services\Usen\Order\Wrappers;
 
 use App\Exceptions\SkipImportException;
+use App\Services\Usen\Order\Wrappers\Product\Category1;
+use App\Services\Usen\Order\Wrappers\Product\Category2;
+use App\Services\Usen\Order\Wrappers\Product\Category3;
+use App\Services\Usen\Order\Wrappers\Product\Category4;
+use App\Services\Usen\Order\Wrappers\Product\Category5;
+use App\Services\Usen\Order\Wrappers\Product\ProductCd;
+use App\Services\Usen\Order\Wrappers\Product\ProductName;
+use App\Services\Usen\Order\Wrappers\Product\ProductOption;
+use App\Services\Usen\Order\Wrappers\Product\Quantity;
+use App\Services\Usen\Order\Wrappers\Product\UnitCost;
+use App\Services\Usen\Order\Wrappers\Product\UnitPrice;
 use Exception;
-use app\Services\Usen\Order\Wrappers\Product\Category1;
-use app\Services\Usen\Order\Wrappers\Product\Category2;
-use app\Services\Usen\Order\Wrappers\Product\Category3;
-use app\Services\Usen\Order\Wrappers\Product\Category4;
-use app\Services\Usen\Order\Wrappers\Product\Category5;
-use app\Services\Usen\Order\Wrappers\Product\ProductCd;
-use app\Services\Usen\Order\Wrappers\Product\ProductName;
-use app\Services\Usen\Order\Wrappers\Product\ProductOption;
-use app\Services\Usen\Order\Wrappers\Product\Quantity;
-use app\Services\Usen\Order\Wrappers\Product\UnitCost;
-use app\Services\Usen\Order\Wrappers\Product\UnitPrice;
 
 
+/**
+ * 注文商品クラス
+ */
 class Product
 {
     private ProductCd     $productCd;
@@ -37,17 +40,17 @@ class Product
      */
     public function __construct(array $row)
     {
-        $this->productCd     = new ProductCd($row['product']);
-        $this->productName   = new ProductName($row['product']);
-        $this->quantity      = new Quantity($row['product_']);
-        $this->unitCost      = new UnitCost($row['unitCost']);
-        $this->unitPrice     = new UnitPrice($row['unitPrice']);
-        $this->category1     = new Category1($row['category1']);
-        $this->category2     = new Category2($row['category2']);
-        $this->category3     = new Category3($row['category3']);
-        $this->category4     = new Category4($row['category4']);
-        $this->category5     = new Category5($row['category5']);
-        $this->productOption = new ProductOption($row['productOption']);
+        $this->productCd     = new ProductCd($row['product'], '商品コード');
+        $this->productName   = new ProductName($row['product'], '商品名');
+        $this->quantity      = new Quantity($row['quantity'], '数量');
+        $this->unitCost      = new UnitCost($row['unitCost'], '理論原価');
+        $this->unitPrice     = new UnitPrice($row['unitPrice'], '販売価格');
+        $this->category1     = new Category1($row['category1'], 'カテゴリ1');
+        $this->category2     = new Category2($row['category2'], 'カテゴリ2');
+        $this->category3     = new Category3($row['category3'], 'カテゴリ3');
+        $this->category4     = new Category4($row['category4'], 'カテゴリ4');
+        $this->category5     = new Category5($row['category5'], 'カテゴリ5');
+        $this->productOption = new ProductOption($row['productOption'], '商品オプション');
     }
 }
 

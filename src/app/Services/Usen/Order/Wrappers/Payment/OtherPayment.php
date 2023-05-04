@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Services\Usen\Order\Wrappers\Payment;
+namespace App\Services\Usen\Order\Wrappers\Payment;
 
-use app\Services\Usen\Order\Wrappers\BaseWrapper;
+use App\Services\Usen\Order\Wrappers\BaseWrapper;
 
 /**
  * OtherPayment(その他支払額)
@@ -11,5 +11,4 @@ use app\Services\Usen\Order\Wrappers\BaseWrapper;
  */
 class OtherPayment extends BaseWrapper
 {
-    protected bool $isCheckPositiveInteger = true;
 }

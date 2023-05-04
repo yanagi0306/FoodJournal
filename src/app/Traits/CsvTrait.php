@@ -19,19 +19,17 @@ trait CsvTrait
      * @return string CSVデータ
      */
     public function convertArrayToCsv(
-        array  $array,
+        array $array,
         string $toEncoding = 'SJIS',
         string $fromEncoding = 'UTF-8',
         string $lineSeparator = "\n"
-    ): string
-    {
-        $escArray = [];
-        foreach ($array as $value) {
+    ): string {
+        $escapedArray = array_map(function ($value) use ($toEncoding, $fromEncoding) {
             $value = str_replace('"', '""', $value);
             $value = '"' . $value . '"';
-            $escArray[] = mb_convert_encoding($value, $toEncoding, $fromEncoding);
-        }
-        return implode(',', $escArray) . $lineSeparator;
+            return mb_convert_encoding($value, $toEncoding, $fromEncoding);
+        }, $array);
+        return implode(',', $escapedArray) . $lineSeparator;
     }
 
     /**
@@ -120,12 +118,8 @@ trait CsvTrait
      */
     private function setResponseHeaders(string $fileName): void
     {
-        foreach ($this->getResponseHeaderTemplate() as $key => $val) {
-            $setVal = $val;
-            if ($key === 'Content-Disposition') {
-                $setVal = str_replace('%file_name%', $fileName, $setVal);
-            }
-            header("$key: $setVal");
+        foreach ($this->getResponseHeaderTemplate($fileName) as $key => $val) {
+            header("$key: $val");
         }
     }
 
@@ -134,11 +128,11 @@ trait CsvTrait
      *
      * @return string[] レスポンスヘッダーテンプレート
      */
-    private function getResponseHeaderTemplate(): array
+    private function getResponseHeaderTemplate(string $fileName): array
     {
         return [
             'Content-type' => 'application/octet-stream; charset=Shift_JIS',
-            'Content-Disposition' => 'attachment; filename=%file_name%',
+            'Content-Disposition' => "attachment; filename=$fileName",
             'X-Content-Type-Options' => 'nosniff',
             'Pragma' => 'no-cache',
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',

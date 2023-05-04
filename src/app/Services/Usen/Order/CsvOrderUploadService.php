@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Services\Usen;
+namespace App\Services\Usen\Order;
 
 use App\Traits\CsvTrait;
 use Exception;
@@ -16,10 +16,9 @@ class CsvOrderUploadService
 
     /**
      * CSVデータを取り込み、データベースに登録するメソッド
-     *
      * @param $csv
      * @return bool 登録の成功/失敗
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     public function uploadOrder($csv): bool
     {

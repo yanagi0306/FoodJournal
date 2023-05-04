@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Files;
 
 use App\Constants\Common;
 use Exception;
-use InvalidArgumentException;
 use Illuminate\Http\UploadedFile;
 
 

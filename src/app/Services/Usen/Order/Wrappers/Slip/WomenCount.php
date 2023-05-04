@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Services\Usen\Order\Wrappers\Slip;
+namespace App\Services\Usen\Order\Wrappers\Slip;
 
-use app\Services\Usen\Order\Wrappers\BaseWrapper;
+use App\Services\Usen\Order\Wrappers\BaseWrapper;
 
 /**
  * WomenCount(女性客数)

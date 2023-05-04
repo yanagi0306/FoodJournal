@@ -1,9 +1,9 @@
 <?php
 
-namespace app\Services\Usen\Order\Wrappers\Payment;
+namespace App\Services\Usen\Order\Wrappers\Payment;
 
 use App\Exceptions\SkipImportException;
-use app\Services\Usen\Order\Wrappers\BaseWrapper;
+use App\Services\Usen\Order\Wrappers\BaseWrapper;
 use Exception;
 
 /**
@@ -15,8 +15,6 @@ use Exception;
  */
 class GiftCertNoChange extends BaseWrapper
 {
-    protected bool $isCheckPositiveInteger = true;
-
     /**
      * 支払金額
      * @var string|null
@@ -39,7 +37,7 @@ class GiftCertNoChange extends BaseWrapper
         $this->giftCertAmount = $giftCertAmount !== null ? $giftCertAmount : 0;
         $this->unusedAmount = $unusedAmount !== null ? $unusedAmount : 0;
         $value = $this->getUsedAmount();
-        Parent::__construct($value);
+        Parent::__construct($value, '商品券釣無');
     }
 
     /**

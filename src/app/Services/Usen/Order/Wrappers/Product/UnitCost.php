@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Services\Usen\Order\Wrappers\Product;
+namespace App\Services\Usen\Order\Wrappers\Product;
 
-use app\Services\Usen\Order\Wrappers\BaseWrapper;
+use App\Services\Usen\Order\Wrappers\BaseWrapper;
 
 /**
  * UnitCost(理論原価)
@@ -11,7 +11,6 @@ use app\Services\Usen\Order\Wrappers\BaseWrapper;
  */
 class UnitCost extends BaseWrapper
 {
-    protected string $permittedValueType = 'float';
-    protected bool $isCheckPositiveInteger = true;
+    protected string $permittedValueType = 'double';
     protected array $invalidValues = [null, '', 0];
 }

@@ -7,16 +7,17 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 
-class AppLogPath
+class ActionLog
 {
     public function __invoke(array $config): Logger
     {
         $date = date('ymd');
         $logPath = $config['logPath'] ?? "/logs/app_{$date}.log";
         $userId = $config['userId'] ?? null;
+        $userName = $config['userName'] ?? null;
         $progName = $config['progName'] ?? null;
-        $userIdFormat = ($userId !== null) ? '[userId:' . $userId . '] ' : '';
-        $format = "[%datetime%{$userIdFormat}%level_name% %message%{$progName}:%extra.line%" . PHP_EOL;
+        $userIdFormat = ($userId !== null) ? "[id:{$userId} name:{$userName}]"  : '';
+        $format = "[%datetime%{$userIdFormat}%level_name% %message%{$progName}:%extra.line%\n";
         $dateFormat = 'Y-m-d H:i:s';
 
         $lineFormatter = new LineFormatter($format, $dateFormat, true, true);
@@ -24,12 +25,19 @@ class AppLogPath
         $handler = new StreamHandler($logPath, Logger::DEBUG);
         $handler->setFormatter($lineFormatter);
 
-        $logger = new Logger('app');
+        $handler->pushProcessor(new IntrospectionProcessor(Logger::DEBUG, [
+            'App\Logging\ActionLog',
+            'Monolog\Logger',
+            'Illuminate\Log\Writer',
+            'Illuminate\Log\Logger',
+        ]));
+
+        $logger = new Logger('action');
         $logger->pushHandler($handler);
-        $logger->pushProcessor(new IntrospectionProcessor(Logger::DEBUG, ['App\Logging\AppLogPath', 'Monolog\Logger', 'Illuminate\Log\Writer', 'Illuminate\Log\Logger']));
 
         return $logger;
     }
 }
+
 
 

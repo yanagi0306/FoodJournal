@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Services\Usen\Order\Wrappers\SkipDecision;
+namespace App\Services\Usen\Order\Wrappers\SkipDecision;
 
-use app\Services\Usen\Order\Wrappers\BaseWrapper;
+use App\Services\Usen\Order\Wrappers\BaseWrapper;
 
 /**
  * PaymentStatus(支払いステータス)

@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Services\Usen\Order\Wrappers\Product;
+namespace App\Services\Usen\Order\Wrappers\Product;
 
-use app\Services\Usen\Order\Wrappers\BaseWrapper;
+use App\Services\Usen\Order\Wrappers\BaseWrapper;
 
 /**
  * Quantity(数量)
@@ -11,7 +11,5 @@ use app\Services\Usen\Order\Wrappers\BaseWrapper;
  */
 class Quantity extends BaseWrapper
 {
-    protected string $permittedValueType = 'integer';
-    protected bool $isCheckPositiveInteger = true;
     protected array $invalidValues = [null, '', 0];
 }

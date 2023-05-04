@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Services\Usen\Order\Wrappers\Slip;
+namespace App\Services\Usen\Order\Wrappers\Slip;
 
-use app\Services\Usen\Order\Wrappers\BaseWrapper;
+use App\Services\Usen\Order\Wrappers\BaseWrapper;
 
 /**
  * OrderDate(伝票発行日)
@@ -12,4 +12,5 @@ use app\Services\Usen\Order\Wrappers\BaseWrapper;
 class OrderDate extends BaseWrapper
 {
     protected string $permittedValueType = 'timestamp';
+    protected bool $isTrimSpaces = false;
 }

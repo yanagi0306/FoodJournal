@@ -1,13 +1,16 @@
 <?php
 
-namespace app\Services\Usen\Order\Wrappers;
+namespace App\Services\Usen\Order\Wrappers;
 
 use App\Exceptions\SkipImportException;
+use App\Services\Usen\Order\Wrappers\SkipDecision\AggregateFlag;
+use App\Services\Usen\Order\Wrappers\SkipDecision\OrderStatus;
+use App\Services\Usen\Order\Wrappers\SkipDecision\PaymentStatus;
 use Exception;
-use app\Services\Usen\Order\Wrappers\SkipDecision\AggregateFlag;
-use app\Services\Usen\Order\Wrappers\SkipDecision\OrderStatus;
-use app\Services\Usen\Order\Wrappers\SkipDecision\PaymentStatus;
 
+/**
+ * 注文データ取込判定クラス
+ */
 class SkipDecision
 {
     private AggregateFlag $aggregateFlag;
@@ -20,9 +23,9 @@ class SkipDecision
      */
     public function __construct(array $row)
     {
-        $this->aggregateFlag = new AggregateFlag($row['aggregateFlag']);
-        $this->paymentStatus = new PaymentStatus($row['paymentStatus']);
-        $this->orderStatus   = new OrderStatus($row['orderStatus']);
+        $this->aggregateFlag = new AggregateFlag($row['aggregateFlag'], '集計フラグ');
+        $this->paymentStatus = new PaymentStatus($row['paymentStatus'], '支払ステータス');
+        $this->orderStatus   = new OrderStatus($row['orderStatus'], 'オーダーステータス');
     }
 }
 

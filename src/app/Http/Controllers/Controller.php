@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\Common;
 use App\Helpers\UserHelper;
-use App\Logging\AppLogPath;
+use App\Logging\ActionLog;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -38,6 +38,7 @@ class Controller extends BaseController
      */
     private function applyMiddleware(): void
     {
+
         $this->middleware(function ($request, $next) {
 
             if (config('logging.channels.app.userId') !== null && config('logging.channels.app.progName') !== null) {
@@ -50,16 +51,18 @@ class Controller extends BaseController
             $this->setProgName(class_basename($request->route()->getController()));
             $this->logPath = $this->getLogPath();
 
-            // ログチャンネルの設定を動的に変更
-            $appLogPath = app(AppLogPath::class);
+// ログチャンネルの設定を動的に変更
+            $actionLog = app(ActionLog::class);
 
-            $logger = $appLogPath([
-                'logPath' => $this->logPath,
-                'userId' => $this->userInfo['id'] ?? null,
+            $handler = $actionLog([
+                'logPath'  => $this->logPath,
+                'userId'   => $this->userInfo['id'] ?? null,
+                'userName' => $this->userInfo['name'] ?? null,
                 'progName' => $this->progName ?? null,
             ]);
 
-            Log::swap($logger);
+            app('log')->getLogger()->setHandlers([$handler->getHandlers()[0]]);
+
             Log::info('[START]>>>>>>>>');
 
             return $next($request);
@@ -69,7 +72,6 @@ class Controller extends BaseController
 
     /**
      * ユーザー情報を設定する
-     *
      * @param ?array $userInfo ユーザー情報
      */
     private function setUserInfo(?array $userInfo): void
@@ -78,7 +80,6 @@ class Controller extends BaseController
     }
 
     /**
-     *
      * @param string $methodName メソッド名
      */
     private function setMethodName(string $methodName): void
@@ -87,7 +88,6 @@ class Controller extends BaseController
     }
 
     /**
-     *
      * @param string $progName プログラム名
      */
     private function setProgName(string $progName): void
@@ -99,7 +99,7 @@ class Controller extends BaseController
     {
         $date = date('Ymd');
 
-        if ($this->userInfo !== null) {
+        if ($this->userInfo !== null && $this->progName !== null) {
             $logDir = Common::LOGS_DIR . "/{$this->userInfo['company_id']}";
 
             if (!file_exists($logDir)) {
