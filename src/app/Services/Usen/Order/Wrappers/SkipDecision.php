@@ -11,7 +11,7 @@ use Exception;
 /**
  * 注文データ取込判定クラス
  */
-class SkipDecision
+class SkipDecision extends ColumnGroupBase
 {
     private AggregateFlag $aggregateFlag;
     private PaymentStatus $paymentStatus;

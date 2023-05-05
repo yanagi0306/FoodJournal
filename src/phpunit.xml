@@ -17,6 +17,7 @@
     </testsuites>
     <php>
         <env name="APP_LOG_LEVEL" value="debug"/>
-        <env name="LOG_CHANNEL" value="app"/>
+        <env name="APP_LOG_CHANNEL" value="test"/>
+<!--        <env name="LOG_CHANNEL" value="test"/>    -->
     </php>
 </phpunit>

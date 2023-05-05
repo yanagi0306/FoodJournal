@@ -14,7 +14,7 @@ protected $table = 'store';
 
     protected $fillable = [
         'company_id',
-        'store_cd',
+        'order_store_cd',
         'purchase_store_cd',
         'store_name',
         'mail',

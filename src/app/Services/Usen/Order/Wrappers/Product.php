@@ -10,7 +10,7 @@ use App\Services\Usen\Order\Wrappers\Product\Category4;
 use App\Services\Usen\Order\Wrappers\Product\Category5;
 use App\Services\Usen\Order\Wrappers\Product\ProductCd;
 use App\Services\Usen\Order\Wrappers\Product\ProductName;
-use App\Services\Usen\Order\Wrappers\Product\ProductOption;
+use App\Services\Usen\Order\Wrappers\Product\OrderOption;
 use App\Services\Usen\Order\Wrappers\Product\Quantity;
 use App\Services\Usen\Order\Wrappers\Product\UnitCost;
 use App\Services\Usen\Order\Wrappers\Product\UnitPrice;
@@ -20,7 +20,7 @@ use Exception;
 /**
  * 注文商品クラス
  */
-class Product
+class Product extends ColumnGroupBase
 {
     private ProductCd     $productCd;
     private ProductName   $productName;
@@ -29,7 +29,7 @@ class Product
     private Category3     $category3;
     private Category4     $category4;
     private Category5     $category5;
-    private ProductOption $productOption;
+    private OrderOption   $orderOption;
     private Quantity      $quantity;
     private UnitCost      $unitCost;
     private UnitPrice     $unitPrice;
@@ -50,7 +50,7 @@ class Product
         $this->category3     = new Category3($row['category3'], 'カテゴリ3');
         $this->category4     = new Category4($row['category4'], 'カテゴリ4');
         $this->category5     = new Category5($row['category5'], 'カテゴリ5');
-        $this->productOption = new ProductOption($row['productOption'], '商品オプション');
+        $this->orderOption   = new OrderOption($row['orderOption'], 'オーダーオプション');
     }
 }
 

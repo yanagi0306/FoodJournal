@@ -122,9 +122,18 @@ return [
         'action' => [
             'driver'     => 'custom',
             'via'        => ActionLog::class,
-            'level'      => 'debug', // 指定したハンドラで出力するログレベル
-            'activation' => 'error', // このログレベル以上で指定したハンドラで出力するレベルのログを出力する
-            'pass'       => 'info',// このログレベル以上は常に出力する
+            'level'      => 'debug',
+            // 指定したハンドラで出力するログレベル
+            'activation' => 'error',
+            // このログレベル以上で指定したハンドラで出力するレベルのログを出力する
+            'pass'       => 'info',
+            // このログレベル以上は常に出力する
+        ],
+        'test'   => [
+            'driver' => 'custom',
+            'via'    => App\Logging\TestLog::class,
+            'path'   => storage_path('logs/test.log'),
+            'level'  => env('LOG_LEVEL', 'debug'),
         ],
     ],
 

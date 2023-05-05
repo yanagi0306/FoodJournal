@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderProduct extends BaseModel
@@ -14,10 +13,17 @@ class OrderProduct extends BaseModel
 
     protected $fillable = [
         'order_id',
-        'product_master_cd',
+        'product_cd',
+        'product_name',
         'quantity',
         'unit_price',
+        'unit_cost',
         'order_options',
+        'category1',
+        'category2',
+        'category3',
+        'category4',
+        'category5',
     ];
 
     /**

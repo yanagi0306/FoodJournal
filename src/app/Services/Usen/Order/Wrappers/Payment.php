@@ -15,15 +15,15 @@ use Exception;
 /**
  * 注文支払クラス
  */
-class Payment
+class Payment extends ColumnGroupBase
 {
-    private Cash               $cash;
-    private CreditCard         $creditCard;
-    private Points             $points;
-    private ElectronicMoney    $electronicMoney;
-    private GiftCertNoChange   $giftCertNoChange;
+    private Cash $cash;
+    private CreditCard $creditCard;
+    private Points $points;
+    private ElectronicMoney $electronicMoney;
+    private GiftCertNoChange $giftCertNoChange;
     private GiftCertWithChange $giftCertWithChange;
-    private OtherPayment       $otherPayment;
+    private OtherPayment $otherPayment;
 
     /**
      * @param array $row

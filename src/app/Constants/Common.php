@@ -4,7 +4,6 @@ namespace App\Constants;
 
 /**
  * 共通定数クラス
- *
  *  <<制約事項>>
  *  ・すべてapp_config.phpで呼び出して使用します。
  *  ・const以外を定義することは禁止します。
@@ -17,9 +16,11 @@ class Common
      * FoodJournal ディレクトリ階層
      */
     const BASE_DIR = '/workspace';
-    const LOGS_DIR = '/logs';
+//    const LOGS_DIR = '/logs';
+    const LOGS_DIR = '/workspace/storage/logs';
     const DATA_DIR = '/data';
     const UPLOAD_DIR = '/data/upload';
+
 }
 
 

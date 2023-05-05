@@ -3,7 +3,7 @@
 namespace App\Services\Usen\Order\Wrappers\Payment;
 
 use App\Exceptions\SkipImportException;
-use App\Services\Usen\Order\Wrappers\BaseWrapper;
+use App\Services\Usen\Order\Wrappers\ColumnBase;
 use Exception;
 
 /**
@@ -13,7 +13,7 @@ use Exception;
  * example inputValue:「900」
  * example value :「900」
  */
-class GiftCertNoChange extends BaseWrapper
+class GiftCertNoChange extends ColumnBase
 {
     /**
      * 支払金額

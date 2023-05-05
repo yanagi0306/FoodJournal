@@ -8,18 +8,14 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 
-class ActionLog
+class TestLog
 {
-    public function __invoke(array $config): Logger
+    public function __invoke(): Logger
     {
-        $date       = date('ymd');
-        $logPath    = $config['logPath'] ?? Common::LOGS_DIR . "/app_{$date}.log";
-        $userId     = $config['userId'] ?? null;
-        $userName   = $config['userName'] ?? null;
-        $methodName = $config['methodName'] ?? null;
-        $infoFormat = ($userId !== null) ? "id:{$userId} name:{$userName}" : '';
-        $format     = "[%datetime%][{$infoFormat}][%level_name%:{$methodName}]%message%[%extra.class%:%extra.line%]" . PHP_EOL;
+        $date = date('ymd');
+        $logPath    = Common::LOGS_DIR . "/test_{$date}.log";
         $dateFormat = 'Y-m-d H:i:s';
+        $format     = '[%datetime%][%level_name%] %message% [%extra.class%:%extra.line%]' . PHP_EOL;
 
         $lineFormatter = new LineFormatter($format, $dateFormat, true, true);
 
@@ -27,7 +23,7 @@ class ActionLog
         $handler->setFormatter($lineFormatter);
 
         $handler->pushProcessor(new IntrospectionProcessor(Logger::DEBUG, [
-            'App\Logging\ActionLog',
+            'App\Logging\TestLog',
             'Monolog\Logger',
             'Monolog\Handler\StreamHandler',
             'Illuminate\Log\Writer',
@@ -36,13 +32,9 @@ class ActionLog
             'Illuminate\Support\Facades\Facade',
         ]));
 
-
-        $logger = new Logger('action');
+        $logger = new Logger('test');
         $logger->pushHandler($handler);
 
         return $logger;
     }
 }
-
-
-

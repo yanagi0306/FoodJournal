@@ -8,14 +8,17 @@ use App\Helpers\ValidationHelper;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class BaseWrapper
+/**
+ * 各カラムクラスの継承元クラス
+ */
+abstract class ColumnBase
 {
 
     /**
      * 取り込まれる値
      * @var mixed
      */
-    public mixed $value = null;
+    protected mixed $value = null;
 
     /**
      * 取り込まれた値の名称
@@ -135,7 +138,15 @@ class BaseWrapper
         if ($this->internalErrorMessage) {
             throw new Exception($this->internalErrorMessage);
         }
+    }
 
+    /**
+     * 値の取得
+     * @return mixed value
+     */
+    public function getValue() : mixed
+    {
+        return $this->value;
     }
 
     /**

@@ -39,9 +39,9 @@ class Controller extends BaseController
     private function applyMiddleware(): void
     {
 
-        $this->middleware(function ($request, $next) {
+        $this->middleware(function($request, $next) {
 
-            if (config('logging.channels.app.userId') !== null && config('logging.channels.app.progName') !== null) {
+            if (config('logging.channels.action.userId') !== null && config('logging.channels.action.progName') !== null) {
                 return $next($request);
             }
 
@@ -55,10 +55,11 @@ class Controller extends BaseController
             $actionLog = app(ActionLog::class);
 
             $handler = $actionLog([
-                'logPath'  => $this->logPath,
-                'userId'   => $this->userInfo['id'] ?? null,
-                'userName' => $this->userInfo['name'] ?? null,
-                'progName' => $this->progName ?? null,
+                'logPath'    => $this->logPath,
+                'userId'     => $this->userInfo['id'] ?? null,
+                'userName'   => $this->userInfo['name'] ?? null,
+                'progName'   => $this->progName ?? null,
+                'methodName' => $this->methodName ?? null,
             ]);
 
             app('log')->getLogger()->setHandlers([$handler->getHandlers()[0]]);

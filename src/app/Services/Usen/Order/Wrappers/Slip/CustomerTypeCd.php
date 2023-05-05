@@ -2,14 +2,14 @@
 
 namespace App\Services\Usen\Order\Wrappers\Slip;
 
-use App\Services\Usen\Order\Wrappers\BaseWrapper;
+use App\Services\Usen\Order\Wrappers\ColumnBase;
 
 /**
- * CustomerSegment(客層)
+ * CustomerTypeCd(客層)
  * example inputValue:「客層:夫婦」
  * example value :「夫婦」
  */
-class CustomerSegment extends BaseWrapper
+class CustomerTypeCd extends ColumnBase
 {
     protected bool $isExtractRight = false;
     protected string $permittedValueType = 'string';

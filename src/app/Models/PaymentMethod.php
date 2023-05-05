@@ -17,6 +17,7 @@ class PaymentMethod extends BaseModel
         'company_id',
         'payment_cd',
         'payment_name',
+        'property_name',
         'commission_rate',
         'is_hidden',
     ];

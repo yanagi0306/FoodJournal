@@ -29,6 +29,7 @@ class TruncateAndSeed extends Command
             'users',
             'company',
             'store',
+            'payment_method',
         ];
 
         // PostgreSQLでは、FOREIGN_KEY_CHECKSの代わりにDISABLE TRIGGERを使用
@@ -59,6 +60,4 @@ class TruncateAndSeed extends Command
         $this->comment('Seeding database...');
         Artisan::call('db:seed');
     }
-
-
 }

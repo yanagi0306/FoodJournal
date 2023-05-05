@@ -1,6 +1,5 @@
 <script setup>
-import {ref} from 'vue';
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import { Link } from '@inertiajs/vue3';
 import SvgIcon from "@/Components/Icons/SvgIcon.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
@@ -14,9 +13,9 @@ import DropdownLink from "@/Components/DropdownLink.vue";
             <div class="header_inner_left">
                 <div class="d-inline-flex bd-highlight">
                     <div class="app_logo p-1 mx-3 bd-highlight">
-                        <a class="navbar-brand" href="{{'/'}}">
+                        <Link class="navbar-brand" href='/'>
                             <img src="/images/food_journal_logo.png" class="navbar-brand-img" alt="logo" width="175" height="25">
-                        </a>
+                        </link>
                     </div>
                 </div>
             </div>

@@ -2,6 +2,8 @@
 
 namespace App\Services\Usen\Order;
 
+use App\Models\CustomerType;
+use App\Models\Store;
 use Exception;
 use App\Exceptions\SkipImportException;
 use App\Services\Usen\Order\Wrappers\Product;
@@ -16,12 +18,26 @@ class CsvOrderRow
     private Product $product;
     private SkipDecision $skipDecision;
     private Slip $slip;
+    private int $companyId;
 
     /**
      * @throws SkipImportException|Exception
      */
-    public function __construct(array $row)
+    public function __construct(array $row, $companyId)
     {
+        $this->companyId = $companyId;
+
+        $this->slip = new Slip([
+            'storeCd'        => $row[1],
+            'slipNumber'     => $row[2],
+            'orderDate'      => $row[12],
+            'paymentDate'    => $row[13],
+            'menCount'       => $row[19],
+            'womenCount'     => $row[20],
+            'customerTypeCd' => $row[64],
+            'salesType'      => $row[91],
+        ]);
+
         $this->payment = new Payment([
             'cash'                     => $row[39],
             'creditCard'               => $row[40],
@@ -52,38 +68,132 @@ class CsvOrderRow
             'orderStatus'   => $row[90],
             'paymentStatus' => $row[11],
         ]);
-
-        $this->slip = new Slip([
-            'storeCd'         => $row[1],
-            'slipNumber'      => $row[2],
-            'orderDate'       => $row[12],
-            'paymentDate'     => $row[13],
-            'menCount'        => $row[19],
-            'womenCount'      => $row[20],
-            'customerSegment' => $row[64],
-            'salesType'       => $row[91],
-        ]);
     }
 
-    // 各クラスのインスタンスを取得するためのgetterを追加
-    public function getPayment(): Payment
+    /**
+     * Orderに関するデータを取得する
+     * @return array
+     */
+    public function getOrderForRegistration(): array
     {
-        return $this->payment;
+        $slip           = $this->slip->getValues();
+        $storeId        = $this->getStoreIdByStoreCd($slip['storeCd']);
+        $customerTypeId = $this->getTypeIdByCustomerTypeCd($slip['customerTypeCd']);
+
+        return [
+            'store_id'           => $storeId,
+            'income_category_id' => 1,
+            'customer_type_id'   => $customerTypeId,
+            'slip_number'        => $slip['slipNumber'],
+            'order_date'         => $slip['orderDate'],
+            'payment_date'       => $slip['paymentDate'],
+            'men_count'          => $slip['menCount'],
+            'women_count'        => $slip['womenCount'],
+        ];
     }
 
-    public function getProduct(): Product
+    /**
+     * OrderPaymentに関するデータを取得する
+     * @param int $orderId
+     * @return array
+     */
+    public function getOrderPaymentsForRegistration(int $orderId): array
     {
-        return $this->product;
+        $orderPayments = [];
+        $payment       = $this->payment->getValues();
+
+        foreach ($payment as $property => $value) {
+            if ($value === 0) {
+                continue;
+            }
+            $orderPayments[$property] = [
+                'order_id'          => $orderId,
+                'payment_method_id' => $this->getPaymentMethodIdByProperty($property),
+                'amount'            => $value['amount'],
+            ];
+        }
+
+        return $orderPayments;
     }
 
-    public function getSkipDecision(): SkipDecision
+    /**
+     * OrderProductに関するデータを取得する
+     * @param int $orderId
+     * @return array
+     */
+    public function getOrderProductForRegistration(int $orderId): array
     {
-        return $this->skipDecision;
+        $orderProduct = $this->product->getValues();
+
+        return [
+            'order_id'      => $orderId,
+            'product_cd'    => $orderProduct['productCd'],
+            'product_name'  => $orderProduct['productName'],
+            'quantity'      => $orderProduct['quantity'],
+            'unit_cost'     => $orderProduct['unitCost'],
+            'unit_price'    => $orderProduct['unitPrice'],
+            'order_options' => $orderProduct['orderOption'],
+            'category1'     => $orderProduct['category1'],
+            'category2'     => $orderProduct['category2'],
+            'category3'     => $orderProduct['category3'],
+            'category4'     => $orderProduct['category4'],
+            'category5'     => $orderProduct['category5'],
+        ];
     }
 
-    public function getSlip(): Slip
+    /**
+     * 伝票番号を取得する
+     * @return string
+     */
+    public function getSlipNumber(): string
     {
-        return $this->slip;
+        $slip = $this->slip->getValues();
+        return $slip['slipNumber'];
+    }
+
+    /**
+     * 店舗IDを取得する
+     * @return int
+     */
+    public function getStoreId(): int
+    {
+        $slip    = $this->slip->getValues();
+        $storeCd = $slip['storeCd'];
+        return Store::where('company_id', $this->companyId)->where('', $customerTypeCd)->first();
+
+    }
+
+    /**
+     * モデルを参照して、customerTypeCdからcustomer_type_idに変換する
+     * @param string $customerTypeCd
+     * @return int|null
+     */
+    private function getTypeIdByCustomerTypeCd(string $customerTypeCd): ?int
+    {
+        $customerType = CustomerType::where('company_id', $this->companyId)->where('type_cd', $customerTypeCd)->first();
+        return $customerType?->id;
+    }
+
+    /**
+     * モデルを参照して、storeCdからstore_idに変換する
+     * @param string $storeCd
+     * @return int|null
+     */
+    private function getStoreIdByStoreCd(string $storeCd): ?int
+    {
+        $store = Store::where('order_store_cd', $storeCd)->first();
+        return $store?->id;
+    }
+
+    /**
+     * モデルを参照して、propertyからpay_method_idに変換する
+     * @param string $property
+     * @return int|null
+     */
+    private function getPaymentMethodIdByProperty(string $property): ?int
+    {
+        $payMethod = Store::where('company_id', $this->companyId)->where('property_name', $property)->first();
+        return $payMethod?->id;
     }
 }
 

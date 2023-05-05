@@ -25,7 +25,7 @@ class StoreFactory extends Factory
     {
         return [
             'company_id' => Company::factory(),
-            'store_cd' => $this->getNextCounter('company_cd', '1001'),
+            'order_store_cd' => $this->getNextCounter('company_cd', '1001'),
             'purchase_store_cd' => $this->getNextCounter('purchase_store_cd', '1001'),
             'store_name' => $this->faker->name,
             'mail' => $this->faker->unique()->safeEmail,

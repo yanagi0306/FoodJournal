@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Log;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -12,9 +13,8 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        // config/logging.php の app チャンネル設定を更新
-        config([
-            'logging.channels.app.logPath' => storage_path('logs/test.log'),
-        ]);
+        // ログチャンネルを test に変更
+        Log::setDefaultDriver('test');
     }
+
 }

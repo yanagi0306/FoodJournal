@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use app\Services\Usen\CsvOrderUploadService;
+use app\Services\Usen\Order\CsvOrderUploadService;
 use App\Services\Files\UploadHistory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,6 +27,7 @@ class OrderController extends Controller
      */
     public function index(): Response
     {
+        Log::info('テスト');
         // 売上情報のアップロード履歴の取得
         $this->uploadHistory = new UploadHistory('order', $this->userInfo['company_id']);
         $this->ordersHistory = $this->uploadHistory->getUploadHistory();
@@ -38,7 +39,6 @@ class OrderController extends Controller
 
     /**
      * 売上実績をアップロード
-     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -48,16 +48,22 @@ class OrderController extends Controller
         // アップロードされたファイルデータを取得
         $uploadedFile = $request->file('order_data');
 
-        $service = new CsvOrderUploadService();
+        $service = new CsvOrderUploadService($uploadedFile);
 
         try {
-            $service->uploadOrder($uploadedFile);
+            $service->main($uploadedFile);
             // 成功時の処理
             return response()->json([
                 'message' => '売上データの登録に成功しました。',
             ]);
 
         } catch (\Exception $e) {
+            // 失敗時の処理
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+
+        } catch (\Throwable $e) {
             // 失敗時の処理
             return response()->json([
                 'message' => $e->getMessage(),
