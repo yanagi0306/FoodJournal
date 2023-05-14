@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Services\Usen\Order\Wrappers;
+namespace App\Services\Base\CsvWrappers;
+
+use Illuminate\Support\Facades\Log;
 
 /**
  * 各カラムの一部をまとめたクラスの継承元クラス
  */
 abstract class ColumnGroupBase
 {
-
     /**
      * 値の取得
-     * @return mixed value
+     * @return array value
      */
     public function getValues(): array
     {

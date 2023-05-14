@@ -73,7 +73,7 @@ services:
         volume:
           nocopy: true
     environment:
-      - POSTGRES_DB=${DB_DATABASE:-FoodJournal}
+      - POSTGRES_DB=${DB_DATABASE:-food_journal}
       - POSTGRES_USER=${DB_USERNAME:-admin}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-password}
       - POSTGRES_HOST=${DB_HOST:-db}

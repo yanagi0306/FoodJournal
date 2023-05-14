@@ -13,10 +13,9 @@ namespace App\Constants;
 class Common
 {
     /**
-     * FoodJournal ディレクトリ階層
+     * food_journal ディレクトリ階層
      */
     const BASE_DIR = '/workspace';
-//    const LOGS_DIR = '/logs';
     const LOGS_DIR = '/workspace/storage/logs';
     const DATA_DIR = '/data';
     const UPLOAD_DIR = '/data/upload';

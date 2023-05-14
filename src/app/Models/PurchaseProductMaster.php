@@ -20,11 +20,11 @@ class PurchaseProductMaster extends BaseModel
         'category3_id',
         'category4_id',
         'cat_cd',
-        'product_cd',
-        'product_name',
+        'purchase_cd',
+        'purchase_name',
         'tax_type',
         'original_unit_price',
-        'purchase_price',
+        'unit_cost',
         'unit_price',
     ];
 
@@ -35,15 +35,6 @@ class PurchaseProductMaster extends BaseModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
-    }
-
-    /**
-     * purchase_productテーブル リレーション設定
-     * @return HasMany
-     */
-    public function purchase_products(): HasMany
-    {
-        return $this->hasMany(PurchaseProduct::class);
     }
 
     /**

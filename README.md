@@ -1,1 +1,1 @@
-# FoodJournal
+# food_journal

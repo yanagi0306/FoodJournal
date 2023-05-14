@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Services\Files;
+
+use App\Constants\Common;
 
 class UploadDirectory
 {
@@ -7,7 +10,7 @@ class UploadDirectory
 
     public function __construct(string $type, int $companyId)
     {
-        $this->path = "/data/upload_BK/{$type}/{$companyId}";
+        $this->path = Common::DATA_DIR . "upload_BK/{$type}/{$companyId}";
 
     }
 

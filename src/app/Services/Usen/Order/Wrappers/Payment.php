@@ -3,6 +3,7 @@
 namespace App\Services\Usen\Order\Wrappers;
 
 use App\Exceptions\SkipImportException;
+use App\Services\Base\CsvWrappers\ColumnGroupBase;
 use App\Services\Usen\Order\Wrappers\Payment\Cash;
 use App\Services\Usen\Order\Wrappers\Payment\CreditCard;
 use App\Services\Usen\Order\Wrappers\Payment\ElectronicMoney;
@@ -17,13 +18,13 @@ use Exception;
  */
 class Payment extends ColumnGroupBase
 {
-    private Cash $cash;
-    private CreditCard $creditCard;
-    private Points $points;
-    private ElectronicMoney $electronicMoney;
-    private GiftCertNoChange $giftCertNoChange;
-    private GiftCertWithChange $giftCertWithChange;
-    private OtherPayment $otherPayment;
+    protected Cash $cash;
+    protected CreditCard $creditCard;
+    protected Points $points;
+    protected ElectronicMoney $electronicMoney;
+    protected GiftCertNoChange $giftCertNoChange;
+    protected GiftCertWithChange $giftCertWithChange;
+    protected OtherPayment $otherPayment;
 
     /**
      * @param array $row

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Usen\Order\Wrappers;
+namespace App\Services\Base\CsvWrappers;
 
 use App\Exceptions\SkipImportException;
 use App\Helpers\ConvertHelper;
@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Log;
  */
 abstract class ColumnBase
 {
-
     /**
      * 取り込まれる値
      * @var mixed

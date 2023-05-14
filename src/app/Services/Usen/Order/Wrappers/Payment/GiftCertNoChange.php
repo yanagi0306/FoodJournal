@@ -3,7 +3,7 @@
 namespace App\Services\Usen\Order\Wrappers\Payment;
 
 use App\Exceptions\SkipImportException;
-use App\Services\Usen\Order\Wrappers\ColumnBase;
+use App\Services\Base\CsvWrappers\ColumnBase;
 use Exception;
 
 /**

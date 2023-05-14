@@ -18,10 +18,10 @@ class UsersSeeder extends Seeder
     public function run(): void
     {
 
-        // 既存のCompanyテーブルからランダムにレコードを取得
+        /** @var Company $company */
         $company = Company::inRandomOrder()->first();
 
-        // 既存のCompanyテーブルからランダムにレコードを取得
+        /** @var Store $store */
         $store = Store::inRandomOrder()->first();
 
         User::factory()->create([

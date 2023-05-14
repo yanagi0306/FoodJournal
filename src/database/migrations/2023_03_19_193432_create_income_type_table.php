@@ -16,7 +16,7 @@ return new class extends Migration {
         Schema::create('income_type', function (Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('収入タイプID');
-            $table->string('type_cd', 15)->comment('収入タイプコード');
+            $table->integer('type_cd')->comment('収入タイプコード');
             $table->string('type_name', 15)->comment('収入タイプ名');
             $table->string('description', 255)->nullable()->comment('収入タイプ説明');
             $table->timestamps();

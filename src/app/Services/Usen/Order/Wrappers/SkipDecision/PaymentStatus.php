@@ -2,7 +2,7 @@
 
 namespace App\Services\Usen\Order\Wrappers\SkipDecision;
 
-use App\Services\Usen\Order\Wrappers\ColumnBase;
+use App\Services\Base\CsvWrappers\ColumnBase;
 
 /**
  * PaymentStatus(支払いステータス)

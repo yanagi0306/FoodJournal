@@ -20,13 +20,13 @@ return new class extends Migration {
             $table->unsignedBigInteger('purchase_supplier_id')->comment('仕入業者ID');
             $table->unsignedBigInteger('parent_purchase_category_id')->comment('仕入親カテゴリID');
             $table->unsignedBigInteger('purchase_category_id')->comment('仕入カテゴリID');
-            $table->string('product_cd', 15)->comment('商品コード');
-            $table->string('product_name', 50)->comment('商品名');
+            $table->string('purchase_cd', 15)->comment('仕入コード');
+            $table->string('purchase_name', 50)->comment('仕入名');
             $table->integer('unit_price')->comment('単価');
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['purchase_supplier_id', 'company_id','product_cd']);
+            $table->unique(['purchase_supplier_id', 'company_id','purchase_cd']);
 
             // 外部キー制約の設定
             $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');

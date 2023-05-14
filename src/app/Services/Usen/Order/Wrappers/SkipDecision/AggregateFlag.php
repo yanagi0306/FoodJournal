@@ -2,7 +2,7 @@
 
 namespace App\Services\Usen\Order\Wrappers\SkipDecision;
 
-use App\Services\Usen\Order\Wrappers\ColumnBase;
+use App\Services\Base\CsvWrappers\ColumnBase;
 
 /**
  * AggregateFlag(集計フラグ)
@@ -13,5 +13,5 @@ class AggregateFlag extends ColumnBase
 {
     protected string $permittedValueType = 'string';
     protected array $permittedValues = ['*'];
-    protected array $invalidValues = ['', null];
+    protected array $invalidValues = [];
 }

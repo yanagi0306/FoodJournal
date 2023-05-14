@@ -2,7 +2,7 @@
 
 namespace App\Services\Usen\Order\Wrappers\Product;
 
-use App\Services\Usen\Order\Wrappers\ColumnBase;
+use App\Services\Base\CsvWrappers\ColumnBase;
 
 /**
  * Category3(商品カテゴリ1)

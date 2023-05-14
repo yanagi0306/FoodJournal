@@ -34,13 +34,4 @@ class OrderProduct extends BaseModel
     {
         return $this->belongsTo(Order::class);
     }
-
-    /**
-     * product_masterテーブル リレーション設定
-     * @return BelongsTo
-     */
-    public function product_master(): BelongsTo
-    {
-        return $this->belongsTo(ProductMaster::class);
-    }
 }

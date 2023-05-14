@@ -102,7 +102,7 @@ const submit = () => {
         <footer class="ly_login_footer">
             <div class="navbar navbar-light border-top">
                 <div class="col-12 text-center">
-                    Copyright &copy; FoodJournal Co., Ltd.
+                    Copyright &copy; food_journal Co., Ltd.
                 </div>
             </div>
         </footer>

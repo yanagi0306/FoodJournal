@@ -10,20 +10,29 @@ class StoreSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
      * @return void
      */
     public function run(): void
     {
-        $storeNames = ['BENCIA越谷店', 'BENCIA戸田公園前店'];
+        $stores = [
+            [
+                'name'           => 'BENCIA越谷店',
+                'order_store_cd' => '001',
+            ],
+            [
+                'name'           => 'BENCIA戸田公園前店',
+                'order_store_cd' => '002',
+            ],
+        ];
 
-        // 既存のCompanyテーブルからランダムにレコードを取得
+        /** @var Company $company */
         $company = Company::inRandomOrder()->first();
 
-        foreach ($storeNames as $storeName) {
+        foreach ($stores as $store) {
             Store::factory()->create([
-                'company_id' => $company->id,
-                'store_name' => $storeName,
+                'company_id'     => $company->id,
+                'store_name'     => $store['name'],
+                'order_store_cd' => $store['order_store_cd'],
             ]);
         }
     }

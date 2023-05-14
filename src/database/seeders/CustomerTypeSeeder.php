@@ -24,15 +24,15 @@ class CustomerTypeSeeder extends Seeder
             7 => 'T.O,デリバリー',
         ];
 
-        // 既存のCompanyテーブルからランダムにレコードを取得
+        /** @var Company $company */
         $company = Company::inRandomOrder()->first();
 
         foreach ($customerTypes as $typeCd => $typeName) {
             CustomerType::create([
-                'company_id' => $company->id,
-                'type_cd'    => $typeCd,
-                'type_name'  => $typeName,
-            ]);
+                                     'company_id' => $company->id,
+                                     'type_cd'    => $typeCd,
+                                     'type_name'  => $typeName,
+                                 ]);
         }
     }
 }

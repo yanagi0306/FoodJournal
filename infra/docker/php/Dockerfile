@@ -25,11 +25,18 @@ ENV TZ=Asia/Tokyo \
   COMPOSER_HOME=/composer
 
 # アプリケーションlog用のディレクトリ作成
-# /upload_buckup 配下
+# /logs 配下
 RUN mkdir -p /logs \
-  && mkdir -p /logs/laravel \
   && chown -R www-data:www-data /logs \
   && chmod -R 775 /logs
+
+# アプリケーションdata用のディレクトリ作成
+# /data 配下
+RUN mkdir -p /data \
+  && mkdir -p /data/upload_BK \
+  && mkdir -p /data/upload \
+  && chown -R www-data:www-data /data \
+  && chmod -R 775 /data
 
 COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
 

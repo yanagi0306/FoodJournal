@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('注文ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
             $table->unsignedBigInteger('income_category_id')->comment('収入カテゴリID');
-            $table->unsignedBigInteger('customer_type_id')->comment('客層ID');
+            $table->unsignedBigInteger('customer_type_id')->nullable()->comment('客層ID');
             $table->string('slip_number', 15)->comment('伝票番号');
             $table->date('order_date')->comment('注文日時');
             $table->timestamp('payment_date')->nullable()->comment('決済日時');

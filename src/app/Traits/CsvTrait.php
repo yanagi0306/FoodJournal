@@ -11,20 +11,21 @@ trait CsvTrait
 {
     /**
      * 配列からCSVデータ用への変換処理
-     *
-     * @param array $array CSVデータに変換する配列
-     * @param string $toEncoding 出力するCSVデータのエンコーディング
-     * @param string $fromEncoding 変換する配列のエンコーディング
+     * @param array  $array         CSVデータに変換する配列
+     * @param string $toEncoding    出力するCSVデータのエンコーディング
+     * @param string $fromEncoding  変換する配列のエンコーディング
      * @param string $lineSeparator 行区切り文字
      * @return string CSVデータ
+     * @throws Exception
      */
     public function convertArrayToCsv(
-        array $array,
+        array  $array,
         string $toEncoding = 'SJIS',
         string $fromEncoding = 'UTF-8',
-        string $lineSeparator = "\n"
-    ): string {
-        $escapedArray = array_map(function ($value) use ($toEncoding, $fromEncoding) {
+        string $lineSeparator = "\n",
+    ): string
+    {
+        $escapedArray = array_map(function($value) use ($toEncoding, $fromEncoding) {
             $value = str_replace('"', '""', $value);
             $value = '"' . $value . '"';
             return mb_convert_encoding($value, $toEncoding, $fromEncoding);
@@ -34,12 +35,11 @@ trait CsvTrait
 
     /**
      * CSVファイルを配列に変換する処理
-     *
      * @param UploadedFile $uploadedFile アップロードされたCSVファイル
-     * @param int|null $skipRows スキップする行数
-     * @param string $delimiter カンマ区切り以外の場合の区切り文字
-     * @param string $enclosure エンクロージャ
-     * @param string $escapeChar エスケープ文字
+     * @param int|null     $skipRows     スキップする行数
+     * @param string       $delimiter    カンマ区切り以外の場合の区切り文字
+     * @param string       $enclosure    エンクロージャ
+     * @param string       $escapeChar   エスケープ文字
      * @return array CSVファイルの内容を格納した配列
      * @throws Exception
      */
@@ -54,15 +54,15 @@ trait CsvTrait
         $path = $uploadedFile->getPathname();
 
         if (!file_exists($path)) {
-            throw new Exception('CSVファイルが存在しません。');
+            throw new Exception('CSVから配列への変換に失敗しました。ファイルが存在しません。');
         }
 
         $handle = fopen($path, 'r');
         if (!$handle) {
-            throw new Exception('CSVファイルが開けませんでした。');
+            throw new Exception('CSVから配列への変換に失敗しました。ファイルが開けません。');
         }
 
-        $rows = [];
+        $rows      = [];
         $skipCount = 0;
         while (($data = fgetcsv($handle, 0, $delimiter, $enclosure, $escapeChar)) !== false) {
             if (is_int($skipRows) && $skipCount < $skipRows) {
@@ -79,9 +79,8 @@ trait CsvTrait
 
     /**
      * CSVデータを一時的に生成し、ダウンロードする処理
-     *
-     * @param string $fileName ダウンロードファイル名
-     * @param array $outputData 出力するデータ
+     * @param string $fileName   ダウンロードファイル名
+     * @param array  $outputData 出力するデータ
      */
     public function downloadOutputCsvFile(string $fileName, array $outputData): void
     {
@@ -96,8 +95,7 @@ trait CsvTrait
 
     /**
      * 作成済みのCSVデータをダウンロードする処理
-     *
-     * @param string $fileName ダウンロードファイル名
+     * @param string $fileName       ダウンロードファイル名
      * @param string $serverFilePath サーバーにあるファイルパス
      */
     public function downloadCsvFile(string $fileName, string $serverFilePath): void
@@ -113,7 +111,6 @@ trait CsvTrait
 
     /**
      * CSVダウンロード時のレスポンスヘッダー設定処理
-     *
      * @param string $fileName ダウンロードファイル名
      */
     private function setResponseHeaders(string $fileName): void
@@ -125,19 +122,18 @@ trait CsvTrait
 
     /**
      * CSVダウンロード時のレスポンスヘッダーテンプレートを取得する処理
-     *
      * @return string[] レスポンスヘッダーテンプレート
      */
     private function getResponseHeaderTemplate(string $fileName): array
     {
         return [
-            'Content-type' => 'application/octet-stream; charset=Shift_JIS',
-            'Content-Disposition' => "attachment; filename=$fileName",
+            'Content-type'           => 'application/octet-stream; charset=Shift_JIS',
+            'Content-Disposition'    => "attachment; filename=$fileName",
             'X-Content-Type-Options' => 'nosniff',
-            'Pragma' => 'no-cache',
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires' => '0',
-            'Connection' => 'close'
+            'Pragma'                 => 'no-cache',
+            'Cache-Control'          => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires'                => '0',
+            'Connection'             => 'close',
         ];
     }
 }

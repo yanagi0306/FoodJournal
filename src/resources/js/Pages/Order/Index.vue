@@ -10,8 +10,6 @@ const props = defineProps({
     'ordersHistory': Array,
 })
 
-const ordersHistory = ref([])
-
 onMounted(() => {
     props.ordersHistory.forEach((file, index) => {
         const filePathParts = file.name.split('/');
@@ -26,6 +24,10 @@ onMounted(() => {
         })
     })
 })
+
+const downloadOrderCsv = (order) => {
+    // order に基づいてダウンロード処理を実装
+}
 
 const selectedFile = ref(null)
 
@@ -107,12 +109,12 @@ const uploadFile = async () => {
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for='order in ordersHistory' :key="file.id">
-                    <td class="text-center">{{ order.index }}</td>
+                <tr v-for='order in ordersHistory' :key="order.id">
+                    <td cv-forlass="text-center">{{ order.index }}</td>
                     <td>{{ order.created_at }}</td>
                     <td>{{ order.name }}</td>
                     <td class="text-center">
-                        <input type="button" class="btn_small-blue-3" @click="downloadOrderCsv()" value="ダウンロード">
+                        <input type="button" class="btn_small-blue-3" @click="downloadOrderCsv(order)" value="ダウンロード">
                     </td>
                 </tr>
                 </tbody>

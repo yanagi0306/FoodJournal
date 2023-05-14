@@ -17,7 +17,7 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('仕入商品ID');
             $table->unsignedBigInteger('purchase_id')->comment('仕入情報ID');
-            $table->unsignedBigInteger('purchase_product_master_cd')->comment('仕入商品マスタコード');
+            $table->unsignedBigInteger('product_cd')->comment('仕入商品マスタコード');
             $table->string('product_name', 50)->comment('商品名');
             $table->integer('quantity')->comment('数量');
             $table->integer('unit_price')->comment('単価');

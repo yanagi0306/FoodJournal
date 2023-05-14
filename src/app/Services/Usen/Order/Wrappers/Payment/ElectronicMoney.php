@@ -2,7 +2,7 @@
 
 namespace App\Services\Usen\Order\Wrappers\Payment;
 
-use App\Services\Usen\Order\Wrappers\ColumnBase;
+use App\Services\Base\CsvWrappers\ColumnBase;
 
 /**
  * ElectronicMoney(電子マネー支払額)

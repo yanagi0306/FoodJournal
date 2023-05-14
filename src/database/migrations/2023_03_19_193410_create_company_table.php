@@ -8,17 +8,18 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up(): void
     {
-        Schema::create('company', function (Blueprint $table) {
+        Schema::create('company', function(Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('会社ID');
             $table->string('company_name', 30)->comment('会社名');
             $table->string('company_cd', 4)->comment('会社コード');
             $table->string('purchase_company_cd', 8)->comment('仕入会社コード');
+            $table->string('order_system', 8)->comment('売上システム');
+            $table->string('purchase_system', 8)->comment('仕入システム');
             $table->string('mail', 255)->nullable()->comment('メールアドレス');
             $table->timestamps();
 
@@ -26,7 +27,7 @@ return new class extends Migration {
             $table->unique('company_cd');
 
             // 文字コードと照合順序の設定
-            $table->charset = 'utf8';
+            $table->charset   = 'utf8';
             $table->collation = 'utf8_general_ci';
 
         });
@@ -36,7 +37,6 @@ return new class extends Migration {
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down(): void

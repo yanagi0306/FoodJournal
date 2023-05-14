@@ -2,7 +2,7 @@
 
 namespace App\Services\Usen\Order\Wrappers\Slip;
 
-use App\Services\Usen\Order\Wrappers\ColumnBase;
+use App\Services\Base\CsvWrappers\ColumnBase;
 
 /**
  * PaymentDate(伝票処理日)

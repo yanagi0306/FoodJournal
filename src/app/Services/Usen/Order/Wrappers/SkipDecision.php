@@ -3,19 +3,21 @@
 namespace App\Services\Usen\Order\Wrappers;
 
 use App\Exceptions\SkipImportException;
+use App\Services\Base\CsvWrappers\ColumnGroupBase;
 use App\Services\Usen\Order\Wrappers\SkipDecision\AggregateFlag;
 use App\Services\Usen\Order\Wrappers\SkipDecision\OrderStatus;
 use App\Services\Usen\Order\Wrappers\SkipDecision\PaymentStatus;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 /**
  * 注文データ取込判定クラス
  */
 class SkipDecision extends ColumnGroupBase
 {
-    private AggregateFlag $aggregateFlag;
-    private PaymentStatus $paymentStatus;
-    private OrderStatus   $orderStatus;
+    protected AggregateFlag $aggregateFlag;
+    protected PaymentStatus $paymentStatus;
+    protected OrderStatus   $orderStatus;
 
     /**
      * @param array $row

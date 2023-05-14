@@ -2,17 +2,17 @@
 
 namespace App\Services\Files;
 
+use App\Constants\Common;
 use Illuminate\Support\Facades\Log;
 
 class UploadHistory
 {
 
-    protected UploadDirectory $uploadDirectory;
+    private string $uploadDir;
 
     public function __construct(string $type, int $companyId)
     {
-        $uploadDirectory = new UploadDirectory($type, $companyId);
-        $this->uploadDirectory = $uploadDirectory;
+        $this->uploadDir = Common::UPLOAD_DIR ."/{$type}/{$companyId}";
     }
 
     /**
@@ -21,20 +21,18 @@ class UploadHistory
      */
     public function getUploadHistory(): array
     {
-        $uploadDir = $this->uploadDirectory->getPath();
-
         // ディレクトリが存在しない場合
-        if (!file_exists($uploadDir)) {
+        if (!file_exists($this->uploadDir)) {
             return array();
         }
 
         // `$uploadDir` ディレクトリ内の全ファイル/ディレクトリのリストを取得('.'と'..'を除く)
-        $historyFiles = array_diff(scandir($uploadDir), array('.', '..'));
+        $historyFiles = array_diff(scandir($this->uploadDir), array('.', '..'));
 
         // ファイル名と作成日を持つ配列を作成
         $filesWithCreationDates = [];
         foreach ($historyFiles as $file) {
-            $filePath = $uploadDir . '/' . $file;
+            $filePath = $this->uploadDir . '/' . $file;
             $filesWithCreationDates[] = [
                 'name' => $file,
                 'created_at' => filectime($filePath)

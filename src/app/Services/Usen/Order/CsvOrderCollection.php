@@ -3,22 +3,18 @@
 namespace App\Services\Usen\Order;
 
 use App\Exceptions\SkipImportException;
-use App\Models\Order;
 use ArrayIterator;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use IteratorAggregate;
 
 /**
- * Class csvOrderCollection
- * 売上情報のコレクション
+ * Class csvCollection(Order)
+ * 注文情報のコレクション
  * @package App\Collections
  */
 class CsvOrderCollection implements IteratorAggregate
 {
-    /**
-     * @var Order[]
-     */
     private array $orders = [];
     private int $companyId;
 
@@ -33,17 +29,10 @@ class CsvOrderCollection implements IteratorAggregate
         $this->addOrdersFromCsv($csvData);
     }
 
-//    /**
-//     * @throws Exception
-//     */
-//    public function getOrder($slipNumber): array
-//    {
-//        return $this->orders[$slipNumber] b
-//    }
-
     /**
      * CsvDataを元にOrderオブジェクトを生成し、伝票番号keyにOrderCollectionに格納する
      * @param array $csvData
+     * @return void
      * @throws Exception
      */
     private function addOrdersFromCsv(array $csvData): void
@@ -58,8 +47,13 @@ class CsvOrderCollection implements IteratorAggregate
                 $csvOrder = new CsvOrderRow($row, $this->companyId);
 
                 // 伝票番号ごとに配列に格納
-                $slipNumber                = $csvOrder->getSlipNumber();
-                $this->orders[$slipNumber] = $csvOrder;
+                $slipNumber = $csvOrder->getSlipNumber();
+
+                if (!isset($this->orders[$slipNumber])) {
+                    $this->orders[$slipNumber] = [];
+                }
+
+                $this->orders[$slipNumber][] = $csvOrder;
 
             } catch (SkipImportException $e) {
                 Log::info($e->getMessage());

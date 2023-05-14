@@ -16,7 +16,7 @@ return new class extends Migration {
         Schema::create('expense_type', function (Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('支出タイプID');
-            $table->string('type_cd', 15)->comment('支出タイプコード');
+            $table->integer('type_cd')->comment('支出タイプコード');
             $table->string('type_name', 15)->comment('支出タイプ名');
             $table->string('description', 255)->nullable()->comment('支出タイプ説明');
             $table->timestamps();

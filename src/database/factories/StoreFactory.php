@@ -18,18 +18,16 @@ class StoreFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
-            'order_store_cd' => $this->getNextCounter('company_cd', '1001'),
+            'company_id'        => Company::factory(),
             'purchase_store_cd' => $this->getNextCounter('purchase_store_cd', '1001'),
-            'store_name' => $this->faker->name,
-            'mail' => $this->faker->unique()->safeEmail,
-            'is_closed' => null,
+            'store_name'        => $this->faker->name,
+            'mail'              => $this->faker->unique()->safeEmail,
+            'is_closed'         => null,
         ];
     }
 }

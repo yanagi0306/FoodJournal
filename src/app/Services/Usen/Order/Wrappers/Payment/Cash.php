@@ -2,7 +2,7 @@
 
 namespace App\Services\Usen\Order\Wrappers\Payment;
 
-use App\Services\Usen\Order\Wrappers\ColumnBase;
+use App\Services\Base\CsvWrappers\ColumnBase;
 
 /**
  * Cash(現金支払額)

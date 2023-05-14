@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             PaymentMethodSeeder::class,
             CustomerTypeSeeder::class,
+            ExpenseTypeSeeder::class,
+            IncomeTypeSeeder::class,
+            ExpenseCategorySeeder::class,
+            IncomeCategorySeeder::class,
         ]);
 
     }

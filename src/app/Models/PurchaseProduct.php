@@ -14,8 +14,8 @@ class PurchaseProduct extends BaseModel
 
     protected $fillable = [
         'purchase_id',
-        'purchase_product_master_cd',
-        'product_name',
+        'purchase_cd',
+        'purchase_name',
         'quantity',
         'unit_price',
     ];
@@ -27,14 +27,5 @@ class PurchaseProduct extends BaseModel
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
-    }
-
-    /**
-     * purchase_product_masterテーブル リレーション設定
-     * @return BelongsTo
-     */
-    public function purchase_product_master(): BelongsTo
-    {
-        return $this->belongsTo(PurchaseProductMaster::class);
     }
 }

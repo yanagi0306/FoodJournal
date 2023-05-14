@@ -3,6 +3,7 @@
 namespace App\Services\Usen\Order\Wrappers;
 
 use App\Exceptions\SkipImportException;
+use App\Services\Base\CsvWrappers\ColumnGroupBase;
 use App\Services\Usen\Order\Wrappers\Slip\CustomerTypeCd;
 use App\Services\Usen\Order\Wrappers\Slip\MenCount;
 use App\Services\Usen\Order\Wrappers\Slip\OrderDate;
@@ -12,20 +13,21 @@ use App\Services\Usen\Order\Wrappers\Slip\SlipNumber;
 use App\Services\Usen\Order\Wrappers\Slip\StoreCd;
 use App\Services\Usen\Order\Wrappers\Slip\WomenCount;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 /**
  * 注文伝票クラス(親)
  */
 class Slip extends ColumnGroupBase
 {
-    private StoreCd $storeCd;
-    private SlipNumber $slipNumber;
-    private OrderDate $orderDate;
-    private PaymentDate $paymentDate;
-    private MenCount $menCount;
-    private WomenCount $womenCount;
-    private CustomerTypeCd $customerTypeCd;
-    private SalesType $salesType;
+    protected StoreCd $storeCd;
+    protected SlipNumber $slipNumber;
+    protected OrderDate $orderDate;
+    protected PaymentDate $paymentDate;
+    protected MenCount $menCount;
+    protected WomenCount $womenCount;
+    protected CustomerTypeCd $customerTypeCd;
+    protected SalesType $salesType;
 
     /**
      * @param array $row
@@ -33,6 +35,7 @@ class Slip extends ColumnGroupBase
      */
     public function __construct(array $row)
     {
+
         $this->storeCd        = new StoreCd($row['storeCd'], '店舗コード');
         $this->slipNumber     = new SlipNumber($row['slipNumber'], '伝票番号');
         $this->orderDate      = new OrderDate($row['orderDate'], '伝票発行日');

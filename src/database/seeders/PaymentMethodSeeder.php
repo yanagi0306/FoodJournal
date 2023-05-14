@@ -24,7 +24,7 @@ class PaymentMethodSeeder extends Seeder
             'otherPayment'       => 'その他',
         ];
 
-        // 既存のCompanyテーブルからランダムにレコードを取得
+        /** @var Company $company */
         $company = Company::inRandomOrder()->first();
 
         $paymentMethodCdCount = 0;

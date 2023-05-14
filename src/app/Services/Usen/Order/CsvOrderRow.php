@@ -27,6 +27,12 @@ class CsvOrderRow
     {
         $this->companyId = $companyId;
 
+        $this->skipDecision = new SkipDecision([
+            'aggregateFlag' => $row[0],
+            'orderStatus'   => $row[90],
+            'paymentStatus' => $row[11],
+        ]);
+
         $this->slip = new Slip([
             'storeCd'        => $row[1],
             'slipNumber'     => $row[2],
@@ -51,28 +57,24 @@ class CsvOrderRow
         ]);
 
         $this->product = new Product([
-            'category1'     => $row[66],
-            'category2'     => $row[67],
-            'category3'     => $row[68],
-            'category4'     => $row[69],
-            'category5'     => $row[70],
-            'product'       => $row[72],
-            'productOption' => $row[73],
-            'unitPrice'     => $row[76],
-            'unitCost'      => $row[78],
-            'quantity'      => $row[81],
+            'category1'    => $row[66],
+            'category2'    => $row[67],
+            'category3'    => $row[68],
+            'category4'    => $row[69],
+            'category5'    => $row[70],
+            'product'      => $row[72],
+            'orderOptions' => $row[73],
+            'unitPrice'    => $row[76],
+            'unitCost'     => $row[78],
+            'quantity'     => $row[81],
         ]);
 
-        $this->skipDecision = new SkipDecision([
-            'aggregateFlag' => $row[0],
-            'orderStatus'   => $row[90],
-            'paymentStatus' => $row[11],
-        ]);
     }
 
     /**
      * Orderに関するデータを取得する
      * @return array
+     * @throws Exception
      */
     public function getOrderForRegistration(): array
     {
@@ -96,6 +98,7 @@ class CsvOrderRow
      * OrderPaymentに関するデータを取得する
      * @param int $orderId
      * @return array
+     * @throws Exception
      */
     public function getOrderPaymentsForRegistration(int $orderId): array
     {
@@ -124,6 +127,7 @@ class CsvOrderRow
     public function getOrderProductForRegistration(int $orderId): array
     {
         $orderProduct = $this->product->getValues();
+        Log::info(print_r($orderProduct, true));
 
         return [
             'order_id'      => $orderId,
@@ -132,7 +136,7 @@ class CsvOrderRow
             'quantity'      => $orderProduct['quantity'],
             'unit_cost'     => $orderProduct['unitCost'],
             'unit_price'    => $orderProduct['unitPrice'],
-            'order_options' => $orderProduct['orderOption'],
+            'order_options' => $orderProduct['orderOptions'],
             'category1'     => $orderProduct['category1'],
             'category2'     => $orderProduct['category2'],
             'category3'     => $orderProduct['category3'],
@@ -152,25 +156,34 @@ class CsvOrderRow
     }
 
     /**
-     * 店舗IDを取得する
+     * モデルを参照して、store_idを取得する(外部処理)
      * @return int
+     * @throws Exception
      */
     public function getStoreId(): int
     {
         $slip    = $this->slip->getValues();
         $storeCd = $slip['storeCd'];
-        return Store::where('company_id', $this->companyId)->where('', $customerTypeCd)->first();
+        $store   = Store::where('company_id', $this->companyId)->where('order_store_cd', $storeCd)->first();
+        if (!$store) {
+            throw new Exception("storeが存在しません companyId:{$this->companyId} storeCd:({$storeCd})");
+        }
+        return $store->id;
 
     }
 
     /**
      * モデルを参照して、customerTypeCdからcustomer_type_idに変換する
-     * @param string $customerTypeCd
+     * @param string|null $customerTypeCd
      * @return int|null
+     * @throws Exception
      */
-    private function getTypeIdByCustomerTypeCd(string $customerTypeCd): ?int
+    private function getTypeIdByCustomerTypeCd(?string $customerTypeCd): ?int
     {
         $customerType = CustomerType::where('company_id', $this->companyId)->where('type_cd', $customerTypeCd)->first();
+        if (!$customerType) {
+            return null;
+        }
         return $customerType?->id;
     }
 
@@ -178,22 +191,30 @@ class CsvOrderRow
      * モデルを参照して、storeCdからstore_idに変換する
      * @param string $storeCd
      * @return int|null
+     * @throws Exception
      */
     private function getStoreIdByStoreCd(string $storeCd): ?int
     {
-        $store = Store::where('order_store_cd', $storeCd)->first();
-        return $store?->id;
+        $store = Store::where('company_id', $this->companyId)->where('order_store_cd', $storeCd)->first();
+        if (!$store) {
+            throw new Exception("storeが存在しません companyId:{$this->companyId} storeCd:({$storeCd})");
+        }
+        return $store->id;
     }
 
     /**
      * モデルを参照して、propertyからpay_method_idに変換する
      * @param string $property
-     * @return int|null
+     * @return int
+     * @throws Exception
      */
-    private function getPaymentMethodIdByProperty(string $property): ?int
+    private function getPaymentMethodIdByProperty(string $property): int
     {
         $payMethod = Store::where('company_id', $this->companyId)->where('property_name', $property)->first();
-        return $payMethod?->id;
+        if (!$payMethod) {
+            throw new Exception("pay_methodが存在しません companyId:({$this->companyId}) property:({$property})");
+        }
+        return $payMethod->id;
     }
 }
 
