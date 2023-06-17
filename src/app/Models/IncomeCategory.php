@@ -16,6 +16,7 @@ class IncomeCategory extends BaseModel
     protected $fillable = [
         'company_id',
         'parent_income_category_id',
+        'income_type_cd',
         'cat_cd',
         'cat_name',
     ];
@@ -33,43 +34,34 @@ class IncomeCategory extends BaseModel
      * parent_income_categoryテーブル リレーション設定
      * @return BelongsTo
      */
-    public function parent_income_category(): BelongsTo
+    public function parentIncomeCategory(): BelongsTo
     {
         return $this->belongsTo(ParentIncomeCategory::class);
     }
 
     /**
-     * income_typeテーブル リレーション設定
-     * @return BelongsTo
+     * order_INFOテーブル リレーション設定
+     * @return HasMany
      */
-    public function income_type(): BelongsTo
+    public function orderInfos(): HasMany
     {
-        return $this->belongsTo(IncomeType::class);
+        return $this->hasMany(OrderInfo::class);
     }
 
     /**
-     * orderテーブル リレーション設定
+     * income_infoテーブル リレーション設定
      * @return HasMany
      */
-    public function orders(): HasMany
+    public function incomeInfos(): HasMany
     {
-        return $this->hasMany(Order::class);
-    }
-
-    /**
-     * incomeテーブル リレーション設定
-     * @return HasMany
-     */
-    public function incomes(): HasMany
-    {
-        return $this->hasMany(Income::class);
+        return $this->hasMany(IncomeInfo::class);
     }
 
     /**
      * income_budgetテーブル リレーション設定
      * @return HasMany
      */
-    public function income_budgets(): HasMany
+    public function incomeBudgets(): HasMany
     {
         return $this->hasMany(IncomeBudget::class);
     }

@@ -11,7 +11,7 @@ class PaymentMethod extends BaseModel
 {
     use HasFactory;
 
-    protected $table = 'payment_method';
+    protected    $table = 'payment_method';
 
     protected $fillable = [
         'company_id',
@@ -35,7 +35,7 @@ class PaymentMethod extends BaseModel
      * order_paymentテーブル リレーション設定
      * @return HasMany
      */
-    public function order_payments(): HasMany
+    public function orderPayments(): HasMany
     {
         return $this->hasMany(OrderPayment::class);
     }

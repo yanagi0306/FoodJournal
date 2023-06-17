@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Base;
 
 use App\Constants\Common;
 use App\Helpers\FileHelper;
@@ -19,7 +19,7 @@ abstract class BaseUploader
         $this->uploadFile = $uploadFile;
     }
 
-    abstract public function processCsv(): void;
+    abstract public function processCsv(): array;
 
     protected function moveUploadedFile(): void
     {
@@ -34,7 +34,7 @@ abstract class BaseUploader
             FileHelper::moveAndStoreUploadedFile($this->uploadFile, $destinationPath, $fileName);
 
         } catch (\Exception $e) {
-            Log::error('アップロードファイルの保存に失敗しました msg=' . $e->getMessage());
+            Log::error('アップロードファイルの取得に失敗しました。' . $e->getMessage());
         }
     }
 }

@@ -10,7 +10,7 @@ class Store extends BaseModel
 {
     use HasFactory;
 
-protected $table = 'store';
+    protected $table = 'store';
 
     protected $fillable = [
         'company_id',
@@ -43,70 +43,70 @@ protected $table = 'store';
      * product_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function product_categories(): HasMany
+    public function productCategories(): HasMany
     {
         return $this->hasMany(ProductCategory::class);
     }
 
     /**
-     * orderテーブル リレーション設定
+     * order_infoテーブル リレーション設定
      * @return HasMany
      */
-    public function orders(): HasMany
+    public function orderInfos(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(OrderInfo::class);
     }
 
     /**
-     * purchaseテーブル リレーション設定
+     * purchase_infoテーブル リレーション設定
      * @return HasMany
      */
-    public function purchases(): HasMany
+    public function purchaseInfos(): HasMany
     {
-        return $this->hasMany(Purchase::class);
+        return $this->hasMany(PurchaseInfo::class);
     }
 
     /**
      * purchase_productテーブル リレーション設定
      * @return HasMany
      */
-    public function purchase_products(): HasMany
+    public function purchaseProducts(): HasMany
     {
         return $this->hasMany(PurchaseProduct::class);
     }
 
     /**
-     * expenseテーブル リレーション設定
+     * expense_infoテーブル リレーション設定
      * @return HasMany
      */
-    public function expenses(): HasMany
+    public function expenseInfos(): HasMany
     {
-        return $this->hasMany(Expense::class);
+        return $this->hasMany(ExpenseInfo::class);
     }
 
     /**
      * expense_budgetテーブル リレーション設定
      * @return HasMany
      */
-    public function expense_budgets(): HasMany
+    public function expenseBudgets(): HasMany
     {
         return $this->hasMany(ExpenseBudget::class);
     }
 
     /**
-     * incomeテーブル リレーション設定
+     * income_infoテーブル リレーション設定
      * @return HasMany
      */
-    public function incomes(): HasMany
+    public function incomeInfos(): HasMany
     {
-        return $this->hasMany(Income::class);
+        return $this->hasMany(IncomeInfo::class);
     }
 
     /**
      * income_budgetテーブル リレーション設定
      * @return HasMany
      */
-    public function income_budgets(): HasMany
+    public function incomeBudgets(): HasMany
     {
         return $this->hasMany(IncomeBudget::class);
     }

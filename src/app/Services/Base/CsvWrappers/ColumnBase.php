@@ -26,16 +26,10 @@ abstract class ColumnBase
     protected string $valueName = '';
 
     /**
-     * 例外発生時のメッセージ
+     * 例外発生時のメッセージ（スキップ）
      * @var string
      */
-    protected string $errorMessage = '';
-
-    /**
-     * 例外発生時のメッセージ(内部処理)
-     * @var string
-     */
-    protected string $internalErrorMessage = '';
+    protected string $skipMessage = '';
 
     /**
      * 許可された型
@@ -75,37 +69,42 @@ abstract class ColumnBase
         '!',
         '^',
         '&',
+        '"',
+        "'",
     ];
+
 
     /**
      * @var bool 禁止文字の削除を許可
      */
-    protected bool $isRemoveForbiddenChars = false;
+    protected bool $isRemoveForbiddenChars = true;
 
     /**
-     * 「:」区切りで左側の分離の許可
-     * @var mixed|string|null
+     * 「:」区切りで左側の分離をする場合はtrueを設定
+     * @var ?bool
      */
-    protected bool $isExtractLeft = false;
+    protected ?bool $isExtractLeft = null;
 
     /**
      * 「:」区切りで右側の分離の許可
-     * @var mixed|string|null
+     * @var ?bool
      */
-    protected bool $isExtractRight = false;
+    protected ?bool $isExtractRight = null;
 
     /**
      * 許可された値がある場合継承先で定義する
      * 配列に定義されいる場合は値がチェックされる
      * 許可された値
+     * デフォルトは未設定
      */
-    protected array $permittedValues = [];
+    protected ?array $permittedValues = null;
 
     /**
      * 無効な値がある場合継承先で定義する
      * 配列に定義されいる場合は値がチェックされる
+     * デフォルトはnull(空はnullへ変換済み)
      */
-    protected array $invalidValues = [null];
+    protected ?array $invalidValues = [null];
 
     /**
      * $this->valueの負の整数を許可
@@ -130,12 +129,8 @@ abstract class ColumnBase
         $this->validateValues();
 
         // バリデーションパートでエラー発生時はスルー
-        if ($this->errorMessage) {
-            throw new SkipImportException($this->errorMessage);
-        }
-
-        if ($this->internalErrorMessage) {
-            throw new Exception($this->internalErrorMessage);
+        if ($this->skipMessage) {
+            throw new SkipImportException($this->skipMessage);
         }
     }
 
@@ -143,7 +138,7 @@ abstract class ColumnBase
      * 値の取得
      * @return mixed value
      */
-    public function getValue() : mixed
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -159,9 +154,9 @@ abstract class ColumnBase
             $this->value = ConvertHelper::trimSpaces($this->value);
         }
 
-        // 許可されている場合は空をnullに置換
-        if ($this->isReplaceEmptyWithNull) {
-            $this->value = ConvertHelper::replaceEmptyWithNull($this->value);
+        // 許可されている場合は禁止文字を削除
+        if ($this->isRemoveForbiddenChars) {
+            $this->value = ConvertHelper::removeForbiddenChars($this->value, $this->valueName, $this->forbiddenChars);
         }
 
         // 許可されている場合「:」区切りで左側を分離
@@ -174,9 +169,9 @@ abstract class ColumnBase
             $this->value = ConvertHelper::extractRight($this->value, $this->valueName);
         }
 
-        // 許可されている場合は禁止文字を削除
-        if ($this->isRemoveForbiddenChars) {
-            $this->value = ConvertHelper::removeForbiddenChars($this->value, $this->valueName, $this->forbiddenChars);
+        // 許可されている場合は空をnullに置換
+        if ($this->isReplaceEmptyWithNull && $this->value === '') {
+            $this->value = ConvertHelper::replaceEmptyWithNull($this->value);
         }
 
         // 定義されている場合は型の変換
@@ -187,37 +182,39 @@ abstract class ColumnBase
 
     /**
      * 値の検証処理
-     * @throws Exception
+     * @throws Exception|SkipImportException
      */
     private function validateValues(): void
     {
         // 型のチェック
         if ($this->permittedValueType && ValidationHelper::validateValueType($this->value, $this->permittedValueType) === false) {
-            $this->addErrorMessage("取り込まれた型に誤りがあります。permittedValueType:{$this->permittedValueType}");
+            $this->addSkipMessage("許可された型:{$this->permittedValueType} 取り込まれた型に誤りがあります。");
         }
 
         // 許可された値を検証
         if ($this->permittedValues && ValidationHelper::validatePermittedValue($this->value, $this->permittedValues) === false) {
-            $this->addErrorMessage("許可された値以外が含まれています value={$this->value}");
+            $this->addSkipMessage("許可された値:(" . implode(',', $this->permittedValues) . ") 許可された値以外が含まれています。");
         }
 
         // 許可されていない値か検証
         if ($this->invalidValues && ValidationHelper::validateInvalidValues($this->value, $this->invalidValues) === false) {
-            $this->addErrorMessage("許可されていない値が含まれています value={$this->value}]");
+            $this->addSkipMessage("許可されていない値:(" . implode(',', $this->invalidValues) . ") 許可されていない値が含まれています。");
         }
 
         // 負の値か検証
         if (!$this->isAllowNegativeInteger && ValidationHelper::validatePositiveValue($this->value, $this->permittedValueType) === false) {
-            $this->addErrorMessage("負の値が検出されました。value:{$this->value}");
+            $this->addSkipMessage("負の値が検出されました。");
         }
     }
 
     /**
-     * エラーメッセージの追加
+     * スキップメッセージの追加
      * @param string $message
+     * @throws SkipImportException
      */
-    private function addErrorMessage(string $message): void
+    private function addSkipMessage(string $message): void
     {
-        $this->errorMessage .= "項目名[{$this->valueName}] 値:[{$this->value}] {$message}\n";
+        $value             = $this->value ?? '未入力';
+        throw new SkipImportException("項目名[{$this->valueName}] 値:({$value}) {$message}");
     }
 }

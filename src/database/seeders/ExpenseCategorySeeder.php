@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Constants\Common;
 use App\Models\Company;
 use App\Models\ExpenseCategory;
 use App\Models\ParentExpenseCategory;
@@ -17,32 +18,25 @@ class ExpenseCategorySeeder extends Seeder
     public function run(): void
     {
         /** @var Company $company */
-        $company = Company::inRandomOrder()->first();
+        $company = Company::find(1)->firstOrFail();
 
-        $parentCategories = [
-            1 => '仕入費',
-        ];
-
-        $childCategories = [
-            1 => '食材',
-            2 => '資材',
-        ];
-
-        foreach ($parentCategories as $catCd => $catName) {
+        foreach (Common::PARENT_EXPENSE_CATEGORIES as $category) {
             ParentExpenseCategory::create([
                                               'company_id' => $company->id,
-                                              'cat_cd'     => $catCd,
-                                              'cat_name'   => $catName,
+                                              'cat_cd'     => $category['cat_cd'],
+                                              'cat_name'   => $category['cat_name'],
                                           ]);
         }
 
-        foreach ($childCategories as $catCd => $catName) {
+        $expenseCategory = ParentExpenseCategory::where('company_id', $company->id)->where('cat_cd', Common::PARENT_EXPENSE_CATEGORY_FOR_PURCHASE['cat_cd'])->firstOrFail();
+
+        foreach (Common::CHILD_EXPENSE_CATEGORIES as $category) {
             ExpenseCategory::create([
                                         'company_id'                 => $company->id,
-                                        'parent_expense_category_id' => 1,
-                                        'expense_type_id'            => 4,
-                                        'cat_cd'                     => $catCd,
-                                        'cat_name'                   => $catName,
+                                        'parent_expense_category_id' => $expenseCategory->id,
+                                        'expense_type_cd'            => $category['expense_type_cd'],
+                                        'cat_cd'                     => $category['cat_cd'],
+                                        'cat_name'                   => $category['cat_name'],
                                     ]);
         }
     }

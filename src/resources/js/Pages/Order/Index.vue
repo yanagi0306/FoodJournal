@@ -1,71 +1,58 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {Head, Link} from '@inertiajs/vue3';
-import {onMounted, ref} from "vue";
+import {Head} from '@inertiajs/vue3';
+import {defineProps, onMounted, ref} from "vue";
 import SvgIcon from "@/Components/Icons/SvgIcon.vue";
 import {Inertia} from "@inertiajs/inertia";
-
+import OrderRow from "@/Components/OrderRow.vue";
+import FlashMessage from "@/Components/FlashMessage.vue";
 
 const props = defineProps({
-    'ordersHistory': Array,
-})
+    ordersHistory: Array,
+});
+
+const ordersHistory = ref([]);
+const selectedFile = ref(null)
+const fileInput = ref(null)
 
 onMounted(() => {
     props.ordersHistory.forEach((file, index) => {
-        const filePathParts = file.name.split('/');
-        const directory = filePathParts.slice(0, -1).join('/');
-        const fileName = filePathParts.slice(-1)[0];
-
         ordersHistory.value.push({
             id: index + 1,
-            directory: directory,
-            name: fileName,
-            created_at: file.created_at,
-        })
-    })
-})
+            path: file.path,
+            name: file.name,
+            updated_at: file.updated_at,
+        });
+    });
+});
 
-const downloadOrderCsv = (order) => {
-    // order に基づいてダウンロード処理を実装
+const downloadOrderCsv = (path) => {
+    window.open('/orders/download?filename=' + encodeURIComponent(path), '_blank');
 }
-
-const selectedFile = ref(null)
 
 const onFileSelected = (event) => {
     selectedFile.value = event.target.files[0]
 }
 
-const uploadFile = async () => {
+const uploadFile = () => {
     if (!selectedFile.value) {
-        alert('ファイルを選択してください。')
-        return
+        alert('ファイルを選択してください。');
+        return;
     }
 
-    const formData = new FormData()
-    formData.append('file', selectedFile.value)
+    const formData = new FormData();
+    formData.append('file', selectedFile.value);
 
-    try {
-        await Inertia.post(route('orders.upload'), formData, {
-            onSuccess: () => {
-                alert('ファイルが正常にアップロードされました。')
-                location.reload();
-            },
-            onError: (errors) => {
-                console.error(errors)
-                alert(errors.message || 'ファイルのアップロード中にエラーが発生しました。')
-            }
-        })
-    } catch (error) {
-        console.error(error)
-        alert('ファイルのアップロード中にエラーが発生しました。')
-    }
-}
+    Inertia.post(route('orders.upload'), formData);
+};
+
 
 </script>
 
 <template>
     <Head title="Order"/>
     <AuthenticatedLayout>
+        <FlashMessage/>
         <div class="main_title_wrapper my-3">
             <h1 class="page-h1-title">売上実績UL</h1>
         </div>
@@ -75,6 +62,7 @@ const uploadFile = async () => {
         <div class="row">
             <div class="col-3">
                 <input
+                    ref="fileInput"
                     type="file"
                     class="form-control"
                     name="fba_csv"
@@ -97,26 +85,19 @@ const uploadFile = async () => {
         <div class="fs12 mb-3">
             最新のアップロード履歴10件を表示します。<br>
         </div>
-        <!--            アップロード履歴ある時はこちらを表示-->
+        <!--アップロード履歴ある時はこちらを表示-->
         <div v-if="ordersHistory.length > 0">
             <table id="standard" class="table_standard_box_2 table-70">
                 <thead>
                 <tr>
-                    <th width="10%">NO</th>
-                    <th width="25%">登録日時</th>
-                    <th width="35%">登録ファイル名</th>
-                    <th width="30%">ダウンロード</th>
+                    <th>NO</th>
+                    <th>登録日時</th>
+                    <th>登録ファイル名</th>
+                    <th>ダウンロード</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for='order in ordersHistory' :key="order.id">
-                    <td cv-forlass="text-center">{{ order.index }}</td>
-                    <td>{{ order.created_at }}</td>
-                    <td>{{ order.name }}</td>
-                    <td class="text-center">
-                        <input type="button" class="btn_small-blue-3" @click="downloadOrderCsv(order)" value="ダウンロード">
-                    </td>
-                </tr>
+                <OrderRow v-for='order in ordersHistory' :key="order.id" :order="order" @download="downloadOrderCsv"/>
                 </tbody>
             </table>
         </div>
@@ -125,7 +106,6 @@ const uploadFile = async () => {
                 <SvgIcon icon="circleInfoSolid" class="svg_icon_wh16 me-1"/>
                 <span class="ms-2">該当するデータが存在しません。</span>
             </p>
-            <input type="hidden" name="fbaShipResultFile" value="">
         </div>
 
     </AuthenticatedLayout>

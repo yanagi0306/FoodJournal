@@ -59,11 +59,10 @@ class IncomeBudgetController extends Controller
 
     /**
      * 収入予算削除
-     *
      * @param int $incomeBudgetId
      * @return void
      */
-    public function destroy($incomeBudgetId)
+    public function destroy(int $incomeBudgetId)
     {
         // ここに収入予算削除のロジックを追加します
     }

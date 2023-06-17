@@ -13,7 +13,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('expense', function (Blueprint $table) {
+        Schema::create('expense_info', function (Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('支出ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
@@ -33,7 +33,7 @@ return new class extends Migration {
 
         });
         // テーブルコメントの設定
-        DB::statement("COMMENT ON TABLE expense IS '支出情報テーブル'");
+        DB::statement("COMMENT ON TABLE expense_info IS '支出情報テーブル'");
     }
 
     /**
@@ -43,6 +43,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('expense');
+        Schema::dropIfExists('expense_info');
     }
 };

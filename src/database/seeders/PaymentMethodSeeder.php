@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Constants\Common;
 use App\Models\Company;
 use App\Models\PaymentMethod;
 use Illuminate\Database\Seeder;
@@ -14,30 +15,17 @@ class PaymentMethodSeeder extends Seeder
      */
     public function run(): void
     {
-        $paymentMethods = [
-            'cash'               => '現金',
-            'creditCard'         => 'クレジット',
-            'points'             => 'ポイント',
-            'electronicMoney'    => '電子マネー',
-            'giftCertNoChange'   => '商品券釣無',
-            'giftCertWithChange' => '商品券釣有',
-            'otherPayment'       => 'その他',
-        ];
-
         /** @var Company $company */
-        $company = Company::inRandomOrder()->first();
+        $company = Company::find(1)->firstOrFail();
 
-        $paymentMethodCdCount = 0;
-
-        foreach ($paymentMethods as $property => $paymentMethod) {
+        foreach (Common::PAYMENT_METHODS_TEMPLATE as $paymentMethod) {
             PaymentMethod::create([
-                'company_id'      => $company->id,
-                'payment_cd'      => $paymentMethodCdCount,
-                'payment_name'    => $paymentMethod,
-                'property_name'   => $property,
-                'commission_rate' => 0.3,
-            ]);
-            $paymentMethodCdCount++;
+                                      'company_id'      => $company->id,
+                                      'payment_cd'      => $paymentMethod['payment_cd'],
+                                      'payment_name'    => $paymentMethod['payment_name'],
+                                      'property_name'   => $paymentMethod['property_name'],
+                                      'commission_rate' => $paymentMethod['commission_rate'],
+                                  ]);
         }
     }
 }

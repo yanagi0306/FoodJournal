@@ -26,7 +26,7 @@ class StoreSeeder extends Seeder
         ];
 
         /** @var Company $company */
-        $company = Company::inRandomOrder()->first();
+        $company = Company::find(1)->firstOrFail();
 
         foreach ($stores as $store) {
             Store::factory()->create([

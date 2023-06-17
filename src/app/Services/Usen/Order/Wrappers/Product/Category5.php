@@ -12,5 +12,5 @@ use App\Services\Base\CsvWrappers\ColumnBase;
 class Category5 extends ColumnBase
 {
     protected string $permittedValueType = 'string';
-    protected array $invalidValues = [];
+    protected ?array $invalidValues      = null;
 }

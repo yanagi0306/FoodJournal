@@ -25,7 +25,7 @@ class CustomerTypeSeeder extends Seeder
         ];
 
         /** @var Company $company */
-        $company = Company::inRandomOrder()->first();
+        $company = Company::find(1)->firstOrFail();
 
         foreach ($customerTypes as $typeCd => $typeName) {
             CustomerType::create([

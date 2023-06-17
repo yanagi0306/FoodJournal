@@ -19,10 +19,12 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected ?string $progName = null;
-    protected ?string $methodName = null;
-    protected ?array $userInfo = null;
-    protected string $logPath;
+    protected ?string $progName        = null;
+    protected ?string $methodName      = null;
+    protected ?array  $userInfo        = null;
+    protected string  $logPath;
+    protected ?string $responseStatus  = null;
+    protected ?string $responseMessage = null;
 
 
     /**
@@ -51,16 +53,16 @@ class Controller extends BaseController
             $this->setProgName(class_basename($request->route()->getController()));
             $this->logPath = $this->getLogPath();
 
-// ログチャンネルの設定を動的に変更
+            // ログチャンネルの設定を動的に変更
             $actionLog = app(ActionLog::class);
 
             $handler = $actionLog([
-                'logPath'    => $this->logPath,
-                'userId'     => $this->userInfo['id'] ?? null,
-                'userName'   => $this->userInfo['name'] ?? null,
-                'progName'   => $this->progName ?? null,
-                'methodName' => $this->methodName ?? null,
-            ]);
+                                      'logPath'    => $this->logPath,
+                                      'userId'     => $this->userInfo['id'] ?? null,
+                                      'userName'   => $this->userInfo['name'] ?? null,
+                                      'progName'   => $this->progName ?? null,
+                                      'methodName' => $this->methodName ?? null,
+                                  ]);
 
             app('log')->getLogger()->setHandlers([$handler->getHandlers()[0]]);
 

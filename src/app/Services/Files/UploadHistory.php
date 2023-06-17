@@ -12,7 +12,7 @@ class UploadHistory
 
     public function __construct(string $type, int $companyId)
     {
-        $this->uploadDir = Common::UPLOAD_DIR ."/{$type}/{$companyId}";
+        $this->uploadDir = Common::UPLOAD_DIR . "/{$type}/{$companyId}";
     }
 
     /**
@@ -23,28 +23,40 @@ class UploadHistory
     {
         // ディレクトリが存在しない場合
         if (!file_exists($this->uploadDir)) {
-            return array();
+            return [];
         }
 
         // `$uploadDir` ディレクトリ内の全ファイル/ディレクトリのリストを取得('.'と'..'を除く)
-        $historyFiles = array_diff(scandir($this->uploadDir), array('.', '..'));
+        $historyFiles = array_diff(scandir($this->uploadDir), ['.',
+                                                               '..']);
 
-        // ファイル名と作成日を持つ配列を作成
-        $filesWithCreationDates = [];
+        // ファイル名と更新日を持つ配列を作成
+        $filesWithModificationDates = [];
         foreach ($historyFiles as $file) {
-            $filePath = $this->uploadDir . '/' . $file;
-            $filesWithCreationDates[] = [
-                'name' => $file,
-                'created_at' => filectime($filePath)
+            $filePath                     = $this->uploadDir . '/' . $file;
+            $modificationTimestamp        = filemtime($filePath);
+            $modificationDateTime         = date('Y/m/d H:i', $modificationTimestamp);
+            $filesWithModificationDates[] = [
+                'name'  => $file,
+                'path'  => $filePath,
+                'updated_at' => $modificationDateTime,
             ];
         }
 
-        // 作成日をもとにソート
-        usort($filesWithCreationDates, function ($a, $b) {
-            return $b['created_at'] - $a['created_at'];
+        // 更新日をもとにソート
+        usort($filesWithModificationDates, function($a, $b) {
+            $timestampA = strtotime($a['updated_at']);
+            $timestampB = strtotime($b['updated_at']);
+
+            if ($timestampA === false || $timestampB === false) {
+                return 0; // 比較できない場合は順序を変更しない（同じ順序とする）
+            }
+
+            return $timestampB - $timestampA;
         });
 
         // 最新の10ファイル/ディレクトリを取得
-        return array_slice($filesWithCreationDates, 0, 10);
+        return array_slice($filesWithModificationDates, 0, 10);
     }
+
 }

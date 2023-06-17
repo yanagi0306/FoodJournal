@@ -16,35 +16,43 @@ use Exception;
 class GiftCertNoChange extends ColumnBase
 {
     /**
-     * 支払金額
-     * @var string|null
+     * 許可された型
+     * 取り込み型に変更がある場合は継承先で変更する
+     * integer:整数 string:文字列 boolean:真偽 double:浮動小数点数 date:日付型 timestamp:タイムスタンプ
+     * @var string
      */
-    private ?string $giftCertAmount;
+    protected string $permittedValueType = 'integer';
+
+    /**
+     * 支払金額
+     * @var int|null
+     */
+    private ?int $giftCertAmount;
 
     /**
      * 支払金額差額
-     * @var string|null
+     * @var int|null
      */
-    private ?string $unusedAmount;
+    private ?int $unusedAmount;
 
     /**
-     * @param string|null $giftCertAmount
-     * @param string|null $unusedAmount
+     * @param int|null $giftCertAmount
+     * @param int|null $unusedAmount
      * @throws SkipImportException|Exception
      */
-    public function __construct(?string $giftCertAmount, ?string $unusedAmount)
+    public function __construct(?int $giftCertAmount, ?int $unusedAmount)
     {
         $this->giftCertAmount = $giftCertAmount !== null ? $giftCertAmount : 0;
-        $this->unusedAmount = $unusedAmount !== null ? $unusedAmount : 0;
-        $value = $this->getUsedAmount();
+        $this->unusedAmount   = $unusedAmount !== null ? $unusedAmount : 0;
+        $value                = $this->getUsedAmount();
         Parent::__construct($value, '商品券釣無');
     }
 
     /**
      * 使用金額を取得
-     * @return string|int|null
+     * @return int|null
      */
-    public function getUsedAmount(): string|int|null
+    public function getUsedAmount(): int|null
     {
         return ($this->giftCertAmount - $this->unusedAmount);
     }

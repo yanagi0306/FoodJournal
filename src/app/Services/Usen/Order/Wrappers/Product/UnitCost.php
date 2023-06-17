@@ -12,5 +12,4 @@ use App\Services\Base\CsvWrappers\ColumnBase;
 class UnitCost extends ColumnBase
 {
     protected string $permittedValueType = 'double';
-    protected array $invalidValues = [null, '', 0];
 }

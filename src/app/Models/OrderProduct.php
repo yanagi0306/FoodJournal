@@ -12,7 +12,7 @@ class OrderProduct extends BaseModel
     protected $table = 'order_product';
 
     protected $fillable = [
-        'order_id',
+        'order_info_id',
         'product_cd',
         'product_name',
         'quantity',
@@ -30,8 +30,8 @@ class OrderProduct extends BaseModel
      * orderテーブル リレーション設定
      * @return BelongsTo
      */
-    public function order(): BelongsTo
+    public function orderInfo(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(OrderInfo::class);
     }
 }

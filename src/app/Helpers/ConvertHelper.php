@@ -15,10 +15,10 @@ class ConvertHelper
 {
     /**
      * 空白をnullに置換
-     * @param string $value
+     * @param ?string $value
      * @return string|null
      */
-    public static function replaceEmptyWithNull(string $value): ?string
+    public static function replaceEmptyWithNull(?string $value): ?string
     {
         return $value === '' ? null : $value;
     }
@@ -26,13 +26,17 @@ class ConvertHelper
     /**
      * 「:」区切りで左側を分離
      * ステータスコード:ステータス名となっている為
-     * @param string $value
-     * @param string $valueName
-     * @return string
+     * @param ?string $value
+     * @param string  $valueName
+     * @return string|null
      * @throws Exception
      */
-    public static function extractLeft(string $value, string $valueName): string
+    public static function extractLeft(?string $value, string $valueName): ?string
     {
+        if (!$value) {
+            return null;
+        }
+
         $split = explode(':', $value);
 
         if (count($split) !== 2) {
@@ -49,13 +53,17 @@ class ConvertHelper
     /**
      * 「:」区切りで右側を分離
      * ステータスコード:ステータス名となっている為
-     * @param string $value
+     * @param ?string $value
      * @param string $valueName
-     * @return string
+     * @return string|null
      * @throws Exception
      */
-    public static function extractRight(string $value, string $valueName): string
+    public static function extractRight(?string $value, string $valueName): ?string
     {
+        if (!$value) {
+            return null;
+        }
+
         $split = explode(':', $value);
 
         if (count($split) !== 2) {
@@ -229,7 +237,7 @@ class ConvertHelper
         }
 
         // 秒の記載がない場合は追記(例:2022/12/25 19:08)
-        if (strlen($value) === 16){
+        if (strlen($value) === 16) {
             $value .= ':00';
         }
 

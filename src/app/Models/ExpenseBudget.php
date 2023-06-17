@@ -34,7 +34,7 @@ class ExpenseBudget extends BaseModel
      * expense_categoryテーブル リレーション設定
      * @return BelongsTo
      */
-    public function expense_category(): BelongsTo
+    public function expenseCategory(): BelongsTo
     {
         return $this->belongsTo(ExpenseCategory::class);
     }

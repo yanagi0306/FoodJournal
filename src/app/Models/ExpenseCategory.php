@@ -16,6 +16,7 @@ class ExpenseCategory extends BaseModel
     protected $fillable = [
         'company_id',
         'parent_expense_category_id',
+        'expense_type_cd',
         'cat_cd',
         'cat_name',
     ];
@@ -33,34 +34,25 @@ class ExpenseCategory extends BaseModel
      * parent_expense_categoryテーブル リレーション設定
      * @return BelongsTo
      */
-    public function parent_expense_category(): BelongsTo
+    public function parentExpenseCategory(): BelongsTo
     {
         return $this->belongsTo(ParentExpenseCategory::class);
     }
 
     /**
-     * expense_typeテーブル リレーション設定
-     * @return BelongsTo
-     */
-    public function expense_type(): BelongsTo
-    {
-        return $this->belongsTo(ExpenseType::class);
-    }
-
-    /**
-     * expenseテーブル リレーション設定
+     * expense_infoテーブル リレーション設定
      * @return HasMany
      */
-    public function expenses(): HasMany
+    public function expenseInfos(): HasMany
     {
-        return $this->hasMany(Expense::class);
+        return $this->hasMany(ExpenseInfo::class);
     }
 
     /**
      * expense_budgetテーブル リレーション設定
      * @return HasMany
      */
-    public function expense_budgets(): HasMany
+    public function expenseBudgets(): HasMany
     {
         return $this->hasMany(ExpenseBudget::class);
     }

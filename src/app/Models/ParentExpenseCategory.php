@@ -32,7 +32,7 @@ class ParentExpenseCategory extends BaseModel
      * expense_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function expense_categories(): HasMany
+    public function expenseCategories(): HasMany
     {
         return $this->hasMany(ExpenseCategory::class);
     }

@@ -73,7 +73,7 @@ class ProductMaster extends BaseModel
      * order_productテーブル リレーション設定
      * @return HasMany
      */
-    public function order_products(): HasMany
+    public function OrderProducts(): HasMany
     {
         return $this->hasMany(OrderProduct::class);
     }

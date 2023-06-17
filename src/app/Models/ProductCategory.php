@@ -29,15 +29,40 @@ class ProductCategory extends BaseModel
     }
 
     /**
-     * purchase_product_masterテーブル リレーション設定
+     * カテゴリ1に関連するPurchaseProductMasterのリレーション定義
      * @return HasMany
      */
-    public function purchase_product_masters(): HasMany
+    public function purchaseProductMastersCategory1(): HasMany
     {
-        return $this->hasMany(PurchaseProductMaster::class, 'category1_id', 'id')
-            ->orWhere('category2_id', $this->id)
-            ->orWhere('category3_id', $this->id)
-            ->orWhere('category4_id', $this->id);
+        return $this->hasMany(PurchaseProductMaster::class, 'category1_id', 'id');
     }
+
+    /**
+     * カテゴリ2に関連するPurchaseProductMasterのリレーション定義
+     * @return HasMany
+     */
+    public function purchaseProductMastersCategory2(): HasMany
+    {
+        return $this->hasMany(PurchaseProductMaster::class, 'category2_id', 'id');
+    }
+
+    /**
+     * カテゴリ3に関連するPurchaseProductMasterのリレーション定義
+     * @return HasMany
+     */
+    public function purchaseProductMastersCategory3(): HasMany
+    {
+        return $this->hasMany(PurchaseProductMaster::class, 'category3_id', 'id');
+    }
+
+    /**
+     * カテゴリ4に関連するPurchaseProductMasterのリレーション定義
+     * @return HasMany
+     */
+    public function purchaseProductMastersCategory4(): HasMany
+    {
+        return $this->hasMany(PurchaseProductMaster::class, 'category4_id', 'id');
+    }
+
 
 }

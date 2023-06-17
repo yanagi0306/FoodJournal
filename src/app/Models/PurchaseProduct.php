@@ -13,7 +13,7 @@ class PurchaseProduct extends BaseModel
     protected $table = 'purchase_product';
 
     protected $fillable = [
-        'purchase_id',
+        'purchase_info_id',
         'purchase_cd',
         'purchase_name',
         'quantity',

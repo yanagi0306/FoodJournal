@@ -31,7 +31,7 @@ class Company extends BaseModel
      * customer_typeテーブル リレーション設定
      * @return HasMany
      */
-    public function customer_types(): HasMany
+    public function customerTypes(): HasMany
     {
         return $this->hasMany(CustomerType::class);
     }
@@ -49,7 +49,7 @@ class Company extends BaseModel
      * payment_methodテーブル リレーション設定
      * @return HasMany
      */
-    public function payment_methods(): HasMany
+    public function paymentMethods(): HasMany
     {
         return $this->hasMany(PaymentMethod::class);
     }
@@ -58,7 +58,7 @@ class Company extends BaseModel
      * purchase_supplierテーブル リレーション設定
      * @return HasMany
      */
-    public function purchase_suppliers(): HasMany
+    public function purchaseSuppliers(): HasMany
     {
         return $this->hasMany(PurchaseSupplier::class);
     }
@@ -67,7 +67,7 @@ class Company extends BaseModel
      * parent_expense_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function parent_expense_categories(): HasMany
+    public function parentExpenseCategories(): HasMany
     {
         return $this->hasMany(ParentExpenseCategory::class);
     }
@@ -94,7 +94,7 @@ class Company extends BaseModel
      * income_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function income_categories(): HasMany
+    public function incomeCategories(): HasMany
     {
         return $this->hasMany(IncomeCategory::class);
     }
@@ -103,7 +103,7 @@ class Company extends BaseModel
      * parent_purchase_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function parent_purchase_categories(): HasMany
+    public function parentPurchaseCategories(): HasMany
     {
         return $this->hasMany(ParentPurchaseCategory::class);
     }
@@ -112,7 +112,7 @@ class Company extends BaseModel
      * purchase_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function purchase_categories(): HasMany
+    public function purchaseCategories(): HasMany
     {
         return $this->hasMany(PurchaseCategory::class);
     }
@@ -121,7 +121,7 @@ class Company extends BaseModel
      * purchase_product_masterテーブル リレーション設定
      * @return HasMany
      */
-    public function purchase_product_masters(): HasMany
+    public function purchaseProductMasters(): HasMany
     {
         return $this->hasMany(PurchaseProductMaster::class);
     }

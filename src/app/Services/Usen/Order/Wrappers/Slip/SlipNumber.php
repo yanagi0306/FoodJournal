@@ -11,6 +11,6 @@ use App\Services\Base\CsvWrappers\ColumnBase;
  */
 class SlipNumber extends ColumnBase
 {
-    protected string $permittedValueType = 'string';
-    protected bool $isExtractRight = true;
+    protected string $permittedValueType     = 'string';
+    protected ?bool  $isExtractRight         = true;
 }

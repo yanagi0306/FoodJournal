@@ -11,6 +11,7 @@ use App\Services\Base\CsvWrappers\ColumnBase;
  */
 class OrderOptions extends ColumnBase
 {
-    protected array $invalidValues = [];
-    protected string $permittedValueType = 'string';
+    protected string $permittedValueType     = 'string';
+    protected ?array $invalidValues          = null;
+
 }

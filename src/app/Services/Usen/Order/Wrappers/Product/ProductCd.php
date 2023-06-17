@@ -11,6 +11,6 @@ use App\Services\Base\CsvWrappers\ColumnBase;
  */
 class ProductCd extends ColumnBase
 {
-    protected string $permittedValueType = 'string';
-    protected bool $isExtractLeft = true;
+    protected string $permittedValueType     = 'string';
+    protected ?bool  $isExtractLeft          = true;
 }

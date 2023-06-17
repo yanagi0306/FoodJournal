@@ -6,10 +6,10 @@ use App\Services\Base\CsvWrappers\ColumnBase;
 
 /**
  * Quantity(数量)
- * example inputValue:「00000001967:金の鯛茶漬け」
- * example value :「金の鯛茶漬け」
+ * example inputValue:「1」
+ * example value :「1」
  */
 class Quantity extends ColumnBase
 {
-    protected array $invalidValues = [null, '', 0];
+    protected string $permittedValueType = 'integer';
 }

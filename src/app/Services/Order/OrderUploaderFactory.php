@@ -6,7 +6,6 @@ use Illuminate\Http\UploadedFile;
 use InvalidArgumentException;
 
 /**
- * Class OrderUploaderFactory
  * 売上アップローダーファクトリークラス
  * @package App\Services\OrderUploaders
  */

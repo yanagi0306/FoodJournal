@@ -29,12 +29,12 @@ class CustomerType extends BaseModel
     }
 
     /**
-     * orderテーブル リレーション設定
+     * order_infoテーブル リレーション設定
      * @return HasMany
      */
-    public function orders(): HasMany
+    public function orderInfos(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(OrderInfo::class);
     }
 
 

@@ -8,28 +8,29 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up(): void
     {
-        Schema::create('order_payment', function (Blueprint $table) {
+        Schema::create('order_payment', function(Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('注文支払ID');
-            $table->unsignedBigInteger('order_id')->comment('注文ID');
+            $table->unsignedBigInteger('order_info_id')->comment('注文ID');
             $table->unsignedBigInteger('payment_method_id')->comment('支払い方法');
             $table->integer('amount')->comment('支払額');
+            $table->integer('payment_fee')->nullable()->comment('支払手数料');
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['order_id', 'payment_method_id']);
+            $table->unique(['order_info_id',
+                            'payment_method_id']);
 
             // 外部キー制約の設定
-            $table->foreign('order_id')->references('id')->on('order')->onDelete('cascade');
+            $table->foreign('order_info_id')->references('id')->on('order_info')->onDelete('cascade');
             $table->foreign('payment_method_id')->references('id')->on('payment_method')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
-            $table->charset = 'utf8';
+            $table->charset   = 'utf8';
             $table->collation = 'utf8_general_ci';
 
         });
@@ -39,7 +40,6 @@ return new class extends Migration {
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down(): void

@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('order_product', function(Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('注文商品ID');
-            $table->unsignedBigInteger('order_id')->comment('注文ID');
+            $table->unsignedBigInteger('order_info_id')->comment('注文ID');
             $table->string('product_cd', 30)->comment('商品コード');
             $table->string('product_name', 30)->comment('商品名');
             $table->string('category1')->comment('カテゴリ1');
@@ -30,7 +30,7 @@ return new class extends Migration {
             $table->timestamps();
 
             // 外部キー制約の設定
-            $table->foreign('order_id')->references('id')->on('order')->onDelete('cascade');
+            $table->foreign('order_info_id')->references('id')->on('order_info')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset   = 'utf8';

@@ -18,23 +18,22 @@ use App\Services\Usen\Order\Wrappers\Product\UnitPrice;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-
 /**
  * 注文商品クラス
  */
 class Product extends ColumnGroupBase
 {
-    protected ProductCd $productCd;
-    protected ProductName $productName;
-    protected Category1 $category1;
-    protected Category2 $category2;
-    protected Category3 $category3;
-    protected Category4 $category4;
-    protected Category5 $category5;
+    protected ProductCd    $productCd;
+    protected ProductName  $productName;
+    protected Category1    $category1;
+    protected Category2    $category2;
+    protected Category3    $category3;
+    protected Category4    $category4;
+    protected Category5    $category5;
     protected OrderOptions $orderOptions;
-    protected Quantity $quantity;
-    protected UnitCost $unitCost;
-    protected UnitPrice $unitPrice;
+    protected Quantity     $quantity;
+    protected UnitCost     $unitCost;
+    protected UnitPrice    $unitPrice;
 
     /**
      * @param array $row
@@ -53,7 +52,6 @@ class Product extends ColumnGroupBase
         $this->category4    = new Category4($row['category4'], 'カテゴリ4');
         $this->category5    = new Category5($row['category5'], 'カテゴリ5');
         $this->orderOptions = new OrderOptions($row['orderOptions'], 'オーダーオプション');
-
     }
 }
 

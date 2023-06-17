@@ -31,12 +31,12 @@ class PurchaseSupplier extends BaseModel
     }
 
     /**
-     * purchaseテーブル リレーション設定
+     * purchase_infoテーブル リレーション設定
      * @return HasMany
      */
-    public function purchases(): HasMany
+    public function purchaseInfos(): HasMany
     {
-        return $this->hasMany(Purchase::class);
+        return $this->hasMany(PurchaseInfo::class);
     }
 
 }

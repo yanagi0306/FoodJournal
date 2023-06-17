@@ -11,7 +11,6 @@ use App\Services\Base\CsvWrappers\ColumnBase;
  */
 class SalesType extends ColumnBase
 {
-    protected string $permittedValueType = 'string';
-    protected bool $isExtractLeft = true;
-    protected array $invalidValues = [];
+    protected string $permittedValueType     = 'string';
+    protected ?bool  $isExtractLeft          = true;
 }

@@ -11,6 +11,8 @@ use App\Services\Base\CsvWrappers\ColumnBase;
  */
 class OrderStatus extends ColumnBase
 {
-    protected bool $isExtractLeft = true;
-    protected array $permittedValues = [20];
+    protected string $permittedValueType     = 'string';
+    protected ?bool  $isExtractLeft          = true;
+    protected ?array $permittedValues        = ['20'];
+    protected ?array $invalidValues          = null;
 }

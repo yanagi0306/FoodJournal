@@ -32,7 +32,7 @@ class ParentIncomeCategory extends BaseModel
      * income_category リレーション設定
      * @return HasMany
      */
-    public function Income_categories(): HasMany
+    public function incomeCategories(): HasMany
     {
         return $this->hasMany(IncomeCategory::class);
     }

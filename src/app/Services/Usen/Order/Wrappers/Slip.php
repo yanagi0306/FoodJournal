@@ -4,7 +4,7 @@ namespace App\Services\Usen\Order\Wrappers;
 
 use App\Exceptions\SkipImportException;
 use App\Services\Base\CsvWrappers\ColumnGroupBase;
-use App\Services\Usen\Order\Wrappers\Slip\CustomerTypeCd;
+use App\Services\Usen\Order\Wrappers\Slip\CustomerTypeName;
 use App\Services\Usen\Order\Wrappers\Slip\MenCount;
 use App\Services\Usen\Order\Wrappers\Slip\OrderDate;
 use App\Services\Usen\Order\Wrappers\Slip\PaymentDate;
@@ -20,14 +20,14 @@ use Illuminate\Support\Facades\Log;
  */
 class Slip extends ColumnGroupBase
 {
-    protected StoreCd $storeCd;
-    protected SlipNumber $slipNumber;
-    protected OrderDate $orderDate;
-    protected PaymentDate $paymentDate;
-    protected MenCount $menCount;
-    protected WomenCount $womenCount;
-    protected CustomerTypeCd $customerTypeCd;
-    protected SalesType $salesType;
+    protected StoreCd          $storeCd;
+    protected SlipNumber       $slipNumber;
+    protected OrderDate        $orderDate;
+    protected PaymentDate      $paymentDate;
+    protected MenCount         $menCount;
+    protected WomenCount       $womenCount;
+    protected CustomerTypeName $customerTypeName;
+    protected SalesType        $salesType;
 
     /**
      * @param array $row
@@ -36,14 +36,14 @@ class Slip extends ColumnGroupBase
     public function __construct(array $row)
     {
 
-        $this->storeCd        = new StoreCd($row['storeCd'], '店舗コード');
-        $this->slipNumber     = new SlipNumber($row['slipNumber'], '伝票番号');
-        $this->orderDate      = new OrderDate($row['orderDate'], '伝票発行日');
-        $this->paymentDate    = new PaymentDate($row['paymentDate'], '伝票処理日');
-        $this->menCount       = new MenCount($row['menCount'], '客数男性');
-        $this->womenCount     = new WomenCount($row['womenCount'], '客数女性');
-        $this->customerTypeCd = new CustomerTypeCd($row['customerTypeCd'], '客層');
-        $this->salesType      = new SalesType($row['salesType'], '販売形態');
+        $this->storeCd          = new StoreCd($row['storeCd'], '店舗コード');
+        $this->slipNumber       = new SlipNumber($row['slipNumber'], '伝票番号');
+        $this->orderDate        = new OrderDate($row['orderDate'], '伝票発行日');
+        $this->paymentDate      = new PaymentDate($row['paymentDate'], '伝票処理日');
+        $this->menCount         = new MenCount($row['menCount'], '客数男性');
+        $this->womenCount       = new WomenCount($row['womenCount'], '客数女性');
+        $this->customerTypeName = new CustomerTypeName($row['customerTypeName'], '客層名');
+        $this->salesType        = new SalesType($row['salesType'], '販売形態');
     }
 }
 

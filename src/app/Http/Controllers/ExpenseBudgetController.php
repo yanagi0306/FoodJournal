@@ -39,34 +39,31 @@ class ExpenseBudgetController extends Controller
 
     /**
      * 支出予算一覧画面
-     *
-     * @param int $storeId
+     * @param int    $storeId
      * @param string $date
      * @return void
      */
-    public function index($storeId, $date)
+    public function index(int $storeId, string $date)
     {
         // ここに支出予算一覧画面のロジックを追加します
     }
 
     /**
      * 支出予算登録&更新
-     *
      * @param int $storeId
      * @return void
      */
-    public function save($storeId)
+    public function save(int $storeId)
     {
         // ここに支出予算登録&更新のロジックを追加します
     }
 
     /**
      * 支出予算削除
-     *
      * @param int $expenseBudgetId
      * @return void
      */
-    public function destroy($expenseBudgetId)
+    public function destroy(int $expenseBudgetId)
     {
         // ここに支出予算削除のロジックを追加します
     }

@@ -19,7 +19,7 @@ class UsersSeeder extends Seeder
     {
 
         /** @var Company $company */
-        $company = Company::inRandomOrder()->first();
+        $company = Company::find(1)->firstOrFail();
 
         /** @var Store $store */
         $store = Store::inRandomOrder()->first();

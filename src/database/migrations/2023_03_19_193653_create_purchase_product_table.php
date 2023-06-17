@@ -8,15 +8,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up(): void
     {
-        Schema::create('purchase_product', function (Blueprint $table) {
+        Schema::create('purchase_product', function(Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('仕入商品ID');
-            $table->unsignedBigInteger('purchase_id')->comment('仕入情報ID');
+            $table->unsignedBigInteger('purchase_info_id')->comment('仕入情報ID');
             $table->unsignedBigInteger('product_cd')->comment('仕入商品マスタコード');
             $table->string('product_name', 50)->comment('商品名');
             $table->integer('quantity')->comment('数量');
@@ -24,10 +23,10 @@ return new class extends Migration {
             $table->timestamps();
 
             // 外部キー制約の設定
-            $table->foreign('purchase_id')->references('id')->on('purchase')->onDelete('cascade');
+            $table->foreign('purchase_info_id')->references('id')->on('purchase_info')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
-            $table->charset = 'utf8';
+            $table->charset   = 'utf8';
             $table->collation = 'utf8_general_ci';
 
         });
@@ -37,7 +36,6 @@ return new class extends Migration {
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down(): void

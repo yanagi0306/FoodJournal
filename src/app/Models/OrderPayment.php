@@ -12,25 +12,26 @@ class OrderPayment extends BaseModel
     protected $table = 'order_payment';
 
     protected $fillable = [
-        'order_id',
+        'order_info_id',
         'payment_method_id',
         'amount',
+        'payment_fee',
     ];
 
     /**
-     * orderテーブル リレーション設定
+     * order_infoテーブル リレーション設定
      * @return BelongsTo
      */
-    public function order(): BelongsTo
+    public function orderInfo(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(OrderInfo::class);
     }
 
     /**
      * payment_methodテーブル リレーション設定
      * @return BelongsTo
      */
-    public function payment_method(): BelongsTo
+    public function paymentMethod(): BelongsTo
     {
         return $this->belongsTo(PaymentMethod::class);
     }

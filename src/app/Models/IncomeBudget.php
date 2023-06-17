@@ -34,7 +34,7 @@ class IncomeBudget extends BaseModel
      * income_categoryテーブル リレーション設定
      * @return BelongsTo
      */
-    public function income_category(): BelongsTo
+    public function incomeCategory(): BelongsTo
     {
         return $this->belongsTo(IncomeCategory::class);
     }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Constants\Common;
 use App\Models\Company;
 use App\Models\IncomeCategory;
 use App\Models\ParentIncomeCategory;
@@ -17,34 +18,25 @@ class IncomeCategorySeeder extends Seeder
     public function run(): void
     {
         /** @var Company $company */
-        $company = Company::inRandomOrder()->first();
+        $company = Company::find(1)->firstOrFail();
 
-        $parentCategories = [
-            1 => '売上',
-        ];
-
-        $childCategories = [
-            1 => '店舗売上',
-            2 => 'Uber',
-            3 => '出前館',
-            4 => 'Wolt',
-        ];
-
-        foreach ($parentCategories as $catCd => $catName) {
+        foreach (Common::PARENT_INCOME_CATEGORIES as $category) {
             ParentIncomeCategory::create([
                                              'company_id' => $company->id,
-                                             'cat_cd'     => $catCd,
-                                             'cat_name'   => $catName,
+                                             'cat_cd'     => $category['cat_cd'],
+                                             'cat_name'   => $category['cat_name'],
                                          ]);
         }
 
-        foreach ($childCategories as $catCd => $catName) {
+        $incomeCategory = ParentIncomeCategory::where('company_id', $company->id)->where('cat_cd', Common::PARENT_INCOME_CATEGORY_FOR_SALE['cat_cd'])->firstOrFail();
+
+        foreach (Common::CHILD_INCOME_CATEGORIES as $category) {
             IncomeCategory::create([
                                        'company_id'                => $company->id,
-                                       'parent_income_category_id' => 1,
-                                       'income_type_id'            => 4,
-                                       'cat_cd'                    => $catCd,
-                                       'cat_name'                  => $catName,
+                                       'parent_income_category_id' => $incomeCategory->id,
+                                       'income_type_cd'            => $category['income_type_cd'],
+                                       'cat_cd'                    => $category['cat_cd'],
+                                       'cat_name'                  => $category['cat_name'],
                                    ]);
         }
     }

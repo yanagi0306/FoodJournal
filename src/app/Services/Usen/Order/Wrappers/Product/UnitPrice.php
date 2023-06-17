@@ -11,5 +11,5 @@ use App\Services\Base\CsvWrappers\ColumnBase;
  */
 class UnitPrice extends ColumnBase
 {
-    protected array $invalidValues = [null, '', 0];
+    protected string $permittedValueType = 'integer';
 }

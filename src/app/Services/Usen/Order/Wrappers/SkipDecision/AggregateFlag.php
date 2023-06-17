@@ -12,6 +12,6 @@ use App\Services\Base\CsvWrappers\ColumnBase;
 class AggregateFlag extends ColumnBase
 {
     protected string $permittedValueType = 'string';
-    protected array $permittedValues = ['*'];
-    protected array $invalidValues = [];
+    protected ?array $permittedValues    = ['*'];
+    protected ?array $invalidValues      = null;
 }

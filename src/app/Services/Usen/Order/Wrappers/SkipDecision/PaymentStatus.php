@@ -10,6 +10,9 @@ use App\Services\Base\CsvWrappers\ColumnBase;
  */
 class PaymentStatus extends ColumnBase
 {
-    protected bool $isExtractLeft = true;
-    protected array $invalidValues = [12, 30, 50];
+    protected string $permittedValueType     = 'string';
+    protected ?bool  $isExtractLeft          = true;
+    protected ?array $invalidValues          = ['12', '30', '50'];
+//    protected ?array $permittedValues    = ['10', '11'];
+
 }

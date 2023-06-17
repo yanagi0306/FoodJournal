@@ -12,5 +12,4 @@ use App\Services\Base\CsvWrappers\ColumnBase;
 class OrderDate extends ColumnBase
 {
     protected string $permittedValueType = 'timestamp';
-    protected bool $isTrimSpaces = false;
 }

@@ -15,8 +15,9 @@ use IteratorAggregate;
  */
 class CsvOrderCollection implements IteratorAggregate
 {
-    private array $orders = [];
-    private int $companyId;
+    private array  $orders      = [];
+    private int    $companyId;
+    private string $skipMessage = '';
 
     /**
      * @param array $csvData
@@ -41,8 +42,6 @@ class CsvOrderCollection implements IteratorAggregate
 
         foreach ($csvData as $row) {
             $lineNumber++;
-            Log::info($lineNumber . '行目取込開始');
-
             try {
                 $csvOrder = new CsvOrderRow($row, $this->companyId);
 
@@ -56,12 +55,22 @@ class CsvOrderCollection implements IteratorAggregate
                 $this->orders[$slipNumber][] = $csvOrder;
 
             } catch (SkipImportException $e) {
-                Log::info($e->getMessage());
+                Log::info(($lineNumber) . "行目取込処理をスキップします。" . $e->getMessage());
+                $this->skipMessage .= $e->getMessage();
                 continue;
+            } catch (Exception $e) {
+                throw new Exception($lineNumber . '行目取込処理に失敗しました:' . $e->getMessage());
             }
-
-            Log::info(($lineNumber) . '行目取込完了');
         }
+    }
+
+    /**
+     * スキップした項目を取得する
+     * @return string
+     */
+    public function getSkipMessage(): string
+    {
+        return $this->skipMessage;
     }
 
 
