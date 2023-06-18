@@ -4,6 +4,7 @@ namespace App\Services\Usen\Order;
 
 use App\Constants\Common;
 use App\Exceptions\SkipImportException;
+use App\Models\Store;
 use ArrayIterator;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -16,21 +17,22 @@ use IteratorAggregate;
  */
 class CsvOrderCollection implements IteratorAggregate
 {
-    private array  $orders      = [];
+    private array  $orders        = [];
+    private array  $orderProducts = [];
     private int    $companyId;
-    private array  $orderProducts;
-    private string $skipMessage = '';
+    private array  $storeCds;
+    private string $skipMessage   = '';
 
     /**
      * @param array $csvOrderArray
      * @param int   $companyId
-     * @param array $orderProducts
+     * @param array $storeIds
      * @throws Exception
      */
-    public function __construct(array $csvOrderArray, int $companyId, array $orderProducts)
+    public function __construct(array $csvOrderArray, int $companyId, array $storeIds)
     {
-        $this->companyId     = $companyId;
-        $this->orderProducts = $orderProducts;
+        $this->companyId = $companyId;
+        $this->storeCds  = $this->getStoreCds($storeIds);
         $this->addCollection($csvOrderArray);
     }
 
@@ -51,15 +53,18 @@ class CsvOrderCollection implements IteratorAggregate
                     throw new SkipImportException('ヘッダー行のためスキップ');
                 }
 
-                $csvOrder = new CsvOrderRow($row, $this->companyId, $this->orderProducts);
+                $productMaster = new CsvOrderProductMasterRow($row, $this->companyId);
+                $csvOrder      = new CsvOrderRow($row, $this->companyId, $this->storeCds);
 
-                // 伝票番号ごとに配列に格納
+                // orderProductsインスタンスにCsvOrderProductMasterRowを格納
+                $productCd                       = $productMaster->getProductCd();
+                $this->orderProducts[$productCd] = $productMaster;
+
+                // 伝票番号ごとにCsvOrderRowを格納
                 $slipNumber = $csvOrder->getSlipNumber();
-
                 if (!isset($this->orders[$slipNumber])) {
                     $this->orders[$slipNumber] = [];
                 }
-
                 $this->orders[$slipNumber][] = $csvOrder;
 
             } catch (SkipImportException $e) {
@@ -69,6 +74,31 @@ class CsvOrderCollection implements IteratorAggregate
             } catch (Exception $e) {
                 throw new Exception($lineNumber . '行目取込処理に失敗しました:' . $e->getMessage());
             }
+        }
+    }
+
+    public function getOrderProducts(): array
+    {
+        return $this->orderProducts;
+    }
+
+    public function getOrders(): array
+    {
+        return $this->orders;
+    }
+
+    /**
+     * モデルを参照してorder_store_cdを取得する
+     * @param array $storeIds
+     * @return array
+     * @throws Exception
+     */
+    private function getStoreCds(array $storeIds): array
+    {
+        try {
+            return Store::whereIn('id', $storeIds)->pluck('order_store_cd')->toArray();
+        } catch (Exception $e) {
+            throw new Exception('order_store_cdの取得に失敗しました: ' . $e->getMessage());
         }
     }
 

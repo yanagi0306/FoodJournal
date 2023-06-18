@@ -32,20 +32,18 @@ class CsvOrderUploader extends BaseUploader implements OrderUploaderInterface
         // CSVデータを配列に変換
         $csvArray = $this->convertCsvToArray($this->uploadFile, null, 'CP932');
 
-        // 配列から注文商品マスタCollectionを作成
-        $productMasterCollection = new CsvOrderProductMasterCollection($csvArray, $this->companyId, $this->storeIds);
+        // 配列から注文情報Collectionを作成
+        $orderCollection = new CsvOrderCollection($csvArray, $this->companyId, $this->storeIds);
+
         // 注文商品マスタの登録処理を実行
-        $csvOrderProductMasterRegistration = new CsvOrderProductMasterRegistration($productMasterCollection, $this->companyId);
+        $csvOrderProductMasterRegistration = new CsvOrderProductMasterRegistration($orderCollection->getOrderProducts(), $this->companyId);
         $recordCounts                      = $csvOrderProductMasterRegistration->saveCsvCollection();
 
         // 注文商品マスタを更新した商品情報を保持
         $orderProducts = $csvOrderProductMasterRegistration->getOrderProducts();
 
-        // 配列から注文情報Collectionを作成
-        $orderCollection = new CsvOrderCollection($csvArray, $this->companyId, $orderProducts);
-
         // 注文情報の登録処理実行
-        $csvOrderRegistration = new CsvOrderRegistration($orderCollection);
+        $csvOrderRegistration = new CsvOrderRegistration($orderCollection->getOrders(), $orderProducts);
         $recordCounts         .= $csvOrderRegistration->saveCsvCollection();
 
         // 成功した場合はファイルをアップロードディレクトリに移動

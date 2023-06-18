@@ -36,7 +36,7 @@ class Slip extends ColumnGroupBase
     public function __construct(array $row)
     {
 
-        $this->storeCd          = new StoreCd($row['storeCd'], '店舗コード');
+        $this->storeCd          = new StoreCd($row['storeCd'], $row['storeCds']);
         $this->slipNumber       = new SlipNumber($row['slipNumber'], '伝票番号');
         $this->orderDate        = new OrderDate($row['orderDate'], '伝票発行日');
         $this->paymentDate      = new PaymentDate($row['paymentDate'], '伝票処理日');

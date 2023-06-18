@@ -40,7 +40,6 @@ class OrderProductMaster extends ColumnGroupBase
      */
     public function __construct(array $row)
     {
-        $this->storeCd     = new StoreCd($row['storeCd'], '店舗コード');
         $this->productCd   = new ProductCd($row['product'], '商品コード');
         $this->productName = new ProductName($row['product'], '商品名');
         $this->unitCost    = new UnitCost($row['unitCost'], '理論原価');

@@ -29,7 +29,6 @@ class CsvOrderProductMasterRow
         }
 
         $this->orderProductMaster = new OrderProductMaster([
-                                                               'storeCd'   => $row[1],
                                                                'category1' => $row[68],
                                                                'category2' => $row[69],
                                                                'category3' => $row[70],
@@ -95,14 +94,5 @@ class CsvOrderProductMasterRow
         return $productMaster['productCd'];
     }
 
-    /**
-     * 店舗コードを取得する
-     * @return string
-     */
-    public function getStoreCd(): string
-    {
-        $productMaster = $this->orderProductMaster->getValues();
-        return $productMaster['storeCd'];
-    }
 
 }

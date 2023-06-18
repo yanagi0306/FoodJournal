@@ -8,20 +8,21 @@ use App\Models\OrderInfo;
 use App\Models\OrderPayment;
 use App\Models\OrderProduct;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class CsvOrderRegistration
 {
-    private CsvOrderCollection $csvOrderCollection;
-    private int                $updatedOrderCount           = 0;
-    private int                $registeredOrderCount        = 0;
-    private int                $registeredOrderPaymentCount = 0;
-    private int                $registeredOrderProductCount = 0;
-    private string             $slipNumMessage;
+    private array  $csvOrderCollection;
+    private array  $orderProducts;
+    private int    $updatedOrderCount           = 0;
+    private int    $registeredOrderCount        = 0;
+    private int    $registeredOrderPaymentCount = 0;
+    private int    $registeredOrderProductCount = 0;
+    private string $slipNumMessage;
 
-    public function __construct(CsvOrderCollection $csvOrderCollection)
+    public function __construct(array $csvOrderCollection, array $orderProducts)
     {
         $this->csvOrderCollection = $csvOrderCollection;
+        $this->orderProducts      = $orderProducts;
     }
 
     /**
@@ -31,15 +32,20 @@ class CsvOrderRegistration
      */
     public function saveCsvCollection(): string
     {
-        // データベースのトランザクションを開始
-        DB::transaction(function() {
+        try {
+            DB::beginTransaction();
             // 伝票番号ごとに処理
             foreach ($this->csvOrderCollection as $slipNumber => $csvOrderRowArray) {
                 $this->slipNumMessage = "伝票番号:({$slipNumber}) ";
                 // 各伝票番号に対応するOrderCollectionをデータベースに保存
                 $this->saveOrders($csvOrderRowArray);
             }
-        });
+            DB::commit();
+        } catch (Exception $e) {
+            // 例外が発生した場合、トランザクションをロールバック処理終了
+            DB::rollBack();
+            throw new Exception($this->slipNumMessage . $e->getMessage());
+        }
 
         return $this->generateResultMessage();
     }
@@ -150,7 +156,7 @@ class CsvOrderRegistration
     {
         $orderProducts = [];
         foreach ($csvOrderRowArray as $csvOrderRow) {
-            $row = $csvOrderRow->getOrderProductForRegistration($orderId);
+            $row = $csvOrderRow->getOrderProductForRegistration($orderId, $this->orderProducts);
 
             $productMasterId = $row['order_product_master_id'];
 

@@ -9,15 +9,15 @@ use Illuminate\Support\Facades\DB;
 
 class CsvOrderProductMasterRegistration
 {
-    private CsvOrderProductMasterCollection $csvOrderProductMasterCollection;
-    private int                             $companyId;
-    private int                             $updatedCount       = 0;
-    private int                             $registeredCount    = 0;
-    private string                          $productCdMessage;
-    private array                           $successfulProducts = [];
+    private array  $csvOrderProductMasterCollection;
+    private int    $companyId;
+    private int    $updatedCount       = 0;
+    private int    $registeredCount    = 0;
+    private string $productCdMessage;
+    private array  $successfulProducts = [];
 
 
-    public function __construct(CsvOrderProductMasterCollection $csvOrderProductMasterCollection, $companyId)
+    public function __construct(array $csvOrderProductMasterCollection, $companyId)
     {
         $this->companyId                       = $companyId;
         $this->csvOrderProductMasterCollection = $csvOrderProductMasterCollection;
@@ -47,11 +47,7 @@ class CsvOrderProductMasterRegistration
             throw new Exception($this->productCdMessage . $e->getMessage());
         }
 
-        $resultMessage = "product_masterテーブル登録:{$this->registeredCount}件\n";
-        $resultMessage .= "product_masterテーブル更新:{$this->updatedCount}件\n";
-
-        // 成功時は登録件数を返す
-        return $resultMessage;
+        return $this->generateResultMessage();
     }
 
     /**
@@ -114,5 +110,18 @@ class CsvOrderProductMasterRegistration
     public function getOrderProducts(): array
     {
         return $this->successfulProducts;
+    }
+
+    /**
+     * 結果メッセージを生成する
+     * @return string
+     */
+    private function generateResultMessage(): string
+    {
+        $resultMessage = "product_masterテーブル登録:{$this->registeredCount}件\n";
+        $resultMessage .= "product_masterテーブル更新:{$this->updatedCount}件\n";
+
+        // 成功時は登録件数を返す
+        return $resultMessage;
     }
 }

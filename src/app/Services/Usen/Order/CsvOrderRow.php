@@ -22,15 +22,15 @@ class CsvOrderRow
     private SkipDecision $skipDecision;
     private Slip         $slip;
     private int          $companyId;
-    private array        $orderProducts;
+    private array        $storeCds;
 
     /**
      * @throws SkipImportException|Exception
      */
-    public function __construct(array $row, $companyId, $orderProducts, $rowCount = 95)
+    public function __construct(array $row, $companyId, array $storeCds, $rowCount = 95)
     {
-        $this->companyId     = $companyId;
-        $this->orderProducts = $orderProducts;
+        $this->companyId = $companyId;
+        $this->storeCds  = $storeCds;
 
         if (count($row) !== $rowCount) {
             Log::info(print_r($row, true));
@@ -52,6 +52,7 @@ class CsvOrderRow
                                    'womenCount'       => $row[20],
                                    'customerTypeName' => $row[66],
                                    'salesType'        => $row[93],
+                                   'storeCds'         => $this->storeCds,
                                ]);
 
         $this->payment = new Payment([
@@ -67,8 +68,8 @@ class CsvOrderRow
                                      ]);
 
         $this->product = new Product([
-                                         'product'       => $row[74],
-                                         'quantity'      => $row[83],
+                                         'product'  => $row[74],
+                                         'quantity' => $row[83],
                                      ]);
     }
 
@@ -129,16 +130,17 @@ class CsvOrderRow
 
     /**
      * OrderProductに関するデータを取得する
-     * @param int $orderId
+     * @param int   $orderId
+     * @param array $orderProducts
      * @return array
      */
-    public function getOrderProductForRegistration(int $orderId): array
+    public function getOrderProductForRegistration(int $orderId, array $orderProducts): array
     {
         $orderProduct = $this->product->getValues();
 
         return [
             'order_info_id'           => $orderId,
-            'order_product_master_id' => $this->getOrderProductMasterId($orderProduct['productCd']),
+            'order_product_master_id' => $this->getOrderProductMasterId($orderProduct['productCd'], $orderProducts),
             'quantity'                => $orderProduct['quantity'],
         ];
     }
@@ -233,11 +235,12 @@ class CsvOrderRow
      * 注文商品マスタ一覧を参照して、OrderProductMasterIdを取得する
      * $orderProducts => key注文番号 value注文商品マスタIDの配列
      * @param string $productCd
+     * @param array  $orderProducts
      * @return int
      */
-    public function getOrderProductMasterId(string $productCd): int
+    public function getOrderProductMasterId(string $productCd, array $orderProducts): int
     {
-        return $this->orderProducts[$productCd];
+        return $orderProducts[$productCd];
     }
 }
 
