@@ -12,4 +12,5 @@ use App\Services\Base\CsvWrappers\ColumnBase;
 class Quantity extends ColumnBase
 {
     protected string $permittedValueType = 'integer';
+    protected ?array $invalidValues = [null,0];
 }

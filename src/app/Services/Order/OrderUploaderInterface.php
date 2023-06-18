@@ -11,5 +11,5 @@ interface OrderUploaderInterface
     /**
      * CSVファイルの処理を実行
      */
-    public function processCsv(): array;
+    public function processCsv(): string;
 }

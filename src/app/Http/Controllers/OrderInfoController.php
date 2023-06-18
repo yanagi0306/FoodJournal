@@ -50,14 +50,13 @@ class OrderInfoController extends Controller
         try {
             // システム名を取得 (データベースや設定ファイルから)
             $orderSystem = 'usen';
-            $service     = OrderUploaderFactory::createUploader($orderSystem, $uploadedFile, $this->userInfo['company_id']);
+            $service     = OrderUploaderFactory::createUploader($orderSystem, $uploadedFile, $this->userInfo['company_id'], $this->userInfo['store_ids']);
 
-            [$resultMessage,
-             $skipMessage] = $service->processCsv();
+            $resultMessage = $service->processCsv();
 
             $this->responseMessage = '注文データの登録処理に成功しました。';
             $this->responseStatus  = 'success';
-            Log::info($this->responseMessage . $resultMessage);
+            Log::info($this->responseMessage . "\n" . $resultMessage);
 
         } catch (\Throwable $e) {
             $this->responseMessage = "注文データの登録処理に失敗しました。\n" . $e->getMessage();

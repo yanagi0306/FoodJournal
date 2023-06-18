@@ -13,17 +13,8 @@ class OrderProduct extends BaseModel
 
     protected $fillable = [
         'order_info_id',
-        'product_cd',
-        'product_name',
+        'order_product_master_id',
         'quantity',
-        'unit_price',
-        'unit_cost',
-        'order_options',
-        'category1',
-        'category2',
-        'category3',
-        'category4',
-        'category5',
     ];
 
     /**
@@ -33,5 +24,14 @@ class OrderProduct extends BaseModel
     public function orderInfo(): BelongsTo
     {
         return $this->belongsTo(OrderInfo::class);
+    }
+
+    /**
+     * order_product_masterテーブル リレーション設定
+     * @return BelongsTo
+     */
+    public function orderProductMaster(): BelongsTo
+    {
+        return $this->belongsTo(OrderProductMaster::class);
     }
 }

@@ -54,7 +54,7 @@ class ConvertHelper
      * 「:」区切りで右側を分離
      * ステータスコード:ステータス名となっている為
      * @param ?string $value
-     * @param string $valueName
+     * @param string  $valueName
      * @return string|null
      * @throws Exception
      */
@@ -236,12 +236,11 @@ class ConvertHelper
             return null;
         }
 
-        // 秒の記載がない場合は追記(例:2022/12/25 19:08)
-        if (strlen($value) === 16) {
-            $value .= ':00';
+        $timestampValue = DateTime::createFromFormat('Y/m/d H:i', $value);
+        if ($timestampValue === false) {
+            $timestampValue = DateTime::createFromFormat('Y/m/d H:i:s', $value);
         }
 
-        $timestampValue = DateTime::createFromFormat('Y/m/d H:i:s', $value);
         if ($timestampValue === false) {
             throw new Exception("項目名[{$valueName}] 値:[{$value}] timestamp型に変換できません");
         }
@@ -249,6 +248,7 @@ class ConvertHelper
         $timestampValue->setTimezone(new DateTimeZone(env('APP_TIMEZONE', 'Asia/Tokyo')));
         return $timestampValue;
     }
+
 
     /**
      * 配列を文字列に変換して、前後に [ ] を追加

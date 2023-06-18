@@ -22,13 +22,16 @@ class CsvOrderRow
     private SkipDecision $skipDecision;
     private Slip         $slip;
     private int          $companyId;
+    private array        $orderProducts;
 
     /**
      * @throws SkipImportException|Exception
      */
-    public function __construct(array $row, $companyId, $rowCount = 95)
+    public function __construct(array $row, $companyId, $orderProducts, $rowCount = 95)
     {
-        $this->companyId = $companyId;
+        $this->companyId     = $companyId;
+        $this->orderProducts = $orderProducts;
+
         if (count($row) !== $rowCount) {
             Log::info(print_r($row, true));
             throw new Exception("不正な列数を持つ連携ファイルが検出されました。正しい桁列数:{$rowCount} 検出された列数:" . count($row));
@@ -64,18 +67,9 @@ class CsvOrderRow
                                      ]);
 
         $this->product = new Product([
-                                         'category1'    => $row[68],
-                                         'category2'    => $row[69],
-                                         'category3'    => $row[70],
-                                         'category4'    => $row[71],
-                                         'category5'    => $row[72],
-                                         'product'      => $row[74],
-                                         'orderOptions' => $row[75],
-                                         'unitPrice'    => $row[78],
-                                         'unitCost'     => $row[80],
-                                         'quantity'     => $row[83],
+                                         'product'       => $row[74],
+                                         'quantity'      => $row[83],
                                      ]);
-
     }
 
     /**
@@ -143,18 +137,9 @@ class CsvOrderRow
         $orderProduct = $this->product->getValues();
 
         return [
-            'order_info_id' => $orderId,
-            'product_cd'    => $orderProduct['productCd'],
-            'product_name'  => $orderProduct['productName'],
-            'quantity'      => $orderProduct['quantity'],
-            'unit_cost'     => floor($orderProduct['unitCost']),
-            'unit_price'    => $orderProduct['unitPrice'],
-            'order_options' => $orderProduct['orderOptions'],
-            'category1'     => $orderProduct['category1'],
-            'category2'     => $orderProduct['category2'],
-            'category3'     => $orderProduct['category3'],
-            'category4'     => $orderProduct['category4'],
-            'category5'     => $orderProduct['category5'],
+            'order_info_id'           => $orderId,
+            'order_product_master_id' => $this->getOrderProductMasterId($orderProduct['productCd']),
+            'quantity'                => $orderProduct['quantity'],
         ];
     }
 
@@ -242,6 +227,17 @@ class CsvOrderRow
         }
         return $incomeCategory->id;
 
+    }
+
+    /**
+     * 注文商品マスタ一覧を参照して、OrderProductMasterIdを取得する
+     * $orderProducts => key注文番号 value注文商品マスタIDの配列
+     * @param string $productCd
+     * @return int
+     */
+    public function getOrderProductMasterId(string $productCd): int
+    {
+        return $this->orderProducts[$productCd];
     }
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Services\Usen\Order;
 
+use App\Constants\Common;
 use App\Exceptions\SkipImportException;
 use ArrayIterator;
 use Exception;
@@ -17,33 +18,40 @@ class CsvOrderCollection implements IteratorAggregate
 {
     private array  $orders      = [];
     private int    $companyId;
+    private array  $orderProducts;
     private string $skipMessage = '';
 
     /**
-     * @param array $csvData
+     * @param array $csvOrderArray
      * @param int   $companyId
+     * @param array $orderProducts
      * @throws Exception
      */
-    public function __construct(array $csvData, int $companyId)
+    public function __construct(array $csvOrderArray, int $companyId, array $orderProducts)
     {
-        $this->companyId = $companyId;
-        $this->addOrdersFromCsv($csvData);
+        $this->companyId     = $companyId;
+        $this->orderProducts = $orderProducts;
+        $this->addCollection($csvOrderArray);
     }
 
     /**
      * CsvDataを元にOrderオブジェクトを生成し、伝票番号keyにOrderCollectionに格納する
-     * @param array $csvData
+     * @param array $csvOrderArray
      * @return void
      * @throws Exception
      */
-    private function addOrdersFromCsv(array $csvData): void
+    private function addCollection(array $csvOrderArray): void
     {
         $lineNumber = 0;
 
-        foreach ($csvData as $row) {
-            $lineNumber++;
+        foreach ($csvOrderArray as $row) {
             try {
-                $csvOrder = new CsvOrderRow($row, $this->companyId);
+                $lineNumber++;
+                if (Common::USEN_CSV_SKIP_ROW >= $lineNumber) {
+                    throw new SkipImportException('ヘッダー行のためスキップ');
+                }
+
+                $csvOrder = new CsvOrderRow($row, $this->companyId, $this->orderProducts);
 
                 // 伝票番号ごとに配列に格納
                 $slipNumber = $csvOrder->getSlipNumber();
@@ -63,16 +71,6 @@ class CsvOrderCollection implements IteratorAggregate
             }
         }
     }
-
-    /**
-     * スキップした項目を取得する
-     * @return string
-     */
-    public function getSkipMessage(): string
-    {
-        return $this->skipMessage;
-    }
-
 
     /**
      * IteratorAggregateインタフェースに必要なgetIteratorメソッドの実装

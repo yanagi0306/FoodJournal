@@ -19,10 +19,10 @@ class OrderUploaderFactory
      * @return OrderUploaderInterface
      * @throws InvalidArgumentException
      */
-    public static function createUploader(string $system, UploadedFile $uploadedFile, int $companyId): OrderUploaderInterface
+    public static function createUploader(string $system, UploadedFile $uploadedFile, int $companyId, array $storeIds): OrderUploaderInterface
     {
         return match ($system) {
-            'usen' => new CsvOrderUploader($uploadedFile, $companyId),
+            'usen' => new CsvOrderUploader($uploadedFile, $companyId, $storeIds),
             default => throw new InvalidArgumentException("無効なシステムが入力されました システム名:({$system})"),
         };
     }

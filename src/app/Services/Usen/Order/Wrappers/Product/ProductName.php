@@ -12,5 +12,5 @@ use App\Services\Base\CsvWrappers\ColumnBase;
 class ProductName extends ColumnBase
 {
     protected string $permittedValueType     = 'string';
-    protected ?bool  $isExtractLeft          = true;
+    protected ?bool  $isExtractRight          = true;
 }

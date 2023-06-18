@@ -76,7 +76,7 @@ class Company extends BaseModel
      * expense_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function expense_categories(): HasMany
+    public function expenseCategories(): HasMany
     {
         return $this->hasMany(ExpenseCategory::class);
     }
@@ -85,7 +85,7 @@ class Company extends BaseModel
      * parent_income_categoryテーブル リレーション設定
      * @return HasMany
      */
-    public function parent_income_categories(): HasMany
+    public function parentIncomeCategories(): HasMany
     {
         return $this->hasMany(ParentIncomeCategory::class);
     }
@@ -124,6 +124,15 @@ class Company extends BaseModel
     public function purchaseProductMasters(): HasMany
     {
         return $this->hasMany(PurchaseProductMaster::class);
+    }
+
+    /**
+     * purchase_categoryテーブル リレーション設定
+     * @return HasMany
+     */
+    public function orderProductMasters(): HasMany
+    {
+        return $this->hasMany(OrderProductMaster::class);
     }
 
 }

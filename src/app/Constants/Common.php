@@ -21,6 +21,11 @@ class Common
     const UPLOAD_DIR = '/data/upload';
 
     /**
+     * USEN
+     */
+    const USEN_CSV_SKIP_ROW = 14;
+
+    /**
      * 共通支出タイプ定義
      */
     const FIXED_EXPENSE_TYPE =

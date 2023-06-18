@@ -11,15 +11,17 @@ abstract class BaseUploader
 {
     protected UploadedFile $uploadFile;
     protected int $companyId;
+    protected array $storeIds;
     protected string $type;
 
-    public function __construct(UploadedFile $uploadFile, int $companyId)
+    public function __construct(UploadedFile $uploadFile, int $companyId, array $storeIds)
     {
         $this->companyId  = $companyId;
+        $this->storeIds  = $storeIds;
         $this->uploadFile = $uploadFile;
     }
 
-    abstract public function processCsv(): array;
+    abstract public function processCsv(): string;
 
     protected function moveUploadedFile(): void
     {
