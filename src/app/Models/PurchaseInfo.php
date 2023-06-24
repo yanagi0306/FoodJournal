@@ -15,7 +15,9 @@ class PurchaseInfo extends BaseModel
     protected $fillable = [
         'store_id',
         'purchase_supplier_id',
+        'expense_category_id',
         'slip_number',
+        'amount',
         'date',
     ];
 
@@ -35,6 +37,15 @@ class PurchaseInfo extends BaseModel
     public function purchaseSupplier(): BelongsTo
     {
         return $this->belongsTo(PurchaseSupplier::class);
+    }
+
+    /**
+     * expense_categoryテーブル リレーション設定
+     * @return BelongsTo
+     */
+    public function expenseCategory(): BelongsTo
+    {
+        return $this->belongsTo(ExpenseCategory::class);
     }
 
 }

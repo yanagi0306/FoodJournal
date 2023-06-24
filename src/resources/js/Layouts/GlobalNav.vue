@@ -8,7 +8,7 @@ const menus = [
         title: {name: "実績管理", icon: 'svgListAltRegular'},
         links: [
             {name: "売上実績", path: 'orders.index'},
-            {name: "仕入実績", path: 'top.index'},
+            {name: "仕入実績", path: 'purchases.index'},
             {name: "月次収入", path: 'top.index'},
             {name: "月次支出", path: 'top.index'},
             {name: "日次収入", path: 'top.index'},

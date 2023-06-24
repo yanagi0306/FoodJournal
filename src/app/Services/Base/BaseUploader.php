@@ -4,21 +4,21 @@ namespace App\Services\Base;
 
 use App\Constants\Common;
 use App\Helpers\FileHelper;
+use App\Services\Company\FetchesCompanyInfo;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 
 abstract class BaseUploader
 {
-    protected UploadedFile $uploadFile;
-    protected int $companyId;
-    protected array $storeIds;
-    protected string $type;
 
-    public function __construct(UploadedFile $uploadFile, int $companyId, array $storeIds)
+    protected UploadedFile       $uploadFile;
+    protected FetchesCompanyInfo $companyInfo;
+    protected string             $type;
+
+    public function __construct(UploadedFile $uploadFile, FetchesCompanyInfo $companyInfo)
     {
-        $this->companyId  = $companyId;
-        $this->storeIds  = $storeIds;
-        $this->uploadFile = $uploadFile;
+        $this->uploadFile  = $uploadFile;
+        $this->companyInfo = $companyInfo;
     }
 
     abstract public function processCsv(): string;
@@ -27,7 +27,7 @@ abstract class BaseUploader
     {
         try {
             // 保存先ディレクトリ定義
-            $destinationPath = Common::UPLOAD_DIR . "/{$this->type}/{$this->companyId}";
+            $destinationPath = Common::UPLOAD_DIR . "/{$this->type}/{$this->companyInfo->company->id}";
 
             // 一意のファイル名を生成
             $fileName = FileHelper::generateUniqueFileName($this->type);

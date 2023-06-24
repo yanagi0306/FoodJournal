@@ -33,15 +33,6 @@ class UserHelper
             $userArray['store_name']   = $store?->store_name;
             $userArray['company_name'] = $company?->company_name;
 
-            // 所属会社に関連するストアIDを取得
-            if ($company) {
-                $userArray['store_ids'] = $company->stores->map(function($store) {
-                    return $store ? $store->id : null;
-                })->filter()->toArray();
-            } else {
-                $userArray['store_ids'] = [];
-            }
-
         }
 
         return $userArray;

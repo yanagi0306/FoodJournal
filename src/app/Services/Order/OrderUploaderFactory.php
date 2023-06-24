@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Services\Order;
 
-use App\Services\Usen\Order\CsvOrderUploader;
+use App\Services\Company\FetchesCompanyInfo;
+use App\Services\Order\Usen\CsvOrderUploader;
 use Illuminate\Http\UploadedFile;
 use InvalidArgumentException;
 
@@ -13,17 +15,15 @@ class OrderUploaderFactory
 {
     /**
      * 指定されたシステムに応じたアップローダーインスタンスを生成
-     * @param string $system システム名（例: 'usen'）
-     * @param UploadedFile $uploadedFile アップロードされたファイル
-     * @param int $companyId 会社ID
+     * @param UploadedFile       $uploadedFile アップロードされたファイル
+     * @param FetchesCompanyInfo $companyInfo
      * @return OrderUploaderInterface
-     * @throws InvalidArgumentException
      */
-    public static function createUploader(string $system, UploadedFile $uploadedFile, int $companyId, array $storeIds): OrderUploaderInterface
+    public static function createUploader(UploadedFile $uploadedFile, FetchesCompanyInfo $companyInfo): OrderUploaderInterface
     {
-        return match ($system) {
-            'usen' => new CsvOrderUploader($uploadedFile, $companyId, $storeIds),
-            default => throw new InvalidArgumentException("無効なシステムが入力されました システム名:({$system})"),
+        return match ($companyInfo->company->order_system) {
+            'usen' => new CsvOrderUploader($uploadedFile, $companyInfo),
+            default => throw new InvalidArgumentException("無効なシステムが入力されました システム名:({$companyInfo->company->order_system})"),
         };
     }
 }

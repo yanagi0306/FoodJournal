@@ -40,15 +40,6 @@ class Store extends BaseModel
     }
 
     /**
-     * product_categoryテーブル リレーション設定
-     * @return HasMany
-     */
-    public function productCategories(): HasMany
-    {
-        return $this->hasMany(ProductCategory::class);
-    }
-
-    /**
      * order_infoテーブル リレーション設定
      * @return HasMany
      */
@@ -64,15 +55,6 @@ class Store extends BaseModel
     public function purchaseInfos(): HasMany
     {
         return $this->hasMany(PurchaseInfo::class);
-    }
-
-    /**
-     * purchase_productテーブル リレーション設定
-     * @return HasMany
-     */
-    public function purchaseProducts(): HasMany
-    {
-        return $this->hasMany(PurchaseProduct::class);
     }
 
     /**
@@ -110,6 +92,4 @@ class Store extends BaseModel
     {
         return $this->hasMany(IncomeBudget::class);
     }
-
-
 }

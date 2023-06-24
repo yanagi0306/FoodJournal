@@ -1,11 +1,11 @@
 <?php
 
-use App\Services\Usen\Order\CsvOrderRow;
-use App\Services\Usen\Order\Wrappers\Payment;
-use App\Services\Usen\Order\Wrappers\Product;
-use App\Services\Usen\Order\Wrappers\SkipDecision;
-use App\Services\Usen\Order\Wrappers\Slip;
 use App\Exceptions\SkipImportException;
+use App\Services\Order\Usen\CsvOrderRow;
+use App\Services\Order\Usen\Wrappers\Payment;
+use App\Services\Order\Usen\Wrappers\Product;
+use App\Services\Order\Usen\Wrappers\SkipDecision;
+use App\Services\Order\Usen\Wrappers\Slip;
 use Tests\TestCase;
 
 class CsvOrderRowTest extends TestCase

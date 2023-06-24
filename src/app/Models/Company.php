@@ -15,7 +15,8 @@ class Company extends BaseModel
         'company_name',
         'company_cd',
         'purchase_company_cd',
-        'mail',
+        'order_system',
+        'purchase_system',
     ];
 
     /**
@@ -97,42 +98,6 @@ class Company extends BaseModel
     public function incomeCategories(): HasMany
     {
         return $this->hasMany(IncomeCategory::class);
-    }
-
-    /**
-     * parent_purchase_categoryテーブル リレーション設定
-     * @return HasMany
-     */
-    public function parentPurchaseCategories(): HasMany
-    {
-        return $this->hasMany(ParentPurchaseCategory::class);
-    }
-
-    /**
-     * purchase_categoryテーブル リレーション設定
-     * @return HasMany
-     */
-    public function purchaseCategories(): HasMany
-    {
-        return $this->hasMany(PurchaseCategory::class);
-    }
-
-    /**
-     * purchase_product_masterテーブル リレーション設定
-     * @return HasMany
-     */
-    public function purchaseProductMasters(): HasMany
-    {
-        return $this->hasMany(PurchaseProductMaster::class);
-    }
-
-    /**
-     * purchase_categoryテーブル リレーション設定
-     * @return HasMany
-     */
-    public function orderProductMasters(): HasMany
-    {
-        return $this->hasMany(OrderProductMaster::class);
     }
 
 }

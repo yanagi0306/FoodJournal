@@ -4,7 +4,7 @@ import {Head} from '@inertiajs/vue3';
 import {defineProps, onMounted, ref} from "vue";
 import SvgIcon from "@/Components/Icons/SvgIcon.vue";
 import {Inertia} from "@inertiajs/inertia";
-import OrderRow from "@/Components/OrderRow.vue";
+import TableRow from "@/Components/TableRow.vue";
 import FlashMessage from "@/Components/FlashMessage.vue";
 
 const props = defineProps({
@@ -54,10 +54,10 @@ const uploadFile = () => {
     <AuthenticatedLayout>
         <FlashMessage/>
         <div class="main_title_wrapper my-3">
-            <h1 class="page-h1-title">売上実績UL</h1>
+            <h1 class="page-h1-title">売上実績アップロード</h1>
         </div>
 
-        <h3 class="sub_title mt-3">ファイルUL</h3>
+        <h3 class="sub_title mt-3">ファイルアップロード</h3>
 
         <div class="row">
             <div class="col-3">
@@ -97,7 +97,7 @@ const uploadFile = () => {
                 </tr>
                 </thead>
                 <tbody>
-                <OrderRow v-for='order in ordersHistory' :key="order.id" :order="order" @download="downloadOrderCsv"/>
+                <TableRow v-for='row in ordersHistory' :key="row.id" :row="row" @download="downloadOrderCsv"/>
                 </tbody>
             </table>
         </div>

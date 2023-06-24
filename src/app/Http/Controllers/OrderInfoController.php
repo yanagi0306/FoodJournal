@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Order\OrderUploaderFactory;
+use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
+use App\Services\Order\OrderUploaderFactory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -48,10 +49,11 @@ class OrderInfoController extends Controller
         $uploadedFile = $request->file('file');
 
         try {
-            // システム名を取得 (データベースや設定ファイルから)
-            $orderSystem = 'usen';
-            $service     = OrderUploaderFactory::createUploader($orderSystem, $uploadedFile, $this->userInfo['company_id'], $this->userInfo['store_ids']);
+            // 会社情報に紐づく情報を取得
+            $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
 
+            // アップローダーインスタンスを取得
+            $service       = OrderUploaderFactory::createUploader($uploadedFile, $companyInfo);
             $resultMessage = $service->processCsv();
 
             $this->responseMessage = '注文データの登録処理に成功しました。';

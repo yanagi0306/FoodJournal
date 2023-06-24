@@ -26,6 +26,15 @@ class Common
     const USEN_CSV_SKIP_ROW = 14;
 
     /**
+     * ASPIT
+     */
+    const ASPIT_CSV_SKIP_ROW = 1;
+    const ASPIT_CATEGORY_CODE = [
+        '1000' => '1',// 食材
+        '2000' => '2',// 資材
+    ];
+
+    /**
      * 共通支出タイプ定義
      */
     const FIXED_EXPENSE_TYPE =

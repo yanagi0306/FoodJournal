@@ -17,7 +17,9 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('仕入ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
             $table->unsignedBigInteger('purchase_supplier_id')->comment('仕入業者ID');
+            $table->unsignedBigInteger('expense_category_id')->comment('支出子カテゴリID');
             $table->string('slip_number', 15)->comment('伝票番号');
+            $table->integer('amount')->comment('伝票金額');
             $table->date('date')->comment('仕入日時');
             $table->timestamps();
 
@@ -30,6 +32,7 @@ return new class extends Migration {
             // 外部キー制約の設定
             $table->foreign('store_id')->references('id')->on('store')->onDelete('cascade');
             $table->foreign('purchase_supplier_id')->references('id')->on('purchase_supplier')->onDelete('cascade');
+            $table->foreign('expense_category_id')->references('id')->on('expense_category')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset   = 'utf8';
