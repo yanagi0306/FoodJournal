@@ -2,6 +2,7 @@
 
 namespace App\Services\Purchase\Aspit;
 
+use App\Constants\AspitConstants;
 use App\Constants\Common;
 use App\Exceptions\SkipImportException;
 use App\Services\Company\FetchesCompanyInfo;
@@ -40,7 +41,7 @@ class CsvPurchaseCollection implements IteratorAggregate
         foreach ($csvOrderArray as $row) {
             try {
                 $lineNumber++;
-                if (Common::ASPIT_CSV_SKIP_ROW >= $lineNumber) {
+                if (AspitConstants::ASPIT_CSV_SKIP_ROW >= $lineNumber) {
                     throw new SkipImportException('ヘッダー行のためスキップ');
                 }
 

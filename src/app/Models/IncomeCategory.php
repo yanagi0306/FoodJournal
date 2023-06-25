@@ -16,9 +16,10 @@ class IncomeCategory extends BaseModel
     protected $fillable = [
         'company_id',
         'parent_income_category_id',
-        'income_type_cd',
         'cat_cd',
+        'position',
         'cat_name',
+        'type_cd',
     ];
 
     /**

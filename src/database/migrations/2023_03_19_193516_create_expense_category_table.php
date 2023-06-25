@@ -17,15 +17,15 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('支出カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
             $table->unsignedBigInteger('parent_expense_category_id')->comment('親支出カテゴリID');
-            $table->string('expense_type_cd')->comment('支出タイプコード');
-            $table->string('cat_cd', 3)->comment('支出カテゴリコード');
+            $table->integer('position')->comment('表示順');
+            $table->string('type_cd')->comment('支出タイプコード');
+            $table->string('cat_cd', 4)->comment('支出カテゴリコード');
             $table->string('cat_name', 8)->comment('支出カテゴリ名');
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['company_id',
-                            'parent_expense_category_id',
-                            'cat_name']);
+            $table->unique(['company_id', 'position']);
+            $table->unique(['company_id', 'cat_cd']);
 
             // 外部キー制約の設定
             $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');

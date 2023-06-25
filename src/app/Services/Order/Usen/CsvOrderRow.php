@@ -2,8 +2,8 @@
 
 namespace App\Services\Order\Usen;
 
-use App\Constants\Common;
-use App\Exceptions\SkipImportException;
+use App\Constants\CommonDatabaseConstants;
+use App\Constants\UsenConstants;
 use App\Models\CustomerType;
 use App\Models\IncomeCategory;
 use App\Models\PaymentMethod;
@@ -18,25 +18,26 @@ use Illuminate\Support\Facades\Log;
 
 class CsvOrderRow
 {
-    private Payment      $payment;
-    private Product      $product;
-    private SkipDecision $skipDecision;
-    private Slip         $slip;
-    private int          $companyId;
-    private array        $storeCds;
+    private Payment            $payment;
+    private Product            $product;
+    private SkipDecision       $skipDecision;
+    private Slip               $slip;
+    private FetchesCompanyInfo $companyInfo;
+    private int                $companyId;
+    private array              $storeCds;
 
     /**
      * @throws Exception
      */
     public function __construct(array $row, FetchesCompanyInfo $companyInfo)
     {
-        $this->companyId = $companyInfo->company->id;
-        $this->storeCds  = array_column($companyInfo->stores, 'order_store_cd');
+        $this->companyInfo = $companyInfo;
+        $this->companyId   = $companyInfo->getCompanyValue('id');
+        $this->storeCds    = array_column($companyInfo->stores, 'order_store_cd');
 
-
-        if (count($row) !== Common::USEN_CSV_ROW_COUNT) {
+        if (count($row) !== UsenConstants::USEN_CSV_ROW_COUNT) {
             Log::info(print_r($row, true));
-            throw new Exception('不正な列数を持つ連携ファイルが検出されました。正しい桁列数:' . Common::USEN_CSV_ROW_COUNT . ' 検出された列数:' . count($row));
+            throw new Exception('不正な列数を持つ連携ファイルが検出されました。正しい桁列数:' . UsenConstants::USEN_CSV_ROW_COUNT . ' 検出された列数:' . count($row));
         }
 
         $this->skipDecision = new SkipDecision([
@@ -85,6 +86,7 @@ class CsvOrderRow
         $slip             = $this->slip->getValues();
         $storeId          = $this->getStoreIdByStoreCd($slip['storeCd']);
         $customerTypeId   = $this->getTypeIdByCustomerTypeName($slip['customerTypeName']);
+        // todo.カテゴリはorderテーブルではなく、orderPaymentにしなければならない。 金額はすべてorderPaymentなので。
         $incomeCategoryId = $this->getIncomeCategory();
 
         return [
@@ -174,62 +176,47 @@ class CsvOrderRow
     }
 
     /**
-     * モデルを参照して、customerTypeNameからcustomer_type_idに変換する
+     * companyInfoインスタンスを参照して、customerTypeNameからcustomer_type_idに変換する
      * @param string|null $customerTypeName
      * @return int|null
+     * @throws Exception
      */
     private function getTypeIdByCustomerTypeName(?string $customerTypeName): ?int
     {
-        $customerType = CustomerType::where('company_id', $this->companyId)->where('type_name', $customerTypeName)->first();
-        if (!$customerType) {
-            return null;
-        }
-        return $customerType?->id;
+        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_CUSTOMER_TYPE, 'type_name', $customerTypeName);
     }
 
     /**
-     * モデルを参照して、storeCdからstore_idに変換する
+     * companyInfoインスタンスを参照して、storeCdからstore_idに変換する
      * @param string $storeCd
      * @return int|null
      * @throws Exception
      */
     private function getStoreIdByStoreCd(string $storeCd): ?int
     {
-        $store = Store::where('company_id', $this->companyId)->where('order_store_cd', $storeCd)->first();
-        if (!$store) {
-            throw new Exception("storeが存在しません companyId:{$this->companyId} storeCd:({$storeCd})");
-        }
-        return $store->id;
+        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'order_store_cd', $storeCd);
     }
 
     /**
-     * モデルを参照して、propertyからpay_method_idに変換する
+     * companyInfoインスタンスを参照して、propertyからpay_method_idに変換する
      * @param string $property
-     * @return PaymentMethod
+     * @return int|null
      * @throws Exception
      */
-    private function getPaymentMethodIdByProperty(string $property): PaymentMethod
+    private function getPaymentMethodIdByProperty(string $property): ?int
     {
-        $payMethod = PaymentMethod::where('company_id', $this->companyId)->where('property_name', $property)->first();
-        if (!$payMethod) {
-            throw new Exception("pay_methodが存在しません companyId:({$this->companyId}) property:({$property})");
-        }
-        return $payMethod;
+        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_PAYMENT_METHOD, 'property_name', $property);
     }
 
     /**
-     * モデルを参照して、companyに収入カテゴリを取得する
+     * モデルを参照して、収入カテゴリを取得する
      * @return int
      * @throws Exception
      */
     private function getIncomeCategory(): int
     {
-        $incomeCategory = IncomeCategory::where('company_id', $this->companyId)->where('cat_cd', Common::CHILD_INCOME_CATEGORY_FOR_STORE_SALE['cat_cd'])->first();
-        if (!$incomeCategory) {
-            throw new Exception("IncomeCategoryが存在しません companyId:({$this->companyId})");
-        }
-        return $incomeCategory->id;
-
+        $categoryCd = CommonDatabaseConstants::CHILD_INCOME_CATEGORY_FOR_STORE_SALE['cat_cd'];
+        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_INCOME_CATEGORY, 'cat_cd', $categoryCd);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\Services\Order\Usen;
 
-use App\Constants\Common;
+use App\Constants\UsenConstants;
 use App\Exceptions\SkipImportException;
 use App\Models\Store;
 use App\Services\Company\FetchesCompanyInfo;
@@ -47,11 +47,11 @@ class CsvOrderCollection implements IteratorAggregate
         foreach ($csvOrderArray as $row) {
             try {
                 $lineNumber++;
-                if (Common::USEN_CSV_SKIP_ROW >= $lineNumber) {
+                if (UsenConstants::USEN_CSV_SKIP_ROW >= $lineNumber) {
                     throw new SkipImportException('ヘッダー行のためスキップ');
                 }
 
-                $productMaster = new CsvOrderProductMasterRow($row, $this->companyInfo->company->id);
+                $productMaster = new CsvOrderProductMasterRow($row, $this->companyInfo->getCompanyValue('id'));
                 $csvOrder      = new CsvOrderRow($row, $this->companyInfo);
 
                 // 商品番号ごとにCsvOrderProductMasterRowを格納

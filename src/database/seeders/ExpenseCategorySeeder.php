@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Constants\Common;
+use App\Constants\CommonDatabaseConstants;
 use App\Models\Company;
 use App\Models\ExpenseCategory;
 use App\Models\ParentExpenseCategory;
@@ -20,7 +21,7 @@ class ExpenseCategorySeeder extends Seeder
         /** @var Company $company */
         $company = Company::find(1)->firstOrFail();
 
-        foreach (Common::PARENT_EXPENSE_CATEGORIES as $category) {
+        foreach (CommonDatabaseConstants::PARENT_EXPENSE_CATEGORIES as $category) {
             ParentExpenseCategory::create([
                                               'company_id' => $company->id,
                                               'cat_cd'     => $category['cat_cd'],
@@ -28,15 +29,17 @@ class ExpenseCategorySeeder extends Seeder
                                           ]);
         }
 
-        $expenseCategory = ParentExpenseCategory::where('company_id', $company->id)->where('cat_cd', Common::PARENT_EXPENSE_CATEGORY_FOR_PURCHASE['cat_cd'])->firstOrFail();
+        foreach (CommonDatabaseConstants::EXPENSE_CATEGORIES as $category) {
 
-        foreach (Common::CHILD_EXPENSE_CATEGORIES as $category) {
+            $parentExpenseCategory = ParentExpenseCategory::where('company_id', $company->id)->where('cat_cd', $category['parent_cat_cd'])->firstOrFail();
+
             ExpenseCategory::create([
                                         'company_id'                 => $company->id,
-                                        'parent_expense_category_id' => $expenseCategory->id,
-                                        'expense_type_cd'            => $category['expense_type_cd'],
+                                        'parent_expense_category_id' => $parentExpenseCategory->id,
                                         'cat_cd'                     => $category['cat_cd'],
+                                        'position'                   => $category['position'],
                                         'cat_name'                   => $category['cat_name'],
+                                        'type_cd'                    => $category['type_cd'],
                                     ]);
         }
     }

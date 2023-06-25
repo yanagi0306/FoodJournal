@@ -2,6 +2,7 @@
 
 namespace App\Services\Purchase\Aspit;
 
+use App\Constants\AspitConstants;
 use App\Constants\Common;
 use App\Services\Base\BaseUploader;
 use App\Services\Purchase\PurchaseUploaderInterface;
@@ -24,7 +25,7 @@ class CsvPurchaseUploader extends BaseUploader implements PurchaseUploaderInterf
     public function processCsv(): string
     {
         // CSVデータを配列に変換
-        $csvArray = $this->convertCsvToArray($this->uploadFile, Common::ASPIT_CSV_ENCODING);
+        $csvArray = $this->convertCsvToArray($this->uploadFile, AspitConstants::ASPIT_CSV_ENCODING);
 
         // 配列から注文情報Collectionを作成
         $purchaseCollection = new CsvPurchaseCollection($csvArray, $this->companyInfo);

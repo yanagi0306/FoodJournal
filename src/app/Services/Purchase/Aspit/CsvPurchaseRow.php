@@ -2,6 +2,7 @@
 
 namespace App\Services\Purchase\Aspit;
 
+use App\Constants\AspitConstants;
 use App\Constants\Common;
 use App\Exceptions\SkipImportException;
 use App\Services\Company\FetchesCompanyInfo;
@@ -26,9 +27,9 @@ class CsvPurchaseRow
         $companyCd         = $this->companyInfo->getCompanyValue('purchase_company_cd');
 
 
-        if (count($row) !== Common::ASPIT_CSV_ROW_COUNT) {
+        if (count($row) !== AspitConstants::ASPIT_CSV_ROW_COUNT) {
             Log::info(print_r($row, true));
-            throw new Exception('不正な列数を持つ連携ファイルが検出されました。正しい桁列数:' . Common::ASPIT_CSV_ROW_COUNT . ' 検出された列数:' . count($row));
+            throw new Exception('不正な列数を持つ連携ファイルが検出されました。正しい桁列数:' . AspitConstants::ASPIT_CSV_ROW_COUNT . ' 検出された列数:' . count($row));
         }
 
         if ($row[0] !== $companyCd) {
@@ -103,7 +104,7 @@ class CsvPurchaseRow
         $expenseCategoryCode = $this->getExpenseCategoryCode($categoryCd);
 
         if (!$expenseCategoryCode) {
-            $validCodes = implode(', ', array_column(Common::ASPIT_CATEGORIES, 'category_cd'));
+            $validCodes = implode(', ', array_column(AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB, 'category_cd'));
             throw new Exception("カテゴリコードに誤りがあります。 値:{$categoryCd} 許可された値:(" . $validCodes . ')');
         }
 
@@ -111,13 +112,13 @@ class CsvPurchaseRow
     }
 
     /**
-     * 定数ASPIT_CATEGORIESを参照してexpense_category_codeを取得する
+     * 定数CATEGORY_MAPS_FROM_ASPIT_TO_DBを参照してexpense_category_codeを取得する
      * @param string $categoryCd
      * @return string|null
      */
     private function getExpenseCategoryCode(string $categoryCd): ?string
     {
-        foreach (Common::ASPIT_CATEGORIES as $category) {
+        foreach (AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB as $category) {
             if (isset($category['category_cd']) && $category['category_cd'] == $categoryCd) {
                 return $category['expense_category_code'];
             }

@@ -2,7 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Constants\Common;
+use App\Constants\AspitConstants;
+use App\Constants\UsenConstants;
 use App\Models\Company;
 use App\Traits\Counter;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -26,8 +27,8 @@ class CompanyFactory extends Factory
             'company_name'        => '合同会社PlusH-table',
             'company_cd'          => $this->getNextCounter('company_cd', '1001'),
             'purchase_company_cd' => '78411381',
-            'purchase_system'     => Common::ASPIT_SYSTEM_NAME,
-            'order_system'        => Common::USEN_SYSTEM_NAME,
+            'purchase_system'     => AspitConstants::ASPIT_SYSTEM_NAME,
+            'order_system'        => UsenConstants::USEN_SYSTEM_NAME,
             'mail'                => $this->faker->unique()->safeEmail,
         ];
     }

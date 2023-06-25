@@ -3,6 +3,7 @@
 namespace App\Services\Order\Usen;
 
 use App\Constants\Common;
+use App\Constants\UsenConstants;
 use App\Services\Base\BaseUploader;
 use App\Services\Order\OrderUploaderInterface;
 use App\Traits\CsvTrait;
@@ -27,13 +28,13 @@ class CsvOrderUploader extends BaseUploader implements OrderUploaderInterface
     public function processCsv(): string
     {
         // CSVデータを配列に変換
-        $csvArray = $this->convertCsvToArray($this->uploadFile, Common::USEN_CSV_ENCODING);
+        $csvArray = $this->convertCsvToArray($this->uploadFile, UsenConstants::USEN_CSV_ENCODING);
 
         // 配列から注文情報Collectionを作成
         $orderCollection = new CsvOrderCollection($csvArray, $this->companyInfo);
 
         // 注文商品マスタの登録処理を実行
-        $csvOrderProductMasterRegistration = new CsvOrderProductMasterRegistration($orderCollection->getOrderProducts(), $this->companyInfo->company->id);
+        $csvOrderProductMasterRegistration = new CsvOrderProductMasterRegistration($orderCollection->getOrderProducts(), $this->companyInfo->getCompanyValue('id'));
         $recordCounts                      = $csvOrderProductMasterRegistration->saveCsvCollection();
 
         // 注文商品マスタを更新した商品情報を保持

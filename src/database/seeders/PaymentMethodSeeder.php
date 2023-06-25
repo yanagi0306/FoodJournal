@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Constants\Common;
+use App\Constants\CommonDatabaseConstants;
 use App\Models\Company;
 use App\Models\PaymentMethod;
 use Illuminate\Database\Seeder;
@@ -18,7 +18,7 @@ class PaymentMethodSeeder extends Seeder
         /** @var Company $company */
         $company = Company::find(1)->firstOrFail();
 
-        foreach (Common::PAYMENT_METHODS_TEMPLATE as $paymentMethod) {
+        foreach (CommonDatabaseConstants::PAYMENT_METHODS_TEMPLATE as $paymentMethod) {
             PaymentMethod::create([
                                       'company_id'      => $company->id,
                                       'payment_cd'      => $paymentMethod['payment_cd'],

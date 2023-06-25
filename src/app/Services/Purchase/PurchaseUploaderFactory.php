@@ -2,7 +2,7 @@
 
 namespace App\Services\Purchase;
 
-use App\Constants\Common;
+use App\Constants\AspitConstants;
 use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Purchase\Aspit\CsvPurchaseUploader;
 use Illuminate\Http\UploadedFile;
@@ -23,7 +23,7 @@ class PurchaseUploaderFactory
     public static function createUploader(UploadedFile $uploadedFile, FetchesCompanyInfo $companyInfo): CsvPurchaseUploader
     {
         return match ($companyInfo->company->purchase_system) {
-            Common::ASPIT_SYSTEM_NAME => new CsvPurchaseUploader($uploadedFile, $companyInfo),
+            AspitConstants::ASPIT_SYSTEM_NAME => new CsvPurchaseUploader($uploadedFile, $companyInfo),
             default => throw new InvalidArgumentException("無効なシステムが入力されました システム名:({$companyInfo->company->purchase_system})"),
         };
     }

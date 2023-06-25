@@ -17,7 +17,7 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('親収入カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->string('cat_cd', 3)->comment('親収入カテゴリコード');
+            $table->string('cat_cd', 2)->comment('親収入カテゴリコード');
             $table->string('cat_name', 10)->comment('親収入カテゴリ名');
             $table->timestamps();
 
