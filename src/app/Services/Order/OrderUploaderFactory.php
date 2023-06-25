@@ -2,6 +2,7 @@
 
 namespace App\Services\Order;
 
+use App\Constants\Common;
 use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Order\Usen\CsvOrderUploader;
 use Illuminate\Http\UploadedFile;
@@ -22,7 +23,7 @@ class OrderUploaderFactory
     public static function createUploader(UploadedFile $uploadedFile, FetchesCompanyInfo $companyInfo): OrderUploaderInterface
     {
         return match ($companyInfo->company->order_system) {
-            'usen' => new CsvOrderUploader($uploadedFile, $companyInfo),
+            Common::USEN_SYSTEM_NAME => new CsvOrderUploader($uploadedFile, $companyInfo),
             default => throw new InvalidArgumentException("無効なシステムが入力されました システム名:({$companyInfo->company->order_system})"),
         };
     }

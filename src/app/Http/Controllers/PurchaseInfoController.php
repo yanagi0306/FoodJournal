@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
 use App\Services\Purchase\PurchaseUploaderFactory;
 use Illuminate\Http\RedirectResponse;
@@ -28,10 +29,10 @@ class PurchaseInfoController extends Controller
     {
         // 売上情報のアップロード履歴の取得
         $uploadHistory = new UploadHistory('purchase_info', $this->userInfo['company_id']);
-        $ordersHistory = $uploadHistory->getUploadHistory();
+        $purchasesHistory = $uploadHistory->getUploadHistory();
 
-        return Inertia::render('Order/Index', [
-            'ordersHistory' => $ordersHistory,
+        return Inertia::render('Purchase/Index', [
+            'purchasesHistory' => $purchasesHistory,
         ]);
     }
 
@@ -48,9 +49,11 @@ class PurchaseInfoController extends Controller
         $uploadedFile = $request->file('file');
 
         try {
+            // 会社情報に紐づく情報を取得
+            $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
+
             // システム名を取得 (データベースや設定ファイルから)
-            $orderSystem = 'Aspit';
-            $service     = PurchaseUploaderFactory::createUploader($orderSystem, $uploadedFile, $this->userInfo['company_id']);
+            $service     = PurchaseUploaderFactory::createUploader($uploadedFile, $companyInfo);
 
             $resultMessage = $service->processCsv();
 
@@ -59,7 +62,7 @@ class PurchaseInfoController extends Controller
             Log::info($this->responseMessage . "\n" . $resultMessage);
 
         } catch (\Throwable $e) {
-            $this->responseMessage = "仕入データの登録処理に失敗しました。\n" . $e->getMessage();
+            $this->responseMessage = "仕入データの登録処理に失敗しました。\n" . $e->getMessage() . "\nfile:" .$e->getFile() . " line:" . $e->getLine();
             $this->responseStatus  = 'error';
             Log::error($this->responseMessage);
         }

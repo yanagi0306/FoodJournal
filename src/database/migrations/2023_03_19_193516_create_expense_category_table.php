@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('支出カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
             $table->unsignedBigInteger('parent_expense_category_id')->comment('親支出カテゴリID');
-            $table->integer('expense_type_cd')->comment('支出タイプコード');
+            $table->string('expense_type_cd')->comment('支出タイプコード');
             $table->string('cat_cd', 3)->comment('支出カテゴリコード');
             $table->string('cat_name', 8)->comment('支出カテゴリ名');
             $table->timestamps();

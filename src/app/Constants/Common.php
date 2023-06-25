@@ -23,15 +23,37 @@ class Common
     /**
      * USEN
      */
-    const USEN_CSV_SKIP_ROW = 14;
+    const USEN_SYSTEM_NAME   = 'USEN';
+    const USEN_CSV_SKIP_ROW  = 14;
+    const USEN_CSV_ROW_COUNT = 95;
+    const USEN_CSV_ENCODING  = 'CP932';
 
     /**
      * ASPIT
      */
-    const ASPIT_CSV_SKIP_ROW = 1;
-    const ASPIT_CATEGORY_CODE = [
-        '1000' => '1',// 食材
-        '2000' => '2',// 資材
+    const ASPIT_SYSTEM_NAME = 'ASPIT';
+
+    const ASPIT_CSV_SKIP_ROW  = 1;
+    const ASPIT_CSV_ROW_COUNT = 61;
+    const ASPIT_CSV_ENCODING  = 'CP932';
+
+    const ASPIT_CATEGORIES = [
+        self::ASPIT_FOOD_CATEGORY_CODE,
+        self::ASPIT_MATERIAL_CATEGORY_CODE,
+        self::ASPIT_OTHER_TAX_CATEGORY_CODE,
+    ];
+
+    const ASPIT_FOOD_CATEGORY_CODE      = [
+        'category_cd'           => '1000',
+        'expense_category_code' => '101',
+    ];
+    const ASPIT_MATERIAL_CATEGORY_CODE  = [
+        'category_cd'           => '2000',
+        'expense_category_code' => '102',
+    ];
+    const ASPIT_OTHER_TAX_CATEGORY_CODE = [
+        'category_cd'           => '0',
+        'expense_category_code' => '103',
     ];
 
     /**
@@ -39,25 +61,25 @@ class Common
      */
     const FIXED_EXPENSE_TYPE =
         [
-            'type_cd'   => 1,
+            'type_cd'   => '101',
             'type_name' => '固定支出',
         ];
 
     const MONTHLY_EXPENSE_TYPE =
         [
-            'type_cd'   => 2,
+            'type_cd'   => '102',
             'type_name' => '月次支出',
         ];
 
     const DAILY_EXPENSE_TYPE =
         [
-            'type_cd'   => 3,
+            'type_cd'   => '103',
             'type_name' => '日次支出',
         ];
 
     const OTHER_EXPENSE_TYPE =
         [
-            'type_cd'   => 4,
+            'type_cd'   => '104',
             'type_name' => 'その他支出',
         ];
 
@@ -74,25 +96,25 @@ class Common
      */
     const FIXED_INCOME_TYPE =
         [
-            'type_cd'   => 1,
+            'type_cd'   => '101',
             'type_name' => '固定収入',
         ];
 
     const MONTHLY_INCOME_TYPE =
         [
-            'type_cd'   => 2,
+            'type_cd'   => '102',
             'type_name' => '月次収入',
         ];
 
     const DAILY_INCOME_TYPE =
         [
-            'type_cd'   => 3,
+            'type_cd'   => '103',
             'type_name' => '日次収入',
         ];
 
     const OTHER_INCOME_TYPE =
         [
-            'type_cd'   => 4,
+            'type_cd'   => '104',
             'type_name' => 'その他収入',
         ];
 
@@ -109,7 +131,7 @@ class Common
      */
     const PARENT_EXPENSE_CATEGORY_FOR_PURCHASE =
         [
-            'cat_cd'   => 1,
+            'cat_cd'   => '101',
             'cat_name' => '仕入費',
         ];
 
@@ -124,21 +146,29 @@ class Common
     const CHILD_EXPENSE_CATEGORY_FOR_FOOD =
         [
             'expense_type_cd' => COMMON::OTHER_EXPENSE_TYPE['type_cd'],
-            'cat_cd'          => 1,
+            'cat_cd'          => '101',
             'cat_name'        => '食材',
         ];
 
     const CHILD_EXPENSE_CATEGORY_FOR_MATERIALS =
         [
             'expense_type_cd' => COMMON::OTHER_EXPENSE_TYPE['type_cd'],
-            'cat_cd'          => 2,
+            'cat_cd'          => '102',
             'cat_name'        => '資材',
+        ];
+
+    const CHILD_EXPENSE_OTHER_TAX_FOR_MATERIALS =
+        [
+            'expense_type_cd' => COMMON::OTHER_EXPENSE_TYPE['type_cd'],
+            'cat_cd'          => '103',
+            'cat_name'        => 'その他税',
         ];
 
     const CHILD_EXPENSE_CATEGORIES =
         [
             Common::CHILD_EXPENSE_CATEGORY_FOR_FOOD,
             Common::CHILD_EXPENSE_CATEGORY_FOR_MATERIALS,
+            Common::CHILD_EXPENSE_OTHER_TAX_FOR_MATERIALS,
         ];
 
     /**
@@ -146,7 +176,7 @@ class Common
      */
     const PARENT_INCOME_CATEGORY_FOR_SALE =
         [
-            'cat_cd'   => 1,
+            'cat_cd'   => '101',
             'cat_name' => '売上',
         ];
 
@@ -160,14 +190,14 @@ class Common
     const CHILD_INCOME_CATEGORY_FOR_STORE_SALE =
         [
             'income_type_cd' => COMMON::OTHER_INCOME_TYPE['type_cd'],
-            'cat_cd'         => 1,
+            'cat_cd'         => '101',
             'cat_name'       => '店舗売上',
         ];
 
     const CHILD_INCOME_CATEGORY_FOR_DELIVERY_SALE =
         [
             'income_type_cd' => COMMON::OTHER_INCOME_TYPE['type_cd'],
-            'cat_cd'         => 2,
+            'cat_cd'         => '102',
             'cat_name'       => 'デリバリー売上',
         ];
 
@@ -182,43 +212,43 @@ class Common
      */
     const PAYMENT_METHODS_TEMPLATE = [
         [
-            'payment_cd'      => 1,
+            'payment_cd'      => '101',
             'property_name'   => 'cash',
             'payment_name'    => '現金',
             'commission_rate' => 0,
         ],
         [
-            'payment_cd'      => 2,
+            'payment_cd'      => '102',
             'property_name'   => 'creditCard',
             'payment_name'    => 'クレジット',
             'commission_rate' => 0.30,
         ],
         [
-            'payment_cd'      => 3,
+            'payment_cd'      => '103',
             'property_name'   => 'points',
             'payment_name'    => 'ポイント',
             'commission_rate' => 0,
         ],
         [
-            'payment_cd'      => 4,
+            'payment_cd'      => '104',
             'property_name'   => 'electronicMoney',
             'payment_name'    => '電子マネー',
             'commission_rate' => 0.3,
         ],
         [
-            'payment_cd'      => 5,
+            'payment_cd'      => '105',
             'property_name'   => 'giftCertNoChange',
             'payment_name'    => '商品券釣無',
             'commission_rate' => 0,
         ],
         [
-            'payment_cd'      => 6,
+            'payment_cd'      => '106',
             'property_name'   => 'giftCertWithChange',
             'payment_name'    => '商品券釣有',
             'commission_rate' => 0,
         ],
         [
-            'payment_cd'      => 7,
+            'payment_cd'      => '107',
             'property_name'   => 'delivery',
             'payment_name'    => 'デリバリー',
             'commission_rate' => 0.30,

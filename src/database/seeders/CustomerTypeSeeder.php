@@ -15,13 +15,13 @@ class CustomerTypeSeeder extends Seeder
     public function run(): void
     {
         $customerTypes = [
-            1 => '会社員・OL',
-            2 => '家族',
-            3 => '学生',
-            4 => '夫婦',
-            5 => 'ママ、主婦',
-            6 => '先輩',
-            7 => 'T.O,デリバリー',
+            '001' => '会社員・OL',
+            '002' => '家族',
+            '003' => '学生',
+            '004' => '夫婦',
+            '005' => 'ママ、主婦',
+            '006' => '先輩',
+            '007' => 'T.O,デリバリー',
         ];
 
         /** @var Company $company */

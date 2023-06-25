@@ -18,7 +18,7 @@ class CategoryCd extends ColumnBase
 
     public function __construct($categoryCd,$valueName)
     {
-        $this->permittedValues = array_keys(Common::ASPIT_CATEGORY_CODE);
+        $this->permittedValues = array_column(Common::ASPIT_CATEGORIES, 'category_cd');
         Parent::__construct($categoryCd, $valueName);
     }
 }

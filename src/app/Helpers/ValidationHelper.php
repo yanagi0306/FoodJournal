@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 use DateTime;
@@ -11,8 +12,7 @@ class ValidationHelper
 {
     /**
      * 許可された値以外が含まれているか検証
-     *
-     * @param mixed $value 検証する値
+     * @param mixed $value           検証する値
      * @param array $permittedValues 許可された値の配列
      * @return bool
      */
@@ -23,8 +23,7 @@ class ValidationHelper
 
     /**
      * 許可されていない値が含まれているか検証
-     *
-     * @param mixed $value 検証する値
+     * @param mixed $value         検証する値
      * @param array $invalidValues 許可されていない値の配列
      * @return bool
      */
@@ -35,8 +34,7 @@ class ValidationHelper
 
     /**
      * 値が正の値か検証する
-     *
-     * @param mixed $value 検証する値
+     * @param mixed  $value              検証する値
      * @param string $permittedValueType 許可された値の型
      * @return bool
      */
@@ -51,8 +49,7 @@ class ValidationHelper
 
     /**
      * 値の型が指定された型と一致するか検証
-     *
-     * @param mixed $value 検証する値
+     * @param mixed  $value              検証する値
      * @param string $permittedValueType 許可された値の型名
      * @return bool
      */
@@ -64,8 +61,15 @@ class ValidationHelper
             return true;
         }
 
-        if ($permittedValueType === 'timestamp' && $value instanceof DateTime) {
-            $inputValueType = 'timestamp';
+        if (($permittedValueType === 'timestamp' || $permittedValueType === 'date') && $value instanceof DateTime) {
+            $inputValueType = $permittedValueType;
+        }
+
+        if ($permittedValueType === 'date' && $inputValueType === 'string') {
+            $date = DateTime::createFromFormat('Y-m-d', $value);
+            if ($date && $date->format('Y-m-d') === $value) {
+                $inputValueType = 'date';
+            }
         }
 
         return $inputValueType === $permittedValueType;

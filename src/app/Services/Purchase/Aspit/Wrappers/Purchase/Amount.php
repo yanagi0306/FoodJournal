@@ -11,5 +11,6 @@ use App\Services\Base\CsvWrappers\ColumnBase;
  */
 class Amount extends ColumnBase
 {
-    protected string $permittedValueType = 'integer';
+    protected string $permittedValueType     = 'integer';
+    protected bool   $isAllowNegativeInteger = true;
 }

@@ -93,13 +93,19 @@ class CsvOrderRegistration
     private function updateExistingOrder(OrderInfo $existingOrder, CsvOrderRow $csvOrderRow): void
     {
         $orderData = $csvOrderRow->getOrderForRegistration();
-        $existingOrder->update($orderData);
+        if (!$existingOrder->update($orderData)) {
+            throw new Exception('order_infoテーブルの更新に失敗しました。' . __FILE__ . __LINE__);
+        }
 
-        // 注文決済の情報を削除
-        OrderPayment::where('order_info_id', $existingOrder->id)->delete();
+        // 注文支払情報の情報を削除
+        if (!OrderPayment::where('order_info_id', $existingOrder->id)->delete()) {
+            throw new Exception('order_paymentテーブルの削除に失敗しました。' . __FILE__ . __LINE__);
+        }
 
-        // 注文商品の情報を削除
-        OrderProduct::where('order_info_id', $existingOrder->id)->delete();
+        // 注文商品情報の情報を削除
+        if (!OrderProduct::where('order_info_id', $existingOrder->id)->delete()) {
+            throw new Exception('order_productテーブルの削除に失敗しました。' . __FILE__ . __LINE__);
+        }
 
         $this->updatedOrderCount++;
     }
@@ -114,7 +120,6 @@ class CsvOrderRegistration
     {
         $orderData = $csvOrderRow->getOrderForRegistration();
 
-        /** @var OrderInfo|null $createdOrder */
         $createdOrder = OrderInfo::create($orderData);
 
         if (!$createdOrder) {
@@ -136,7 +141,11 @@ class CsvOrderRegistration
     {
         $orderPaymentsData = $csvOrderRow->getOrderPaymentsForRegistration($orderId);
         foreach ($orderPaymentsData as $orderPaymentData) {
-            OrderPayment::create($orderPaymentData);
+
+            if (!OrderPayment::create($orderPaymentData)) {
+                throw new Exception('order_paymentテーブルの登録に失敗しました。' . __FILE__ . __LINE__);
+            }
+
             $this->registeredOrderPaymentCount++;
         }
     }
@@ -146,13 +155,13 @@ class CsvOrderRegistration
      * @param iterable|CsvOrderRow[] $csvOrderRowArray
      * @param int                    $orderId
      * @return void
+     * @throws Exception
      */
     private function saveOrderProducts(array $csvOrderRowArray, int $orderId): void
     {
         $orderProducts = [];
         foreach ($csvOrderRowArray as $csvOrderRow) {
             $row = $csvOrderRow->getOrderProductForRegistration($orderId, $this->orderProducts);
-
             $productMasterId = $row['order_product_master_id'];
 
             // 同一伝票番号の同一商品について数量を集計
@@ -165,7 +174,9 @@ class CsvOrderRegistration
 
         // 集計した商品情報をデータベースに登録
         foreach ($orderProducts as $productData) {
-            OrderProduct::create($productData);
+            if (!OrderProduct::create($productData)) {
+                throw new Exception('order_productテーブルの登録に失敗しました。' . __FILE__ . __LINE__);
+            }
             $this->registeredOrderProductCount++;
         }
     }

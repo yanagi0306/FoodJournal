@@ -16,10 +16,10 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('店舗ID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->string('order_store_cd', 4)->comment('店舗コード');
-            $table->string('purchase_store_cd', 4)->comment('仕入店舗コード（アスピット）');
+            $table->string('order_store_cd', 4)->comment('注文店舗コード');
+            $table->string('purchase_store_cd', 4)->comment('仕入店舗コード');
             $table->string('store_name', 30)->comment('店舗名');
-            $table->string('mail', 30)->nullable()->comment('メールアドレス');
+            $table->string('mail', 100)->nullable()->comment('メールアドレス');
             $table->integer('is_closed')->nullable()->comment('閉店フラグ');
             $table->timestamps();
 

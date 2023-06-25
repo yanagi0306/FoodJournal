@@ -1,28 +1,30 @@
 <?php
+
 namespace App\Services\Purchase;
 
+use App\Constants\Common;
+use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Purchase\Aspit\CsvPurchaseUploader;
 use Illuminate\Http\UploadedFile;
 use InvalidArgumentException;
 
 /**
- * 売上アップローダーファクトリークラス
+ * 仕入アップローダーファクトリークラス
  * @package App\Services\PurchaseUploaders
  */
 class PurchaseUploaderFactory
 {
     /**
      * 指定されたシステムに応じたアップローダーインスタンスを生成
-     * @param string       $system       システム名（例: 'Aspit'）
-     * @param UploadedFile $uploadedFile アップロードされたファイル
-     * @param int          $companyId    会社ID
+     * @param UploadedFile       $uploadedFile アップロードされたファイル
+     * @param FetchesCompanyInfo $companyInfo
      * @return CsvPurchaseUploader
      */
-    public static function createUploader(string $system, UploadedFile $uploadedFile, int $companyId): CsvPurchaseUploader
+    public static function createUploader(UploadedFile $uploadedFile, FetchesCompanyInfo $companyInfo): CsvPurchaseUploader
     {
-        return match ($system) {
-            'aspit' => new CsvPurchaseUploader($uploadedFile, $companyId),
-            default => throw new InvalidArgumentException("無効なシステムが入力されました システム名:({$system})"),
+        return match ($companyInfo->company->purchase_system) {
+            Common::ASPIT_SYSTEM_NAME => new CsvPurchaseUploader($uploadedFile, $companyInfo),
+            default => throw new InvalidArgumentException("無効なシステムが入力されました システム名:({$companyInfo->company->purchase_system})"),
         };
     }
 }

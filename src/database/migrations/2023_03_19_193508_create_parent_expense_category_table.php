@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('親支出カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
             $table->string('cat_cd', 3)->comment('親支出カテゴリコード');
-            $table->string('cat_name', 8)->comment('親支出カテゴリ名');
+            $table->string('cat_name', 10)->comment('親支出カテゴリ名');
             $table->timestamps();
 
             // ユニークキーの設定

@@ -16,7 +16,7 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('支払方法ID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->integer('payment_cd')->comment('支払方法コード（表示の優先度）');
+            $table->string('payment_cd')->comment('支払方法コード（表示の優先度）');
             $table->string('payment_name')->comment('支払方法名');
             $table->string('property_name')->nullable()->comment('プロパティ名');
             $table->decimal('commission_rate', 4, 4)->comment('支払手数料');

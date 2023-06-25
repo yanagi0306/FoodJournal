@@ -208,20 +208,27 @@ class ConvertHelper
     /**
      * 日付に変換
      * @param string|null $value 変換前の値
-     * @return DateTime|null 変換後の日付オブジェクト
+     * @return string|null 変換後の日付文字列
      * @throws Exception 変換に失敗した場合
      */
-    public static function convertToDate(?string $value, string $valueName): ?DateTime
+    public static function convertToDate(?string $value, string $valueName): ?string
     {
         if ($value === null) {
             return null;
         }
 
-        $dateValue = DateTime::createFromFormat('Y-m-d', $value);
-        if ($dateValue === false) {
+        $date = DateTime::createFromFormat('Y/m/d', $value);
+
+        if ($date === false) {
+            $date = DateTime::createFromFormat('Y/n/j', $value);
+        }
+
+        if ($date === false) {
             throw new Exception("項目名[{$valueName}] 値:[{$value}] date型に変換できません");
         }
-        return $dateValue;
+
+        Log::info($date->format('Y-m-d'));
+        return $date->format('Y-m-d');
     }
 
     /**

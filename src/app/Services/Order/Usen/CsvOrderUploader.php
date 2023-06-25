@@ -2,6 +2,7 @@
 
 namespace App\Services\Order\Usen;
 
+use App\Constants\Common;
 use App\Services\Base\BaseUploader;
 use App\Services\Order\OrderUploaderInterface;
 use App\Traits\CsvTrait;
@@ -26,7 +27,7 @@ class CsvOrderUploader extends BaseUploader implements OrderUploaderInterface
     public function processCsv(): string
     {
         // CSVデータを配列に変換
-        $csvArray = $this->convertCsvToArray($this->uploadFile, null, 'CP932');
+        $csvArray = $this->convertCsvToArray($this->uploadFile, Common::USEN_CSV_ENCODING);
 
         // 配列から注文情報Collectionを作成
         $orderCollection = new CsvOrderCollection($csvArray, $this->companyInfo);

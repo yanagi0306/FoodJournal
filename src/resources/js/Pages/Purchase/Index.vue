@@ -26,7 +26,7 @@ onMounted(() => {
     });
 });
 
-const downloadOrderCsv = (path) => {
+const downloadPurchaseCsv = (path) => {
     window.open('/purchases/download?filename=' + encodeURIComponent(path), '_blank');
 }
 
@@ -97,7 +97,7 @@ const uploadFile = () => {
                 </tr>
                 </thead>
                 <tbody>
-                <TableRow v-for='purchase in purchasesHistory' :key="purchase.id" :purchase="purchase" @download="downloadOrderCsv"/>
+                <TableRow v-for='row in purchasesHistory' :key="row.id" :row="row" @download="downloadPurchaseCsv"/>
                 </tbody>
             </table>
         </div>

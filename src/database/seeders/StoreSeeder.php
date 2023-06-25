@@ -16,12 +16,14 @@ class StoreSeeder extends Seeder
     {
         $stores = [
             [
-                'name'           => 'BENCIA越谷店',
-                'order_store_cd' => '001',
+                'name'              => 'BENCIA越谷店',
+                'order_store_cd'    => '001',
+                'purchase_store_cd' => '1001',
             ],
             [
-                'name'           => 'BENCIA戸田公園前店',
-                'order_store_cd' => '002',
+                'name'              => 'BENCIA戸田公園前店',
+                'order_store_cd'    => '002',
+                'purchase_store_cd' => '1002',
             ],
         ];
 
@@ -30,10 +32,11 @@ class StoreSeeder extends Seeder
 
         foreach ($stores as $store) {
             Store::factory()->create([
-                'company_id'     => $company->id,
-                'store_name'     => $store['name'],
-                'order_store_cd' => $store['order_store_cd'],
-            ]);
+                                         'company_id'        => $company->id,
+                                         'store_name'        => $store['name'],
+                                         'order_store_cd'    => $store['order_store_cd'],
+                                         'purchase_store_cd' => $store['purchase_store_cd'],
+                                     ]);
         }
     }
 }

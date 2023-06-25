@@ -28,15 +28,15 @@ class CsvOrderRow
     /**
      * @throws Exception
      */
-    public function __construct(array $row, FetchesCompanyInfo $companyInfo, $rowCount = 95)
+    public function __construct(array $row, FetchesCompanyInfo $companyInfo)
     {
         $this->companyId = $companyInfo->company->id;
         $this->storeCds  = array_column($companyInfo->stores, 'order_store_cd');
 
 
-        if (count($row) !== $rowCount) {
+        if (count($row) !== Common::USEN_CSV_ROW_COUNT) {
             Log::info(print_r($row, true));
-            throw new Exception("不正な列数を持つ連携ファイルが検出されました。正しい桁列数:{$rowCount} 検出された列数:" . count($row));
+            throw new Exception('不正な列数を持つ連携ファイルが検出されました。正しい桁列数:' . Common::USEN_CSV_ROW_COUNT . ' 検出された列数:' . count($row));
         }
 
         $this->skipDecision = new SkipDecision([

@@ -47,9 +47,9 @@ trait CsvTrait
      */
     public function convertCsvToArray(
         UploadedFile $uploadedFile,
-        ?int         $skipRows = null,
         string       $fromEncoding = 'Shift_JIS',
         string       $toEncoding = 'UTF-8',
+        ?int         $skipRows = null,
         string       $delimiter = ',',
         string       $enclosure = '"',
     ): array

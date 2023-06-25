@@ -4,9 +4,7 @@ namespace App\Services\Purchase\Aspit;
 
 use App\Constants\Common;
 use App\Exceptions\SkipImportException;
-use App\Models\Company;
-use App\Models\PurchaseSupplier;
-use App\Models\Store;
+use App\Services\Company\FetchesCompanyInfo;
 use ArrayIterator;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -14,25 +12,18 @@ use IteratorAggregate;
 
 class CsvPurchaseCollection implements IteratorAggregate
 {
-    private array  $purchases   = [];
-    private int    $companyId;
-    private string $companyCd;
-    private array  $storeCds;
-    private array  $supplierCds;
-    private string $skipMessage = '';
+    private array              $purchases   = [];
+    private FetchesCompanyInfo $companyInfo;
+    private string             $skipMessage = '';
 
     /**
-     * @param array $csvOrderArray
-     * @param int   $companyId
-     * @param array $storeIds
+     * @param array              $csvOrderArray
+     * @param FetchesCompanyInfo $companyInfo
      * @throws Exception
      */
-    public function __construct(array $csvOrderArray, int $companyId, array $storeIds)
+    public function __construct(array $csvOrderArray, FetchesCompanyInfo $companyInfo)
     {
-        $this->companyId   = $companyId;
-        $this->storeCds    = $this->getStoreCds($storeIds);
-        $this->companyCd   = $this->getCompanyCd($companyId);
-        $this->supplierCds = $this->getSupplierCds($companyId);
+        $this->companyInfo = $companyInfo;
         $this->addCollection($csvOrderArray);
     }
 
@@ -53,12 +44,12 @@ class CsvPurchaseCollection implements IteratorAggregate
                     throw new SkipImportException('ヘッダー行のためスキップ');
                 }
 
-                $csvPurchase = new CsvPurchaseRow($row, $this->companyCd, $this->storeCds, $this->supplierCds);
+                $csvPurchase = new CsvPurchaseRow($row, $this->companyInfo);
 
                 // 伝票番号ごとにCsvPurchaseRowを格納
                 $slipNumber = $csvPurchase->getSlipNumber();
                 if (!isset($this->orders[$slipNumber])) {
-                    $this->purchases[$slipNumber][] = $csvPurchase;
+                    $this->purchases[$slipNumber] = $csvPurchase;
                 }
 
             } catch (SkipImportException $e) {
@@ -68,6 +59,8 @@ class CsvPurchaseCollection implements IteratorAggregate
             } catch (Exception $e) {
                 throw new Exception($lineNumber . '行目取込処理に失敗しました:' . $e->getMessage());
             }
+
+            Log::info($lineNumber . '行目取込処理に成功');
         }
     }
 
@@ -81,56 +74,11 @@ class CsvPurchaseCollection implements IteratorAggregate
     }
 
     /**
-     * モデルを参照してpurchase_store_cdを取得する
-     * @param array $storeIds
-     * @return array
-     * @throws Exception
-     */
-    private function getStoreCds(array $storeIds): array
-    {
-        try {
-            return Store::whereIn('id', $storeIds)->where('is_closed', null)->pluck('purchase_store_cd')->toArray();
-        } catch (Exception $e) {
-            throw new Exception('purchase_store_cdの取得に失敗しました: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * モデルを参照してpurchase_company_cdを取得する
-     * @param int $companyId
-     * @return string
-     * @throws Exception
-     */
-    private function getCompanyCd(int $companyId): string
-    {
-        try {
-            return Company::where('id', $companyId)->value('purchase_company_cd');
-        } catch (Exception $e) {
-            throw new Exception('purchase_company_cdの取得に失敗しました: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * モデルを参照してcompanyIdに紐づくsupplierCdを取得する
-     * @param int $companyId
-     * @return array
-     * @throws Exception
-     */
-    private function getSupplierCds(int $companyId): array
-    {
-        try {
-            return PurchaseSupplier::where('id', $companyId)->pluck('supplier_cd')->toArray();
-        } catch (Exception $e) {
-            throw new Exception('supplier_cdの取得に失敗しました: ' . $e->getMessage());
-        }
-    }
-
-    /**
      * IteratorAggregateインタフェースに必要なgetIteratorメソッドの実装
      * @return ArrayIterator
      */
     public function getIterator(): ArrayIterator
     {
-        return new ArrayIterator($this->orders);
+        return new ArrayIterator($this->purchases);
     }
 }

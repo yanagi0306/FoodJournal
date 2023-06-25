@@ -214,7 +214,7 @@ abstract class ColumnBase
      */
     private function addSkipMessage(string $message): void
     {
-        $value             = $this->value ?? '未入力';
+        $value = $this->value ?? '未入力';
         throw new SkipImportException("項目名[{$this->valueName}] 値:({$value}) {$message}");
     }
 }

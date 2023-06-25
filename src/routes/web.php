@@ -63,7 +63,7 @@ Route::middleware(['auth',
     Route::get('/purchases', PurchaseInfoController::class . '@index')
          ->name('purchases.index');
     Route::post('/purchases/upload', PurchaseInfoController::class . '@upload')
-         ->name('purchases.store');
+         ->name('purchases.upload');
     Route::get('/purchases/download_upload_history', PurchaseInfoController::class . '@download_upload_history')
          ->name('purchases.download_upload_history');
 

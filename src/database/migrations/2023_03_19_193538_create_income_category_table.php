@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('収入カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
             $table->unsignedBigInteger('parent_income_category_id')->comment('親収入カテゴリID');
-            $table->integer('income_type_cd')->comment('収入タイプコード');
+            $table->string('income_type_cd')->comment('収入タイプコード');
             $table->string('cat_cd', 3)->comment('収入カテゴリコード');
             $table->string('cat_name', 8)->comment('収入カテゴリ名');
             $table->timestamps();
