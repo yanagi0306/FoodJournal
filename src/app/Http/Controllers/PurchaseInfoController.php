@@ -28,7 +28,7 @@ class PurchaseInfoController extends Controller
     public function index(): Response
     {
         // 売上情報のアップロード履歴の取得
-        $uploadHistory = new UploadHistory('purchase_info', $this->userInfo['company_id']);
+        $uploadHistory    = new UploadHistory('purchase_info', $this->userInfo['company_id']);
         $purchasesHistory = $uploadHistory->getUploadHistory();
 
         return Inertia::render('Purchase/Index', [
@@ -53,16 +53,16 @@ class PurchaseInfoController extends Controller
             $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
 
             // システム名を取得 (データベースや設定ファイルから)
-            $service     = PurchaseUploaderFactory::createUploader($uploadedFile, $companyInfo);
+            $service = PurchaseUploaderFactory::createUploader($uploadedFile, $companyInfo);
 
             $resultMessage = $service->processCsv();
 
-            $this->responseMessage = '仕入データの登録処理に成功しました。';
+            $this->responseMessage = "仕入データの登録に成功しました。\n" . $resultMessage;
             $this->responseStatus  = 'success';
-            Log::info($this->responseMessage . "\n" . $resultMessage);
+            Log::info($this->responseMessage);
 
         } catch (\Throwable $e) {
-            $this->responseMessage = "仕入データの登録処理に失敗しました。\n" . $e->getMessage() . "\nfile:" .$e->getFile() . " line:" . $e->getLine();
+            $this->responseMessage = "仕入データの登録に失敗しました。\n" . $e->getMessage(). "\nfile:" . $e->getFile() . ' line:' . $e->getLine();
             $this->responseStatus  = 'error';
             Log::error($this->responseMessage);
         }

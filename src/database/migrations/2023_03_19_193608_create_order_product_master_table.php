@@ -19,7 +19,9 @@ return new class extends Migration {
             $table->string('product_cd', 15)->comment('商品コード');
             $table->string('product_name', 20)->comment('商品名');
             $table->double('unit_cost')->nullable()->comment('理論原価');
+            $table->double('original_unit_cost')->nullable()->comment('初期理論原価');
             $table->integer('unit_price')->comment('単価');
+            $table->integer('original_unit_price')->comment('初期単価');
             $table->string('category1', 20)->comment('商品カテゴリ1');
             $table->string('category2', 20)->nullable()->comment('商品カテゴリ2');
             $table->string('category3', 20)->nullable()->comment('商品カテゴリ3');

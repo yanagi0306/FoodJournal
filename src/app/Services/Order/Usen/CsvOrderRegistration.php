@@ -34,16 +34,13 @@ class CsvOrderRegistration
     {
         try {
             DB::beginTransaction();
-            // 伝票番号ごとに処理
             /** @var iterable|CsvOrderRow[] $csvOrderRowArray */
             foreach ($this->orderCollection as $slipNumber => $csvOrderRowArray) {
                 $this->slipNumMessage = "伝票番号:({$slipNumber}) ";
-                // 各伝票番号に対応するOrderCollectionをデータベースに保存
                 $this->saveOrders($csvOrderRowArray);
             }
             DB::commit();
         } catch (Exception $e) {
-            // 例外が発生した場合、トランザクションをロールバック処理終了
             DB::rollBack();
             throw new Exception($this->slipNumMessage . $e->getMessage());
         }
@@ -94,17 +91,17 @@ class CsvOrderRegistration
     {
         $orderData = $csvOrderRow->getOrderForRegistration();
         if (!$existingOrder->update($orderData)) {
-            throw new Exception('order_infoテーブルの更新に失敗しました。' . __FILE__ . __LINE__);
+            throw new Exception('order_infoテーブルの更新に失敗しました。');
         }
 
         // 注文支払情報の情報を削除
         if (!OrderPayment::where('order_info_id', $existingOrder->id)->delete()) {
-            throw new Exception('order_paymentテーブルの削除に失敗しました。' . __FILE__ . __LINE__);
+            throw new Exception('order_paymentテーブルの削除に失敗しました。');
         }
 
         // 注文商品情報の情報を削除
         if (!OrderProduct::where('order_info_id', $existingOrder->id)->delete()) {
-            throw new Exception('order_productテーブルの削除に失敗しました。' . __FILE__ . __LINE__);
+            throw new Exception('order_productテーブルの削除に失敗しました。');
         }
 
         $this->updatedOrderCount++;
@@ -123,7 +120,7 @@ class CsvOrderRegistration
         $createdOrder = OrderInfo::create($orderData);
 
         if (!$createdOrder) {
-            throw new Exception('order_infoテーブルの登録に失敗しました。' . __FILE__ . __LINE__);
+            throw new Exception('order_infoテーブルの登録に失敗しました。');
         }
 
         $this->registeredOrderCount++;
@@ -143,7 +140,7 @@ class CsvOrderRegistration
         foreach ($orderPaymentsData as $orderPaymentData) {
 
             if (!OrderPayment::create($orderPaymentData)) {
-                throw new Exception('order_paymentテーブルの登録に失敗しました。' . __FILE__ . __LINE__);
+                throw new Exception('order_paymentテーブルの登録に失敗しました。');
             }
 
             $this->registeredOrderPaymentCount++;
@@ -175,7 +172,7 @@ class CsvOrderRegistration
         // 集計した商品情報をデータベースに登録
         foreach ($orderProducts as $productData) {
             if (!OrderProduct::create($productData)) {
-                throw new Exception('order_productテーブルの登録に失敗しました。' . __FILE__ . __LINE__);
+                throw new Exception('order_productテーブルの登録に失敗しました。');
             }
             $this->registeredOrderProductCount++;
         }
@@ -188,10 +185,10 @@ class CsvOrderRegistration
     private
     function generateResultMessage(): string
     {
-        $resultMessage = "Orderテーブル登録:{$this->registeredOrderCount}件\n";
-        $resultMessage .= "Orderテーブル更新:{$this->updatedOrderCount}件\n";
-        $resultMessage .= "OrderPaymentテーブル登録:{$this->registeredOrderPaymentCount}件\n";
-        $resultMessage .= "OrderProductテーブル登録:{$this->registeredOrderProductCount}件\n";
+        $resultMessage = "注文伝票情報     登録:{$this->registeredOrderCount}件\n";
+        $resultMessage .= "注文伝票情報     更新:{$this->updatedOrderCount}件\n";
+        $resultMessage .= "注文支払情報     登録:{$this->registeredOrderPaymentCount}件\n";
+        $resultMessage .= "注文商品情報     登録:{$this->registeredOrderProductCount}件\n";
 
         // 成功時は登録件数を返す
         return $resultMessage;

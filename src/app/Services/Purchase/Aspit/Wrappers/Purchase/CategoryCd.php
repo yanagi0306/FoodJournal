@@ -2,7 +2,7 @@
 
 namespace App\Services\Purchase\Aspit\Wrappers\Purchase;
 
-use App\Constants\Common;
+use App\Constants\AspitConstants;
 use App\Services\Base\CsvWrappers\ColumnBase;
 
 /**
@@ -18,7 +18,7 @@ class CategoryCd extends ColumnBase
 
     public function __construct($categoryCd,$valueName)
     {
-        $this->permittedValues = array_column(CommonDatabaseConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB, 'category_cd');
+        $this->permittedValues = array_column(AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB, 'aspit_category_cd');
         Parent::__construct($categoryCd, $valueName);
     }
 }

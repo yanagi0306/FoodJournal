@@ -14,7 +14,6 @@ class OrderInfo extends BaseModel
 
     protected $fillable = [
         'store_id',
-        'income_category_id',
         'customer_type_id',
         'slip_number',
         'order_date',
@@ -30,15 +29,6 @@ class OrderInfo extends BaseModel
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
-    }
-
-    /**
-     * income_categoryテーブル リレーション設定
-     * @return BelongsTo
-     */
-    public function incomeCategory(): BelongsTo
-    {
-        return $this->belongsTo(IncomeCategory::class);
     }
 
     /**

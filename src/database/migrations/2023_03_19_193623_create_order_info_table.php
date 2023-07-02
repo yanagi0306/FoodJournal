@@ -17,7 +17,6 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('注文ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
-            $table->unsignedBigInteger('income_category_id')->comment('収入カテゴリID');
             $table->unsignedBigInteger('customer_type_id')->nullable()->comment('客層ID');
             $table->string('slip_number', 15)->comment('伝票番号');
             $table->timestamp('order_date')->comment('注文日時');
@@ -31,7 +30,6 @@ return new class extends Migration {
 
             // 外部キー制約の設定
             $table->foreign('store_id')->references('id')->on('store')->onDelete('cascade');
-            $table->foreign('income_category_id')->references('id')->on('income_category')->onDelete('cascade');
             $table->foreign('customer_type_id')->references('id')->on('customer_type')->onDelete('cascade');
 
             // 文字コードと照合順序の設定

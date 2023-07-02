@@ -17,7 +17,6 @@ class ExpenseCategory extends BaseModel
         'company_id',
         'parent_expense_category_id',
         'cat_cd',
-        'position',
         'cat_name',
         'type_cd',
     ];

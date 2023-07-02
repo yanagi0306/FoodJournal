@@ -6,6 +6,7 @@ use App\Exceptions\SkipImportException;
 use App\Services\Base\CsvWrappers\ColumnGroupBase;
 use App\Services\Order\Usen\Wrappers\Product\ProductCd;
 use App\Services\Order\Usen\Wrappers\Product\Quantity;
+use App\Services\Order\Usen\Wrappers\Product\UnitPrice;
 use Exception;
 
 /**
@@ -13,8 +14,9 @@ use Exception;
  */
 class Product extends ColumnGroupBase
 {
-    protected ProductCd    $productCd;
-    protected Quantity     $quantity;
+    protected ProductCd $productCd;
+    protected unitPrice $unitPrice;
+    protected Quantity  $quantity;
 
     /**
      * @param array $row
@@ -22,8 +24,9 @@ class Product extends ColumnGroupBase
      */
     public function __construct(array $row)
     {
-        $this->productCd    = new ProductCd($row['product'], '商品コード');
-        $this->quantity     = new Quantity($row['quantity'], '数量');
+        $this->productCd = new ProductCd($row['product'], '商品コード');
+        $this->unitPrice = new unitPrice($row['unitPrice'], '販売価格');
+        $this->quantity  = new Quantity($row['quantity'], '数量');
     }
 }
 

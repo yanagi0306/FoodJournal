@@ -15,11 +15,11 @@ class AspitConstants
         self::MATERIAL_CATEGORY_MAP_FROM_ASPIT,
     ];
     const FOOD_CATEGORY_MAP_FROM_ASPIT     = [
-        'aspit_category_code'      => '1000',
-        'db_expense_category_code' => CommonDatabaseConstants::EXPENSE_CATEGORY_FOR_FOOD['cat_cd'],
+        'aspit_category_cd'      => '1000',
+        'expense_category_cd' => CommonDatabaseConstants::EXPENSE_CATEGORY_FOR_FOOD['cat_cd'],
     ];
     const MATERIAL_CATEGORY_MAP_FROM_ASPIT = [
-        'aspit_category_code'      => '2000',
-        'db_expense_category_code' => CommonDatabaseConstants::EXPENSE_CATEGORY_FOR_MATERIALS['cat_cd'],
+        'aspit_category_cd'      => '2000',
+        'expense_category_cd' => CommonDatabaseConstants::EXPENSE_CATEGORY_FOR_MATERIALS['cat_cd'],
     ];
 }

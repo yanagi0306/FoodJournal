@@ -44,5 +44,23 @@ class Slip extends ColumnGroupBase
         $this->customerTypeName = new CustomerTypeName($row['customerTypeName'], '客層名');
         $this->salesType        = new SalesType($row['salesType'], '販売形態');
     }
+
+    /**
+     * 伝票番号を取得する
+     * @return string
+     */
+    public function getSlipNumber(): string
+    {
+        return $this->slipNumber->getValue();
+    }
+
+    /**
+     * 店舗コードを取得する
+     * @return string
+     */
+    public function getStoreCd(): string
+    {
+        return $this->storeCd->getValue();
+    }
 }
 

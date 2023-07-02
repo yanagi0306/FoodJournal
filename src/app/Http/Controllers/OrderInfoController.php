@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FormatHelper;
 use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
 use App\Services\Order\OrderUploaderFactory;
@@ -56,19 +57,19 @@ class OrderInfoController extends Controller
             $service       = OrderUploaderFactory::createUploader($uploadedFile, $companyInfo);
             $resultMessage = $service->processCsv();
 
-            $this->responseMessage = '注文データの登録処理に成功しました。';
+            $this->responseMessage = "注文データの登録に成功しました。\n" . $resultMessage;
             $this->responseStatus  = 'success';
-            Log::info($this->responseMessage . "\n" . $resultMessage);
+            Log::info($this->responseMessage);
 
         } catch (\Throwable $e) {
-            $this->responseMessage = "注文データの登録処理に失敗しました。\n" . $e->getMessage();
+            $this->responseMessage = "注文データの登録に失敗しました。\n" . $e->getMessage() . "\nfile:" . $e->getFile() . ' line:' . $e->getLine();
             $this->responseStatus  = 'error';
             Log::error($this->responseMessage);
         }
 
         return to_route('orders.index')
             ->with([
-                       'message' => str_replace("\n", '<br>', $this->responseMessage),
+                       'message' => FormatHelper::formatStringForHtml($this->responseMessage),
                        'status'  => $this->responseStatus,
                    ]);
     }

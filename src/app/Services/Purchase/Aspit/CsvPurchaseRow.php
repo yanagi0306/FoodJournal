@@ -104,7 +104,7 @@ class CsvPurchaseRow
         $expenseCategoryCode = $this->getExpenseCategoryCode($categoryCd);
 
         if (!$expenseCategoryCode) {
-            $validCodes = implode(', ', array_column(AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB, 'category_cd'));
+            $validCodes = implode(', ', array_column(AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB, 'aspit_category_cd'));
             throw new Exception("カテゴリコードに誤りがあります。 値:{$categoryCd} 許可された値:(" . $validCodes . ')');
         }
 
@@ -119,8 +119,8 @@ class CsvPurchaseRow
     private function getExpenseCategoryCode(string $categoryCd): ?string
     {
         foreach (AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB as $category) {
-            if (isset($category['category_cd']) && $category['category_cd'] == $categoryCd) {
-                return $category['expense_category_code'];
+            if (isset($category['aspit_category_cd']) && $category['aspit_category_cd'] == $categoryCd) {
+                return $category['expense_category_cd'];
             }
         }
 

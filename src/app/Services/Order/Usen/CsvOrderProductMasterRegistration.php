@@ -42,7 +42,6 @@ class CsvOrderProductMasterRegistration
             DB::commit();
 
         } catch (Exception $e) {
-            // 例外が発生した場合、トランザクションをロールバック処理終了
             DB::rollBack();
             throw new Exception($this->productCdMessage . $e->getMessage());
         }
@@ -72,16 +71,12 @@ class CsvOrderProductMasterRegistration
         // 既存のレコードが存在する場合は更新処理
         if ($existingProductMaster) {
             $orderProductMasterId   = $existingProductMaster->id;
-            $orderProductMasterData = $csvRowArray->getOrderProductMasterForUpdate();
+            $orderProductMasterData = $csvRowArray->getOrderProductMasterForUpdate($existingProductMaster);
             $existingProductMaster->update($orderProductMasterData);
             $this->updatedCount++;
         }
 
         // 更新に成功した商品の情報を保存
-        if (is_null($orderProductMasterId)) {
-            throw new Exception('商品IDの取得に失敗しました。');
-        }
-
         $this->successfulProducts[$productCd] = $orderProductMasterId;
     }
 
@@ -97,7 +92,7 @@ class CsvOrderProductMasterRegistration
         $orderProductMaster = OrderProductMaster::create($orderProductMasterRow);
 
         if (!$orderProductMaster) {
-            throw new Exception('order_product_masterテーブルの登録に失敗しました。' . __FILE__ . __LINE__);
+            throw new Exception('order_product_masterテーブルの登録に失敗しました。');
         }
 
         return $orderProductMaster->id;
@@ -118,8 +113,8 @@ class CsvOrderProductMasterRegistration
      */
     private function generateResultMessage(): string
     {
-        $resultMessage = "product_masterテーブル登録:{$this->registeredCount}件\n";
-        $resultMessage .= "product_masterテーブル更新:{$this->updatedCount}件\n";
+        $resultMessage = "商品マスタ情報 登録:{$this->registeredCount}件\n";
+        $resultMessage .= "商品マスタ情報 更新:{$this->updatedCount}件\n";
 
         // 成功時は登録件数を返す
         return $resultMessage;

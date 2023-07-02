@@ -2,12 +2,8 @@
 
 namespace App\Services\Order\Usen;
 
-use App\Constants\CommonDatabaseConstants;
 use App\Constants\UsenConstants;
-use App\Models\CustomerType;
-use App\Models\IncomeCategory;
 use App\Models\PaymentMethod;
-use App\Models\Store;
 use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Order\Usen\Wrappers\Payment;
 use App\Services\Order\Usen\Wrappers\Product;
@@ -23,7 +19,7 @@ class CsvOrderRow
     private SkipDecision       $skipDecision;
     private Slip               $slip;
     private FetchesCompanyInfo $companyInfo;
-    private int                $companyId;
+    private int                $storeId;
     private array              $storeCds;
 
     /**
@@ -32,8 +28,7 @@ class CsvOrderRow
     public function __construct(array $row, FetchesCompanyInfo $companyInfo)
     {
         $this->companyInfo = $companyInfo;
-        $this->companyId   = $companyInfo->getCompanyValue('id');
-        $this->storeCds    = array_column($companyInfo->stores, 'order_store_cd');
+        $this->storeCds    = $companyInfo->getValueArrayFromColumn(FetchesCompanyInfo::TABLE_STORE, 'order_store_cd');
 
         if (count($row) !== UsenConstants::USEN_CSV_ROW_COUNT) {
             Log::info(print_r($row, true));
@@ -71,9 +66,13 @@ class CsvOrderRow
                                      ]);
 
         $this->product = new Product([
-                                         'product'  => $row[74],
-                                         'quantity' => $row[83],
+                                         'product'   => $row[74],
+                                         'unitPrice' => $row[78],
+                                         'quantity'  => $row[83],
                                      ]);
+
+        $storeCd       = $this->slip->getStoreCd();
+        $this->storeId = $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'order_store_cd', $storeCd);
     }
 
     /**
@@ -83,21 +82,17 @@ class CsvOrderRow
      */
     public function getOrderForRegistration(): array
     {
-        $slip             = $this->slip->getValues();
-        $storeId          = $this->getStoreIdByStoreCd($slip['storeCd']);
-        $customerTypeId   = $this->getTypeIdByCustomerTypeName($slip['customerTypeName']);
-        // todo.カテゴリはorderテーブルではなく、orderPaymentにしなければならない。 金額はすべてorderPaymentなので。
-        $incomeCategoryId = $this->getIncomeCategory();
+        $slip           = $this->slip->getValues();
+        $customerTypeId = $this->getTypeIdByCustomerTypeName($slip['customerTypeName']);
 
         return [
-            'store_id'           => $storeId,
-            'income_category_id' => $incomeCategoryId,
-            'customer_type_id'   => $customerTypeId,
-            'slip_number'        => $slip['slipNumber'],
-            'order_date'         => $slip['orderDate'],
-            'payment_date'       => $slip['paymentDate'],
-            'men_count'          => $slip['menCount'],
-            'women_count'        => $slip['womenCount'],
+            'store_id'         => $this->storeId,
+            'customer_type_id' => $customerTypeId,
+            'slip_number'      => $slip['slipNumber'],
+            'order_date'       => $slip['orderDate'],
+            'payment_date'     => $slip['paymentDate'],
+            'men_count'        => $slip['menCount'],
+            'women_count'      => $slip['womenCount'],
         ];
     }
 
@@ -117,13 +112,12 @@ class CsvOrderRow
                 continue;
             }
 
-            $paymentMethod = $this->getPaymentMethodIdByProperty($property);
-
-            $paymentFee = bcmul((string)$value, (string)$paymentMethod->commission_rate, 2);
+            $paymentMethod = $this->getPaymentMethodByProperty($property);
+            $paymentFee = bcmul((string)$value, (string)$paymentMethod['commission_rate'], 2);
 
             $orderPayments[$property] = [
                 'order_info_id'     => $orderId,
-                'payment_method_id' => $paymentMethod->id,
+                'payment_method_id' => $paymentMethod['id'],
                 'amount'            => $value,
                 'payment_fee'       => floor((float)$paymentFee),
             ];
@@ -145,6 +139,7 @@ class CsvOrderRow
         return [
             'order_info_id'           => $orderId,
             'order_product_master_id' => $this->getOrderProductMasterId($orderProduct['productCd'], $orderProducts),
+            'sell_price'              => $orderProduct['unitPrice'],
             'quantity'                => $orderProduct['quantity'],
         ];
     }
@@ -155,24 +150,16 @@ class CsvOrderRow
      */
     public function getSlipNumber(): string
     {
-        $slip = $this->slip->getValues();
-        return $slip['slipNumber'];
+        return $this->slip->getSlipNumber();
     }
 
     /**
-     * モデルを参照して、store_idを取得する
+     * store_idを取得する
      * @return int
-     * @throws Exception
      */
     public function getStoreId(): int
     {
-        $slip    = $this->slip->getValues();
-        $storeCd = $slip['storeCd'];
-        $store   = Store::where('company_id', $this->companyId)->where('order_store_cd', $storeCd)->first();
-        if (!$store) {
-            throw new Exception("storeが存在しません companyId:{$this->companyId} storeCd:({$storeCd})");
-        }
-        return $store->id;
+        return $this->storeId;
     }
 
     /**
@@ -187,36 +174,14 @@ class CsvOrderRow
     }
 
     /**
-     * companyInfoインスタンスを参照して、storeCdからstore_idに変換する
-     * @param string $storeCd
-     * @return int|null
-     * @throws Exception
-     */
-    private function getStoreIdByStoreCd(string $storeCd): ?int
-    {
-        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'order_store_cd', $storeCd);
-    }
-
-    /**
-     * companyInfoインスタンスを参照して、propertyからpay_method_idに変換する
+     * companyInfoインスタンスを参照して、propertyからpay_methodに取得する
      * @param string $property
-     * @return int|null
+     * @return array
      * @throws Exception
      */
-    private function getPaymentMethodIdByProperty(string $property): ?int
+    private function getPaymentMethodByProperty(string $property): array
     {
-        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_PAYMENT_METHOD, 'property_name', $property);
-    }
-
-    /**
-     * モデルを参照して、収入カテゴリを取得する
-     * @return int
-     * @throws Exception
-     */
-    private function getIncomeCategory(): int
-    {
-        $categoryCd = CommonDatabaseConstants::CHILD_INCOME_CATEGORY_FOR_STORE_SALE['cat_cd'];
-        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_INCOME_CATEGORY, 'cat_cd', $categoryCd);
+        return $this->companyInfo->getRecordFromColumnValue(FetchesCompanyInfo::TABLE_PAYMENT_METHOD, 'property_name', $property);
     }
 
     /**

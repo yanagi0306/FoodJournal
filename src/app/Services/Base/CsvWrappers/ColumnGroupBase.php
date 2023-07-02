@@ -2,7 +2,6 @@
 
 namespace App\Services\Base\CsvWrappers;
 
-use Illuminate\Support\Facades\Log;
 
 /**
  * 各カラムの一部をまとめたクラスの継承元クラス

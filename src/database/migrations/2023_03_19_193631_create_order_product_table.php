@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('注文商品ID');
             $table->unsignedBigInteger('order_info_id')->comment('注文ID');
             $table->unsignedBigInteger('order_product_master_id')->comment('注文商品マスタID');
+            $table->integer('sell_price')->comment('販売価格');
             $table->integer('quantity')->comment('数量');
             $table->timestamps();
 

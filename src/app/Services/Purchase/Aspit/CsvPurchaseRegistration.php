@@ -35,12 +35,10 @@ class CsvPurchaseRegistration
             /** @var CsvPurchaseRow|null $CsvPurchaseRow */
             foreach ($this->purchaseCollection as $slipNumber => $csvPurchaseRow) {
                 $this->slipNumMessage = "伝票番号:({$slipNumber}) ";
-                // 各伝票番号に対応するPurchaseCollectionをデータベースに保存
                 $this->savePurchase($csvPurchaseRow, $slipNumber);
             }
             DB::commit();
         } catch (Exception $e) {
-            // 例外が発生した場合、トランザクションをロールバック処理終了
             DB::rollBack();
             throw new Exception($this->slipNumMessage . $e->getMessage());
         }
@@ -109,8 +107,8 @@ class CsvPurchaseRegistration
      */
     private function generateResultMessage(): string
     {
-        $resultMessage = "purchaseテーブル登録:{$this->registeredCount}件\n";
-        $resultMessage .= "purchase更新:{$this->updatedCount}件\n";
+        $resultMessage = "仕入伝票情報 登録:{$this->registeredCount}件\n";
+        $resultMessage .= "仕入伝票情報 更新:{$this->updatedCount}件\n";
 
         // 成功時は登録件数を返す
         return $resultMessage;

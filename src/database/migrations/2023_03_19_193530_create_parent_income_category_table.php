@@ -8,12 +8,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up(): void
     {
-        Schema::create('parent_income_category', function (Blueprint $table) {
+        Schema::create('parent_income_category', function(Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('親収入カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
@@ -21,14 +20,11 @@ return new class extends Migration {
             $table->string('cat_name', 10)->comment('親収入カテゴリ名');
             $table->timestamps();
 
-            // ユニークキーの設定
-            $table->unique(['company_id', 'cat_cd']);
-
             // 外部キー制約の設定
             $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
-            $table->charset = 'utf8';
+            $table->charset   = 'utf8';
             $table->collation = 'utf8_general_ci';
 
         });
@@ -38,7 +34,6 @@ return new class extends Migration {
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down(): void

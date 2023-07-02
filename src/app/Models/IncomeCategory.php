@@ -17,7 +17,6 @@ class IncomeCategory extends BaseModel
         'company_id',
         'parent_income_category_id',
         'cat_cd',
-        'position',
         'cat_name',
         'type_cd',
     ];
@@ -38,15 +37,6 @@ class IncomeCategory extends BaseModel
     public function parentIncomeCategory(): BelongsTo
     {
         return $this->belongsTo(ParentIncomeCategory::class);
-    }
-
-    /**
-     * order_INFOテーブル リレーション設定
-     * @return HasMany
-     */
-    public function orderInfos(): HasMany
-    {
-        return $this->hasMany(OrderInfo::class);
     }
 
     /**
