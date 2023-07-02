@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Constants\CommonDatabaseConstants;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateExpenseCategoryRequest extends FormRequest
@@ -24,8 +25,11 @@ class CreateExpenseCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parent_cat_cd' => ['required', 'max:2'],
+            'parent_cat_cd' => ['required', 'integer',
+                                'max:' . CommonDatabaseConstants::MAX_PARENT_EXPENSE_CATEGORY_CODE,
+            ],
             'cat_name'      => ['required', 'max:10'],
+            'type_cd'       => ['required', 'integer'],
         ];
     }
 }

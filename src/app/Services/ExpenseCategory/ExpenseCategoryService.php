@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\ExpenseCategory;
 
 use App\Constants\CommonDatabaseConstants;
 use App\Http\Requests\CreateExpenseCategoryRequest;
 use App\Http\Requests\CreateParentExpenseCategoryRequest;
 use App\Models\ExpenseCategory;
 use App\Models\ParentExpenseCategory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use DB;
@@ -43,26 +44,43 @@ class ExpenseCategoryService
                 return $this->registerParentExpenseCategory($validateData->cat_name);
             });
         } catch (Throwable $e) {
-            Log::error("親支出カテゴリの登録処理に失敗しました。\n" . $e->getMessage());
+            Log::error("親支出カテゴリの登録処理に失敗しました。\n" . $e->getMessage() . "\nfile:" . $e->getFile() . ' line:' . $e->getLine());
             return null;
         }
     }
 
     /**
      * 新規親支出カテゴリーを保存処理
-     * @param string $catName
+     * 共通カテゴリ「その他」の登録
+     * @param string   $catName
+     * @param int|null $catCd
      * @return ParentExpenseCategory
      * @throws Throwable
      */
-    public function registerParentExpenseCategory(string $catName): ParentExpenseCategory
+    public function registerParentExpenseCategory(string $catName, int $catCd = null): ParentExpenseCategory
     {
+        if ($catCd === null) {
+            $catCd = $this->generateNextParentCategoryCd();
+        }
+
         $parentExpenseCategory = new ParentExpenseCategory([
-                                                               'cat_name'   => $catName,
-                                                               'cat_cd'     => $this->generateNextParentCategoryCd(),
                                                                'company_id' => $this->companyId,
+                                                               'cat_name'   => $catName,
+                                                               'cat_cd'     => $catCd,
                                                            ]);
 
         $parentExpenseCategory->saveOrFail();
+
+        // 共通カテゴリその他の登録
+        $expenseCategory = new ExpenseCategory([
+                                                   'company_id'                 => $this->companyId,
+                                                   'parent_expense_category_id' => $parentExpenseCategory->id,
+                                                   'cat_cd'                     => CommonDatabaseConstants::CATEGORY_FOR_OTHER['cat_cd'],
+                                                   'cat_name'                   => CommonDatabaseConstants::CATEGORY_FOR_OTHER['cat_name'],
+                                                   'type_cd'                    => CommonDatabaseConstants::CATEGORY_FOR_OTHER['type_cd'],
+                                               ]);
+
+        $expenseCategory->saveOrFail();
 
         return $parentExpenseCategory;
     }
@@ -73,34 +91,41 @@ class ExpenseCategoryService
      * @param CreateExpenseCategoryRequest $request
      * @return ExpenseCategory|null
      */
-    public function registerExpenseCategory(CreateExpenseCategoryRequest $request): ?ExpenseCategory
+    public function createNewExpenseCategory(CreateExpenseCategoryRequest $request): ?ExpenseCategory
     {
         try {
             return DB::transaction(function() use ($request) {
                 $validateData            = $request->validated();
                 $parentExpenseCategoryId = $this->getParentExpenseCategory($validateData->parent_cat_cd)->id;
-                return $this->createNewExpenseCategory($validateData->cat_name, $parentExpenseCategoryId);
+                return $this->registerExpenseCategory($validateData->cat_name, $parentExpenseCategoryId, $validateData->type_cd);
             });
         } catch (Throwable $e) {
-            Log::error("支出カテゴリの登録処理に失敗しました。\n" . $e->getMessage());
+            Log::error("支出カテゴリの登録処理に失敗しました。\n" . $e->getMessage() . "\nfile:" . $e->getFile() . ' line:' . $e->getLine());
             return null;
         }
     }
 
     /**
      * 新規支出カテゴリーを保存処理
-     * @param string $name
-     * @param int    $parentExpenseCategoryId
+     * @param string   $catName
+     * @param int      $parentExpenseCategoryId
+     * @param int      $typeCd
+     * @param int|null $catCd
      * @return ExpenseCategory
      * @throws Throwable
      */
-    public function createNewExpenseCategory(string $name, int $parentExpenseCategoryId): ExpenseCategory
+    public function registerExpenseCategory(string $catName, int $parentExpenseCategoryId, int $typeCd, int $catCd = null): ExpenseCategory
     {
+        if ($catCd === null) {
+            $catCd = $this->generateNextCategoryCd($parentExpenseCategoryId);
+        }
+
         $expenseCategory = new ExpenseCategory([
-                                                   'parent_expense_category_id' => $parentExpenseCategoryId,
-                                                   'cat_name'                   => $name,
-                                                   'cat_cd'                     => $this->generateNextCategoryCd($parentExpenseCategoryId),
                                                    'company_id'                 => $this->companyId,
+                                                   'parent_expense_category_id' => $parentExpenseCategoryId,
+                                                   'cat_name'                   => $catName,
+                                                   'cat_cd'                     => $catCd,
+                                                   'type_cd'                    => $typeCd,
                                                ]);
 
         $expenseCategory->saveOrFail();
@@ -129,16 +154,20 @@ class ExpenseCategoryService
                 // 削除
                 $expenseCategory->delete();
 
-                // 紐づく全てのカテゴリを取得
-                $categories = $this->getExpenseCategories($parentExpenseCategoryId);
+                // 紐づく全てのカテゴリを取得(特殊数値カテゴリは除く)
+                /** @var Builder|ExpenseCategory $categories */
+                $categories = $this->getExpenseCategories($parentExpenseCategoryId)
+                                   ->where('cat_cd', '<=', CommonDatabaseConstants::MAX_EXPENSE_CATEGORY_CODE);
 
-                // 採番し直す
-                $this->reassignCatCd($categories);
+                // カテゴリコードを再採番(存在しない場合は採番不要)
+                if ($categories->first()) {
+                    $this->reassignCatCd($categories);
+                }
 
                 return true;
             });
         } catch (Throwable $e) {
-            Log::error("支出カテゴリの削除処理に失敗しました。\n" . $e->getMessage());
+            Log::error("支出カテゴリの削除処理に失敗しました。\n" . $e->getMessage() . "\nfile:" . $e->getFile() . ' line:' . $e->getLine());
             return false;
         }
     }
@@ -162,19 +191,22 @@ class ExpenseCategoryService
                 $parentExpenseCategory->delete();
 
                 // 会社に紐づく全ての親カテゴリを取得
-                $parentCategories = $this->getParentExpenseCategories();
+                /** @var Builder|ParentExpenseCategory $parentCategories */
+                $parentCategories = $this->getParentExpenseCategories()
+                                         ->where('cat_cd', '<=', CommonDatabaseConstants::MAX_PARENT_EXPENSE_CATEGORY_CODE);
 
-                // カテゴリコードを再採番
-                $this->reassignParentCatCd($parentCategories);
+                // カテゴリコードを再採番(存在しない場合は採番不要)
+                if ($parentCategories->first()) {
+                    $this->reassignParentCatCd($parentCategories);
+                }
 
                 return true;
             });
         } catch (Throwable $e) {
-            Log::error("親支出カテゴリの削除処理に失敗しました。\n" . $e->getMessage());
+            Log::error("親支出カテゴリの削除処理に失敗しました。\n" . $e->getMessage() . "\nfile:" . $e->getFile() . ' line:' . $e->getLine());
             return false;
         }
     }
-
 
     /**
      * カテゴリコード(expense_category.cat_cd)を採番する
@@ -184,40 +216,50 @@ class ExpenseCategoryService
      * @return string
      * @throws Exception
      */
-    private
-    function generateNextCategoryCd(int $parentExpenseCategoryId): string
+    private function generateNextCategoryCd(int $parentExpenseCategoryId): string
     {
+        /** @var Builder|ExpenseCategory $categories */
         $categories = $this->getExpenseCategories($parentExpenseCategoryId)
-                           ->whereNotIn('cat_cd', [CommonDatabaseConstants::OTHER_CATEGORY_CODE]);
+                           ->where('cat_cd', '<=', CommonDatabaseConstants::MAX_EXPENSE_CATEGORY_CODE);
+        Log::info('parentExpenseCategoryId:' . $parentExpenseCategoryId);
+        Log::info('categories:' . $categories->first());
+
+        if (!$categories->first()) {
+            return CommonDatabaseConstants::START_CATEGORY_CODE;
+        }
 
         $maxCatCd = $categories->max('cat_cd');
 
-        if ($maxCatCd === CommonDatabaseConstants::MAX_EXPENSE_CATEGORY_CODE) {
-            throw new Exception('親支出カテゴリに紐づく支出カテゴリの登録上限数に達しました。不要なカテゴリを削除してください。カテゴリの登録上限数:' . CommonDatabaseConstants::MAX_EXPENSE_CATEGORY_CODE);
+        if ($maxCatCd >= CommonDatabaseConstants::MAX_EXPENSE_CATEGORY_CODE) {
+            throw new Exception('支出カテゴリに紐づく支出カテゴリの登録上限数に達しました。不要なカテゴリを削除してください。カテゴリの登録上限数:' . CommonDatabaseConstants::MAX_EXPENSE_CATEGORY_CODE - CommonDatabaseConstants::START_CATEGORY_CODE);
         }
 
-        return $maxCatCd ? strval(intval($maxCatCd) + 1) : CommonDatabaseConstants::START_CATEGORY_CODE;
+        return $maxCatCd + 1;
     }
 
     /**
      * 親支出カテゴリを採番する
-     * 99:その他は除外
      * 親カテゴリコード未登録の場合は先頭番号'10'を採番する。
      * @return string
      * @throws Exception
      */
-    private
-    function generateNextParentCategoryCd(): string
+    private function generateNextParentCategoryCd(): string
     {
-        $parentCategories = $this->getParentExpenseCategories()->whereNotIn('cat_cd', [CommonDatabaseConstants::OTHER_CATEGORY_CODE]);
+        /** @var Builder|ParentExpenseCategory $parentCategories */
+        $parentCategories = $this->getParentExpenseCategories()
+                                 ->where('cat_cd', '<=', CommonDatabaseConstants::MAX_PARENT_EXPENSE_CATEGORY_CODE);
+
+        if (!$parentCategories->first()) {
+            return CommonDatabaseConstants::START_CATEGORY_CODE;
+        }
 
         $maxCatCd = $parentCategories->max('cat_cd');
 
-        if ($maxCatCd === CommonDatabaseConstants::MAX_PARENT_EXPENSE_CATEGORY_CODE) {
-            throw new Exception('支出カテゴリの登録上限数に達しました。不要なカテゴリを削除してください。カテゴリの登録上限数:' . CommonDatabaseConstants::MAX_PARENT_EXPENSE_CATEGORY_CODE);
+        if ($maxCatCd >= CommonDatabaseConstants::MAX_PARENT_EXPENSE_CATEGORY_CODE) {
+            throw new Exception('支出カテゴリの登録上限数に達しました。不要なカテゴリを削除してください。カテゴリの登録上限数:' . CommonDatabaseConstants::MAX_PARENT_EXPENSE_CATEGORY_CODE - CommonDatabaseConstants::START_CATEGORY_CODE);
         }
 
-        return $maxCatCd ? strval(intval($maxCatCd) + 1) : CommonDatabaseConstants::START_CATEGORY_CODE;
+        return $maxCatCd + 1;
     }
 
     /**
@@ -288,14 +330,11 @@ class ExpenseCategoryService
     function reassignParentCatCd(ParentExpenseCategory $categories): void
     {
         $catCd = CommonDatabaseConstants::START_CATEGORY_CODE;
-
         foreach ($categories as $category) {
-            if ($category->cat_cd === CommonDatabaseConstants::OTHER_CATEGORY_CODE) {
-                continue;
-            }
 
             try {
-                $category->cat_cd = strval(intval($catCd) + 1);
+                $category->cat_cd = $catCd;
+                $catCd++;
                 $category->saveOrFail();
             } catch (Throwable $e) {
                 throw new Exception("親カテゴリコードの再採番に失敗しました。\n" . $e->getMessage());
@@ -308,32 +347,29 @@ class ExpenseCategoryService
      * @param ExpenseCategory $categories
      * @throws Exception
      */
-    private
-    function reassignCatCd(ExpenseCategory $categories): void
+    private function reassignCatCd(ExpenseCategory $categories): void
     {
         $catCd = CommonDatabaseConstants::START_CATEGORY_CODE;
 
         foreach ($categories as $category) {
-            if ($category->cat_cd === CommonDatabaseConstants::OTHER_CATEGORY_CODE) {
-                continue;
-            }
 
             try {
-                $category->cat_cd = strval(intval($catCd) + 1);
+                $category->cat_cd = $catCd + 1;
                 $category->saveOrFail();
             } catch (Throwable $e) {
-                throw new Exception("カテゴリコードの再裁判に失敗しました。\n" . $e->getMessage());
+                throw new Exception("カテゴリコードの再採番に失敗しました。\n" . $e->getMessage());
             }
         }
     }
 
     /**
      * ParentExpenseCategoryモデルを参照して会社IDに紐づくParentExpenseCategoryを返す
-     * @return ParentExpenseCategory
+     * @return Builder|null
      */
-    private function getParentExpenseCategories(): ParentExpenseCategory
+    private function getParentExpenseCategories(): ?Builder
     {
-        return ParentExpenseCategory::where('company_id', $this->companyId)->orderBy('cat_cd');
+        return ParentExpenseCategory::where('company_id', $this->companyId)
+                                    ->orderBy('cat_cd');
     }
 
     /**
@@ -342,20 +378,24 @@ class ExpenseCategoryService
      * @return ParentExpenseCategory
      * @throws Exception
      */
-    private function getParentExpenseCategory($catCd): ParentExpenseCategory
+    public function getParentExpenseCategory($catCd): ParentExpenseCategory
     {
         try {
-            return $this->getParentExpenseCategories()
-                        ->where('cat_cd', $catCd)
-                        ->firstOrFail();
+            /** @var Builder|ParentExpenseCategory $parentExpenseCategories */
+            $parentExpenseCategories = $this->getParentExpenseCategories();
+
+            // 存在しない場合はエラーにする
+            return $parentExpenseCategories
+                ->where('cat_cd', $catCd)
+                ->firstOrFail();
         } catch (ModelNotFoundException $e) {
-            Log::error("親支出カテゴリが見つかりませんでした。\n" . $e->getMessage());
+            Log::error("親支出カテゴリが見つかりませんでした。\n" . $e->getMessage() . "\nfile:" . $e->getFile() . ' line:' . $e->getLine());
             throw new Exception('親支出カテゴリが見つかりませんでした。');
         }
     }
 
     /**
-     * ParentExpenseCategoryモデルを参照してParentExpenseCategoryを取得する
+     * ExpenseCategoryモデルを参照してExpenseCategoryを取得する
      * @param $catCd
      * @param $parentCatCd
      * @return ExpenseCategory
@@ -365,22 +405,27 @@ class ExpenseCategoryService
     {
         try {
             $parentCatId = $this->getParentExpenseCategory($parentCatCd)->id;
-            return $this->getExpenseCategories($parentCatId)
-                        ->where('cat_cd', $catCd)
-                        ->firstOrFail();
+            /** @var Builder|ExpenseCategory $expenseCategories */
+            $expenseCategories = $this->getExpenseCategories($parentCatId);
+            // 存在しない場合はエラーにする
+            return $expenseCategories
+                ->where('cat_cd', $catCd)
+                ->firstOrFail();
         } catch (ModelNotFoundException $e) {
-            Log::error("支出カテゴリが見つかりませんでした。\n" . $e->getMessage());
+            Log::error("支出カテゴリが見つかりませんでした。\n" . $e->getMessage() . "\nfile:" . $e->getFile() . ' line:' . $e->getLine());
             throw new Exception('支出カテゴリが見つかりませんでした。');
         }
     }
 
     /**
-     * ExpenseCategoryモデルを参照して会社IDに紐づくExpenseCategoryを返す
+     * ExpenseCategoryモデルを参照してParentExpenseCategoryに紐づくExpenseCategoryを返す
      * @param int $parentExpenseCategoryId
-     * @return ExpenseCategory
+     * @return Builder|null
      */
-    private function getExpenseCategories(int $parentExpenseCategoryId): ExpenseCategory
+    private function getExpenseCategories(int $parentExpenseCategoryId): ?Builder
     {
-        return ExpenseCategory::where('company_id', $this->companyId)->where('parent_expense_category', $parentExpenseCategoryId)->orderBy('cat_cd');
+        return ExpenseCategory::where('company_id', $this->companyId)
+                              ->where('parent_expense_category_id', $parentExpenseCategoryId)
+                              ->orderBy('cat_cd');
     }
 }

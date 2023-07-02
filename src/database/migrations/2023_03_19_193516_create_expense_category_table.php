@@ -17,9 +17,9 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('支出カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
             $table->unsignedBigInteger('parent_expense_category_id')->comment('親支出カテゴリID');
-            $table->string('type_cd', 2)->comment('支出タイプコード');
-            $table->string('cat_cd', 2)->comment('支出カテゴリコード');
-            $table->string('cat_name', 10)->comment('支出カテゴリ名');
+            $table->integer('type_cd')->comment('支出タイプコード');
+            $table->integer('cat_cd')->comment('支出カテゴリコード');
+            $table->string('cat_name', 20)->comment('支出カテゴリ名');
             $table->timestamps();
 
             // 外部キー制約の設定

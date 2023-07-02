@@ -10,6 +10,7 @@ use App\Models\PaymentMethod;
 use App\Models\PurchaseSupplier;
 use App\Models\Store;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class FetchesCompanyInfo
 {

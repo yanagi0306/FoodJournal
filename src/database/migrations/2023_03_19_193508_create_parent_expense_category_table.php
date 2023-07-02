@@ -17,8 +17,8 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('親支出カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->string('cat_cd', 2)->comment('親支出カテゴリコード');
-            $table->string('cat_name', 10)->comment('親支出カテゴリ名');
+            $table->integer('cat_cd')->comment('親支出カテゴリコード');
+            $table->string('cat_name', 20)->comment('親支出カテゴリ名');
             $table->timestamps();
 
             // 外部キー制約の設定

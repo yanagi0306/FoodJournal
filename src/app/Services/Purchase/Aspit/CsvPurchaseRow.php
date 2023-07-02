@@ -79,11 +79,11 @@ class CsvPurchaseRow
      */
     public function getPurchaseForRegistration(): array
     {
-        $purchase          = $this->purchase->getValues();
+        $purchase = $this->purchase->getValues();
 
         $expenseCategoryId = $this->getExpenseCategoryId($purchase['categoryCd']);
-        $storeId    = $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'purchase_store_cd', $purchase['storeCd']);
-        $supplierId = $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_PURCHASE_SUPPLIER, 'supplier_cd', $purchase['supplierCd']);
+        $storeId           = $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'purchase_store_cd', $purchase['storeCd']);
+        $supplierId        = $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_PURCHASE_SUPPLIER, 'supplier_cd', $purchase['supplierCd']);
 
         return [
             'store_id'             => $storeId,
@@ -101,22 +101,23 @@ class CsvPurchaseRow
      */
     private function getExpenseCategoryId(string $categoryCd): int
     {
+        Log::info('categoryCd値:' . print_r($categoryCd, true));
+        Log::info('categoryCd型:' . print_r(gettype($categoryCd), true));
         $expenseCategoryCode = $this->getExpenseCategoryCode($categoryCd);
 
         if (!$expenseCategoryCode) {
             $validCodes = implode(', ', array_column(AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB, 'aspit_category_cd'));
             throw new Exception("カテゴリコードに誤りがあります。 値:{$categoryCd} 許可された値:(" . $validCodes . ')');
         }
-
         return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_EXPENSE_CATEGORY, 'cat_cd', $expenseCategoryCode);
     }
 
     /**
      * 定数CATEGORY_MAPS_FROM_ASPIT_TO_DBを参照してexpense_category_codeを取得する
      * @param string $categoryCd
-     * @return string|null
+     * @return int|null
      */
-    private function getExpenseCategoryCode(string $categoryCd): ?string
+    private function getExpenseCategoryCode(string $categoryCd): ?int
     {
         foreach (AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB as $category) {
             if (isset($category['aspit_category_cd']) && $category['aspit_category_cd'] == $categoryCd) {

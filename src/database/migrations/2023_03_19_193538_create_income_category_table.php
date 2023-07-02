@@ -18,9 +18,9 @@ return new class extends Migration {
             $table->id()->autoIncrement()->comment('収入カテゴリID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
             $table->unsignedBigInteger('parent_income_category_id')->comment('親収入カテゴリID');
-            $table->string('type_cd', 2)->comment('収入タイプコード');
-            $table->string('cat_cd', 2)->comment('収入カテゴリコード');
-            $table->string('cat_name', 10)->comment('収入カテゴリ名');
+            $table->integer('type_cd')->comment('収入タイプコード');
+            $table->integer('cat_cd')->comment('収入カテゴリコード');
+            $table->string('cat_name', 20)->comment('収入カテゴリ名');
             $table->timestamps();
 
             // 外部キー制約の設定
