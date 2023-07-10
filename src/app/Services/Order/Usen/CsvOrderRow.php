@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Services\Order\Usen;
+namespace app\Services\Order\Usen\Usen;
 
 use App\Constants\UsenConstants;
-use App\Models\PaymentMethod;
-use App\Services\Company\FetchesCompanyInfo;
-use App\Services\Order\Usen\Wrappers\Payment;
-use App\Services\Order\Usen\Wrappers\Product;
-use App\Services\Order\Usen\Wrappers\SkipDecision;
-use App\Services\Order\Usen\Wrappers\Slip;
+use app\Services\Company\FetchesCompanyInfo;
+use app\Services\Order\Usen\Usen\Wrappers\Payment;
+use app\Services\Order\Usen\Usen\Wrappers\Product;
+use app\Services\Order\Usen\Usen\Wrappers\SkipDecision;
+use app\Services\Order\Usen\Usen\Wrappers\Slip;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -72,7 +71,7 @@ class CsvOrderRow
                                      ]);
 
         $storeCd       = $this->slip->getStoreCd();
-        $this->storeId = $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'order_store_cd', $storeCd);
+        $this->storeId = $this->companyInfo->getRecordFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'order_store_cd', $storeCd)['id'];
     }
 
     /**
@@ -170,7 +169,7 @@ class CsvOrderRow
      */
     private function getTypeIdByCustomerTypeName(?string $customerTypeName): ?int
     {
-        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_CUSTOMER_TYPE, 'type_name', $customerTypeName);
+        return $this->companyInfo->getRecordFromColumnValue(FetchesCompanyInfo::TABLE_CUSTOMER_TYPE, 'type_name', $customerTypeName)['id'];
     }
 
     /**

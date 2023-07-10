@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Order\Usen;
+namespace app\Services\Order\Usen\Usen;
 
 use App\Constants\UsenConstants;
 use App\Exceptions\SkipImportException;
-use App\Services\Order\Usen\Wrappers\OrderProductMaster;
+use app\Services\Order\Usen\Usen\Wrappers\OrderProductMaster;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

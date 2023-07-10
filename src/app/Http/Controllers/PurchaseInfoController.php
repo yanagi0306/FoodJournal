@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Company\FetchesCompanyInfo;
+use app\Services\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
 use App\Services\Purchase\PurchaseUploaderFactory;
 use Illuminate\Http\RedirectResponse;

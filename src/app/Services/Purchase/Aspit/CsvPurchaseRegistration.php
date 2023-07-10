@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Purchase\Aspit;
+namespace app\Services\Purchase\Aspit;
 
 use App\Models\PurchaseInfo;
 use Exception;

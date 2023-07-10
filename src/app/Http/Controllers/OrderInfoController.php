@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FormatHelper;
-use App\Services\Company\FetchesCompanyInfo;
+use app\Services\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
-use App\Services\Order\OrderUploaderFactory;
+use app\Services\Order\Usen\OrderUploaderFactory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -52,6 +52,7 @@ class OrderInfoController extends Controller
         try {
             // 会社情報に紐づく情報を取得
             $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
+            Log::info(print_r($companyInfo,true));
 
             // アップローダーインスタンスを取得
             $service       = OrderUploaderFactory::createUploader($uploadedFile, $companyInfo);

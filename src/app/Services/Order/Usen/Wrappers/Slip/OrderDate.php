@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Order\Usen\Wrappers\Slip;
+namespace app\Services\Order\Usen\Usen\Wrappers\Slip;
 
 use App\Services\Base\CsvWrappers\ColumnBase;
 

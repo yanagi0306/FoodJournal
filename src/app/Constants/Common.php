@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Constants;
+namespace app\Constants;
 
 /**
  * 共通定数クラス

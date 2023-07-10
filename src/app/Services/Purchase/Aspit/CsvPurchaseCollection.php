@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Services\Purchase\Aspit;
+namespace app\Services\Purchase\Aspit;
 
 use App\Constants\AspitConstants;
-use App\Constants\Common;
 use App\Exceptions\SkipImportException;
-use App\Services\Company\FetchesCompanyInfo;
+use app\Services\Company\FetchesCompanyInfo;
 use ArrayIterator;
 use Exception;
 use Illuminate\Support\Facades\Log;

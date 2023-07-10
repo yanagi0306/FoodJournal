@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Services\Order\Usen\Wrappers\Payment;
+namespace app\Services\Order\Usen\Usen\Wrappers\Payment;
 
 use App\Services\Base\CsvWrappers\ColumnBase;
 

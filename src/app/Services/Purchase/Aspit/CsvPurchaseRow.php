@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Services\Purchase\Aspit;
+namespace app\Services\Purchase\Aspit;
 
 use App\Constants\AspitConstants;
-use App\Constants\Common;
 use App\Exceptions\SkipImportException;
-use App\Services\Company\FetchesCompanyInfo;
+use app\Services\Company\FetchesCompanyInfo;
 use App\Services\Purchase\Aspit\Wrappers\Purchase;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -69,7 +68,7 @@ class CsvPurchaseRow
     {
         $slip    = $this->purchase->getValues();
         $storeCd = $slip['storeCd'];
-        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'purchase_store_cd', $storeCd);
+        return $this->companyInfo->getRecordFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'purchase_store_cd', $storeCd)['id'];
     }
 
     /**
@@ -82,8 +81,8 @@ class CsvPurchaseRow
         $purchase = $this->purchase->getValues();
 
         $expenseCategoryId = $this->getExpenseCategoryId($purchase['categoryCd']);
-        $storeId           = $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'purchase_store_cd', $purchase['storeCd']);
-        $supplierId        = $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_PURCHASE_SUPPLIER, 'supplier_cd', $purchase['supplierCd']);
+        $storeId           = $this->companyInfo->getRecordFromColumnValue(FetchesCompanyInfo::TABLE_STORE, 'purchase_store_cd', $purchase['storeCd'])['id'];
+        $supplierId        = $this->companyInfo->getRecordFromColumnValue(FetchesCompanyInfo::TABLE_PURCHASE_SUPPLIER, 'supplier_cd', $purchase['supplierCd'])['id'];
 
         return [
             'store_id'             => $storeId,
@@ -109,7 +108,7 @@ class CsvPurchaseRow
             $validCodes = implode(', ', array_column(AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB, 'aspit_category_cd'));
             throw new Exception("カテゴリコードに誤りがあります。 値:{$categoryCd} 許可された値:(" . $validCodes . ')');
         }
-        return $this->companyInfo->getIdFromColumnValue(FetchesCompanyInfo::TABLE_EXPENSE_CATEGORY, 'cat_cd', $expenseCategoryCode);
+        return $this->companyInfo->getRecordFromColumnValue(FetchesCompanyInfo::TABLE_EXPENSE_CATEGORY, 'cat_cd', $expenseCategoryCode)['id'];
     }
 
     /**

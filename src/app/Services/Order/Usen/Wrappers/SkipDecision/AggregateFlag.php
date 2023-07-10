@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Order\Usen\Wrappers\SkipDecision;
+namespace app\Services\Order\Usen\Usen\Wrappers\SkipDecision;
 
 use App\Services\Base\CsvWrappers\ColumnBase;
 

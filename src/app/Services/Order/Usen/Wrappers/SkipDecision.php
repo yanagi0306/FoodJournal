@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Order\Usen\Wrappers;
+namespace app\Services\Order\Usen\Usen\Wrappers;
 
 use App\Exceptions\SkipImportException;
 use App\Services\Base\CsvWrappers\ColumnGroupBase;
-use App\Services\Order\Usen\Wrappers\SkipDecision\AggregateFlag;
-use App\Services\Order\Usen\Wrappers\SkipDecision\OrderStatus;
-use App\Services\Order\Usen\Wrappers\SkipDecision\PaymentStatus;
+use app\Services\Order\Usen\Usen\Wrappers\SkipDecision\AggregateFlag;
+use app\Services\Order\Usen\Usen\Wrappers\SkipDecision\OrderStatus;
+use app\Services\Order\Usen\Usen\Wrappers\SkipDecision\PaymentStatus;
 use Exception;
 
 /**

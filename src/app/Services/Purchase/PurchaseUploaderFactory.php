@@ -3,8 +3,8 @@
 namespace App\Services\Purchase;
 
 use App\Constants\AspitConstants;
-use App\Services\Company\FetchesCompanyInfo;
-use App\Services\Purchase\Aspit\CsvPurchaseUploader;
+use app\Services\Company\FetchesCompanyInfo;
+use app\Services\Purchase\Aspit\CsvPurchaseUploader;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use InvalidArgumentException;

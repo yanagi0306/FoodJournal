@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Order\Usen;
+namespace app\Services\Order\Usen\Usen;
 
 use App\Models\OrderProductMaster;
 use Exception;

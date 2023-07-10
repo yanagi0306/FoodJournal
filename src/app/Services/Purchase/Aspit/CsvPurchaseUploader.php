@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Services\Purchase\Aspit;
+namespace app\Services\Purchase\Aspit;
 
 use App\Constants\AspitConstants;
-use App\Constants\Common;
 use App\Services\Base\BaseUploader;
 use App\Services\Purchase\PurchaseUploaderInterface;
 use App\Traits\CsvTrait;
