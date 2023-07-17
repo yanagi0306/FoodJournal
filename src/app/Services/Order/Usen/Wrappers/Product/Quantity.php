@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Services\Order\Usen\Usen\Wrappers\Product;
+namespace App\Services\Order\Usen\Wrappers\Product;
 
 use App\Services\Base\CsvWrappers\ColumnBase;
 

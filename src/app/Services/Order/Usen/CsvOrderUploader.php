@@ -1,11 +1,11 @@
 <?php
 
-namespace app\Services\Order\Usen\Usen;
+namespace App\Services\Order\Usen;
 
 use App\Constants\Common;
 use App\Constants\UsenConstants;
 use App\Services\Base\BaseUploader;
-use app\Services\Order\Usen\OrderUploaderInterface;
+use App\Services\Order\Usen\OrderUploaderInterface;
 use App\Traits\CsvTrait;
 use Exception;
 use Throwable;

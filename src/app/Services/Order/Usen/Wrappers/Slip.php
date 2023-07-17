@@ -1,17 +1,17 @@
 <?php
 
-namespace app\Services\Order\Usen\Usen\Wrappers;
+namespace App\Services\Order\Usen\Wrappers;
 
 use App\Exceptions\SkipImportException;
 use App\Services\Base\CsvWrappers\ColumnGroupBase;
-use app\Services\Order\Usen\Usen\Wrappers\Slip\CustomerTypeName;
-use app\Services\Order\Usen\Usen\Wrappers\Slip\MenCount;
-use app\Services\Order\Usen\Usen\Wrappers\Slip\OrderDate;
-use app\Services\Order\Usen\Usen\Wrappers\Slip\PaymentDate;
-use app\Services\Order\Usen\Usen\Wrappers\Slip\SalesType;
-use app\Services\Order\Usen\Usen\Wrappers\Slip\SlipNumber;
-use app\Services\Order\Usen\Usen\Wrappers\Slip\StoreCd;
-use app\Services\Order\Usen\Usen\Wrappers\Slip\WomenCount;
+use App\Services\Order\Usen\Wrappers\Slip\CustomerTypeName;
+use App\Services\Order\Usen\Wrappers\Slip\MenCount;
+use App\Services\Order\Usen\Wrappers\Slip\OrderDate;
+use App\Services\Order\Usen\Wrappers\Slip\PaymentDate;
+use App\Services\Order\Usen\Wrappers\Slip\SalesType;
+use App\Services\Order\Usen\Wrappers\Slip\SlipNumber;
+use App\Services\Order\Usen\Wrappers\Slip\StoreCd;
+use App\Services\Order\Usen\Wrappers\Slip\WomenCount;
 use Exception;
 
 /**

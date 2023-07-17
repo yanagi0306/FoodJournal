@@ -1,10 +1,10 @@
 <?php
 
-namespace app\Services\Purchase\Aspit;
+namespace App\Services\Purchase\Aspit;
 
 use App\Constants\AspitConstants;
 use App\Exceptions\SkipImportException;
-use app\Services\Company\FetchesCompanyInfo;
+use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Purchase\Aspit\Wrappers\Purchase;
 use Exception;
 use Illuminate\Support\Facades\Log;

@@ -1,20 +1,20 @@
 <?php
 
-namespace app\Services\Order\Usen\Usen\Wrappers;
+namespace App\Services\Order\Usen\Wrappers;
 
 use App\Exceptions\SkipImportException;
 use App\Services\Base\CsvWrappers\ColumnGroupBase;
-use app\Services\Order\Usen\Usen\Wrappers\Product\Category1;
-use app\Services\Order\Usen\Usen\Wrappers\Product\Category2;
-use app\Services\Order\Usen\Usen\Wrappers\Product\Category3;
-use app\Services\Order\Usen\Usen\Wrappers\Product\Category4;
-use app\Services\Order\Usen\Usen\Wrappers\Product\Category5;
-use app\Services\Order\Usen\Usen\Wrappers\Product\ProductCd;
-use app\Services\Order\Usen\Usen\Wrappers\Product\ProductName;
-use app\Services\Order\Usen\Usen\Wrappers\Product\Quantity;
-use app\Services\Order\Usen\Usen\Wrappers\Product\UnitCost;
-use app\Services\Order\Usen\Usen\Wrappers\Product\UnitPrice;
-use app\Services\Order\Usen\Usen\Wrappers\Slip\StoreCd;
+use App\Services\Order\Usen\Wrappers\Product\Category1;
+use App\Services\Order\Usen\Wrappers\Product\Category2;
+use App\Services\Order\Usen\Wrappers\Product\Category3;
+use App\Services\Order\Usen\Wrappers\Product\Category4;
+use App\Services\Order\Usen\Wrappers\Product\Category5;
+use App\Services\Order\Usen\Wrappers\Product\ProductCd;
+use App\Services\Order\Usen\Wrappers\Product\ProductName;
+use App\Services\Order\Usen\Wrappers\Product\Quantity;
+use App\Services\Order\Usen\Wrappers\Product\UnitCost;
+use App\Services\Order\Usen\Wrappers\Product\UnitPrice;
+use App\Services\Order\Usen\Wrappers\Slip\StoreCd;
 use Exception;
 
 /**

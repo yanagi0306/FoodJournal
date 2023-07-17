@@ -1,13 +1,13 @@
 <?php
 
-namespace app\Services\Order\Usen\Usen;
+namespace App\Services\Order\Usen;
 
 use App\Constants\UsenConstants;
-use app\Services\Company\FetchesCompanyInfo;
-use app\Services\Order\Usen\Usen\Wrappers\Payment;
-use app\Services\Order\Usen\Usen\Wrappers\Product;
-use app\Services\Order\Usen\Usen\Wrappers\SkipDecision;
-use app\Services\Order\Usen\Usen\Wrappers\Slip;
+use App\Services\Company\FetchesCompanyInfo;
+use App\Services\Order\Usen\Wrappers\Payment;
+use App\Services\Order\Usen\Wrappers\Product;
+use App\Services\Order\Usen\Wrappers\SkipDecision;
+use App\Services\Order\Usen\Wrappers\Slip;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

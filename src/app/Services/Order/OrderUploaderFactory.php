@@ -3,8 +3,8 @@
 namespace App\Services\Order;
 
 use App\Constants\UsenConstants;
-use app\Services\Company\FetchesCompanyInfo;
-use app\Services\Order\Usen\Usen\CsvOrderUploader;
+use App\Services\Company\FetchesCompanyInfo;
+use App\Services\Order\Usen\CsvOrderUploader;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use InvalidArgumentException;

@@ -1,13 +1,13 @@
 <?php
 
-namespace app\Services\Base;
+namespace App\Services\Base;
 
 use App\Constants\CommonDatabaseConstants;
 use App\Http\Requests\CreateExpenseCategoryRequest;
 use App\Http\Requests\CreateParentExpenseCategoryRequest;
 use App\Models\ExpenseCategory;
 use App\Models\ParentExpenseCategory;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

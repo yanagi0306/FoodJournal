@@ -1,12 +1,12 @@
 <?php
 
-namespace app\Services\Order\Usen\Usen\Wrappers;
+namespace App\Services\Order\Usen\Wrappers;
 
 use App\Exceptions\SkipImportException;
 use App\Services\Base\CsvWrappers\ColumnGroupBase;
-use app\Services\Order\Usen\Usen\Wrappers\Product\ProductCd;
-use app\Services\Order\Usen\Usen\Wrappers\Product\Quantity;
-use app\Services\Order\Usen\Usen\Wrappers\Product\UnitPrice;
+use App\Services\Order\Usen\Wrappers\Product\ProductCd;
+use App\Services\Order\Usen\Wrappers\Product\Quantity;
+use App\Services\Order\Usen\Wrappers\Product\UnitPrice;
 use Exception;
 
 /**

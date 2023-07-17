@@ -1,11 +1,11 @@
 <?php
 
-namespace app\Services\Order\Usen\Usen;
+namespace App\Services\Order\Usen;
 
 use App\Constants\UsenConstants;
 use App\Exceptions\SkipImportException;
 use App\Models\Store;
-use app\Services\Company\FetchesCompanyInfo;
+use App\Services\Company\FetchesCompanyInfo;
 use ArrayIterator;
 use Exception;
 use Illuminate\Support\Facades\Log;

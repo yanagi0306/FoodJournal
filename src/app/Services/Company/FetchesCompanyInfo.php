@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Services\Company;
+namespace App\Services\Company;
 
 use App\Models\Company;
 use Exception;

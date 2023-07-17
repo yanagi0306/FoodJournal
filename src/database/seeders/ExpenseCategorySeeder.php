@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Constants\CommonDatabaseConstants;
 use App\Models\Company;
-use app\Services\Base\ExpenseCategoryService;
+use App\Services\Base\ExpenseCategoryService;
 use DB;
 use Exception;
 use Illuminate\Database\Seeder;

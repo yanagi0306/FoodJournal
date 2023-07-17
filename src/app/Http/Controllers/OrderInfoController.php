@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FormatHelper;
-use app\Services\FetchesCompanyInfo;
+use App\Services\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
-use app\Services\Order\Usen\OrderUploaderFactory;
+use App\Services\Order\Usen\OrderUploaderFactory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;

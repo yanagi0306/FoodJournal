@@ -4,7 +4,7 @@ namespace App\Services\Base;
 
 use App\Constants\Common;
 use App\Helpers\FileHelper;
-use app\Services\Company\FetchesCompanyInfo;
+use App\Services\Company\FetchesCompanyInfo;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;

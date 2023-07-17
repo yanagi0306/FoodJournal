@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Helpers;
+namespace App\Helpers;
 
 use App\Models\Company;
 use App\Models\Store;
