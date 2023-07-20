@@ -104,10 +104,7 @@ class FetchesCompanyInfo
      */
     public function findIncomeCategoriesWithCompany(): Collection
     {
-        $incomeCategories = $this->company ? collect(ParentIncomeCategory::with('incomeCategories')->where('company_id', $this->company->id)->get()->toArray()) : collect();
-        Log::info('incomeCategories=' . print_r($incomeCategories, true));
-        return $incomeCategories;
-//        return $this->company ? collect($this->company->incomeCategories->toArray()) : collect();
+        return $this->company ? collect(ParentIncomeCategory::with('incomeCategories')->where('company_id', $this->company->id)->get()->toArray()) : collect();
     }
 
     /**
@@ -117,7 +114,6 @@ class FetchesCompanyInfo
     public function findExpenseCategoriesWithCompany(): Collection
     {
         return $this->company ? collect(ParentExpenseCategory::with('expenseCategories')->where('company_id', $this->company->id)->get()->toArray()) : collect();
-//        return $this->company ? collect($this->company->expenseCategories->toArray()) : collect();
     }
 
     /**
