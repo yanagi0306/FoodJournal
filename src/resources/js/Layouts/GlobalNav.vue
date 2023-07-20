@@ -19,7 +19,7 @@ const menus = [
         title: {name: "予算管理", icon: 'svgFaBook'},
         links: [
             {name: "収入予算", path: 'top.index'},
-            {name: "支出予算", path: 'top.index'},
+            {name: "支出予算", path: 'expense_budgets.index'},
             {name: "収入予算一括登録", path: 'top.index'},
             {name: "支出予算一括登録", path: 'top.index'}
         ],

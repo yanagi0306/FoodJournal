@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FormatHelper;
-use App\Services\FetchesCompanyInfo;
+use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
-use App\Services\Order\Usen\OrderUploaderFactory;
+use App\Services\Order\OrderUploaderFactory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -52,7 +52,6 @@ class OrderInfoController extends Controller
         try {
             // 会社情報に紐づく情報を取得
             $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
-            Log::info(print_r($companyInfo,true));
 
             // アップローダーインスタンスを取得
             $service       = OrderUploaderFactory::createUploader($uploadedFile, $companyInfo);
@@ -63,7 +62,8 @@ class OrderInfoController extends Controller
             Log::info($this->responseMessage);
 
         } catch (\Throwable $e) {
-            $this->responseMessage = "注文データの登録に失敗しました。\n" . $e->getMessage() . "\nfile:" . $e->getFile() . ' line:' . $e->getLine();
+
+            $this->responseMessage = '注文データの登録に失敗しました。' . $e->getMessage() . "\n" . $e->getTraceAsString();
             $this->responseStatus  = 'error';
             Log::error($this->responseMessage);
         }

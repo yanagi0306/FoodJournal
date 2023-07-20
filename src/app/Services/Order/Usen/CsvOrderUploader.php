@@ -2,10 +2,9 @@
 
 namespace App\Services\Order\Usen;
 
-use App\Constants\Common;
 use App\Constants\UsenConstants;
 use App\Services\Base\BaseUploader;
-use App\Services\Order\Usen\OrderUploaderInterface;
+use App\Services\Order\OrderUploaderInterface;
 use App\Traits\CsvTrait;
 use Exception;
 use Throwable;

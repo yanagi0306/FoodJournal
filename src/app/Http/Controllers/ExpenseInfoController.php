@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Company\FetchesCompanyInfo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Inertia\Response;
 
 /**
  * Class ExpenseController
@@ -13,18 +17,27 @@ class ExpenseInfoController extends Controller
 {
     /**
      * 日次支出一覧画面
-     *
-     * @param int $storeId
-     * @param string $date
-     * @return void
+     * @return Response
      */
-    public function index(int $storeId, string $date)
+    public function index(): Response
     {
-        // ここに日次支出一覧画面のロジックを追加します
+        // 会社情報から支出カテゴリ情報を取得
+        try {
+            $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
+            $expenseCategories = $companyInfo->findParentExpenseCategoriesWithCompany();
+
+        } catch (\Exception $e) {
+            Log::error("支出カテゴリ情報の取得に失敗しました。" . $e->getMessage());
+            return Inertia::render('Top/Index');
+        }
+
+        return Inertia::render('ExpenseInfo/Index', [
+            'expenseCategory' => $expenseCategories,
+        ]);
     }
 
     /**
-     * 日次支出登録画面
+     * 日次支出登録画
      *
      * @return void
      */

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use App\Models\ExpenseBudget;
+use App\Models\ExpenseCategory;
+use App\Services\Company\FetchesCompanyInfo;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Inertia\Response;
 
 /**
  * Class ExpenseBudgetController
@@ -13,39 +16,26 @@ use App\Models\ExpenseBudget;
  */
 class ExpenseBudgetController extends Controller
 {
+    public ?Collection $stores            = null;
+    public ?Collection $expenseCategories = null;
+    public ?string     $errorMessage      = null;
+
 
     /**
-     * 店舗月次支出検索
-     *
-     * @param int $storeId
-     * @param string $date
-     * @return void
+     * 店舗支出予算画面
+     * @return Response
      */
-    public function search($storeId, $date)
+    public function index(): Response
     {
-        // ここに店舗月次支出一覧のロジックを追加します
-    }
+        // todo.関連情報取得失敗時はエラーページに遷移するように後ほど変更する
+        if (!$this->setCompanyInfo()) {
+            return Inertia::render('Top/Index');
+        }
 
-    /**
-     * 店舗月次支出確定
-     *
-     * @param int $id
-     * @return void
-     */
-    public function confirm($id)
-    {
-        // ここに月次支出確定のロジックを追加します
-    }
-
-    /**
-     * 支出予算一覧画面
-     * @param int    $storeId
-     * @param string $date
-     * @return void
-     */
-    public function index(int $storeId, string $date)
-    {
-        // ここに支出予算一覧画面のロジックを追加します
+        return Inertia::render('ExpenseBudget/Index', [
+            'stores'          => $this->stores,
+            'expenseCategory' => $this->expenseCategories,
+        ]);
     }
 
     /**
@@ -69,6 +59,27 @@ class ExpenseBudgetController extends Controller
     }
 
     /**
+     * 店舗月次支出検索
+     * @param int    $storeId
+     * @param string $date
+     * @return void
+     */
+    public function search($storeId, $date)
+    {
+        // ここに店舗月次支出一覧のロジックを追加します
+    }
+
+    /**
+     * 店舗月次支出確定
+     * @param int $id
+     * @return void
+     */
+    public function confirm($id)
+    {
+        // ここに月次支出確定のロジックを追加します
+    }
+
+    /**
      * 支出予算一括登録
      * @return void
      */
@@ -79,7 +90,6 @@ class ExpenseBudgetController extends Controller
 
     /**
      * 支出予算フォーマットDL
-     *
      * @return void
      */
     public function download()
@@ -89,7 +99,6 @@ class ExpenseBudgetController extends Controller
 
     /**
      * 支出予算アップロード
-     *
      * @return void
      */
     public function upload()
@@ -97,5 +106,29 @@ class ExpenseBudgetController extends Controller
         // ここに支出予算アップロードのロジックを追加します
     }
 
+    /**
+     * 会社に関連する情報を定義する
+     * @return boolean
+     */
+    private function setCompanyInfo(): bool
+    {
+        // 会社に紐づく情報を取得
+        try {
+            $companyInfo             = new FetchesCompanyInfo($this->userInfo['company_id']);
+            $this->stores            = $companyInfo->findStoresWithCompany();
+            $this->expenseCategories = $companyInfo->findExpenseCategoriesWithCompany();
+
+        } catch (\Exception $e) {
+            Log::error('システムエラーが発生しました。' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return false;
+        }
+
+        if ($this->expenseCategories->isEmpty() || $this->stores->isEmpty()) {
+            Log::error("会社に関連する情報の取得できませんでした。company_id:{$this->userInfo['company_id']}");
+            return false;
+        }
+
+        return true;
+    }
 
 }

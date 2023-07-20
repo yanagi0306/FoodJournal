@@ -7,7 +7,6 @@ use App\Models\Company;
 use App\Models\IncomeCategory;
 use App\Models\ParentIncomeCategory;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Log;
 
 class IncomeCategorySeeder extends Seeder
 {

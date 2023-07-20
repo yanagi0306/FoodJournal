@@ -221,8 +221,6 @@ class ExpenseCategoryService
         /** @var Builder|ExpenseCategory $categories */
         $categories = $this->getExpenseCategories($parentExpenseCategoryId)
                            ->where('cat_cd', '<=', CommonDatabaseConstants::MAX_EXPENSE_CATEGORY_CODE);
-        Log::info('parentExpenseCategoryId:' . $parentExpenseCategoryId);
-        Log::info('categories:' . $categories->first());
 
         if (!$categories->first()) {
             return CommonDatabaseConstants::START_CATEGORY_CODE;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FetchesCompanyInfo;
+use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
 use App\Services\Purchase\PurchaseUploaderFactory;
 use Illuminate\Http\RedirectResponse;
@@ -62,8 +62,8 @@ class PurchaseInfoController extends Controller
             Log::info($this->responseMessage);
 
         } catch (\Throwable $e) {
-            $this->responseMessage = "仕入データの登録に失敗しました。\n" . $e->getMessage(). "\nfile:" . $e->getFile() . ' line:' . $e->getLine();
-            $this->responseStatus  = 'error';
+            $this->responseMessage = '仕入データの登録に失敗しました。' . $e->getMessage() . "\n" . $e->getTraceAsString();
+            $this->responseStatus = 'error';
             Log::error($this->responseMessage);
         }
 

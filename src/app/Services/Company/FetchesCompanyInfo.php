@@ -3,6 +3,8 @@
 namespace App\Services\Company;
 
 use App\Models\Company;
+use App\Models\ParentExpenseCategory;
+use App\Models\ParentIncomeCategory;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
@@ -64,18 +66,18 @@ class FetchesCompanyInfo
      * モデルを参照して関連する店舗テーブル情報を取得する
      * @return Collection
      */
-    private function findStoresWithCompany(): Collection
+    public function findStoresWithCompany(): Collection
     {
-        return $this->company ? collect($this->company->stores->array()) : collect();
+        return $this->company ? collect($this->company->stores->toArray()) : collect();
     }
 
     /**
      * モデルを参照して関連する顧客テーブル情報を取得する
      * @return Collection
      */
-    private function findCustomersWithCompany(): Collection
+    public function findCustomersWithCompany(): Collection
     {
-        return $this->company ? collect($this->company->customerTypes->array()) : collect();
+        return $this->company ? collect($this->company->customerTypes->toArray()) : collect();
     }
 
     /**
@@ -96,41 +98,26 @@ class FetchesCompanyInfo
         return $this->company ? collect($this->company->purchaseSuppliers->toArray()) : collect();
     }
 
-/**
- * モデルを参照して関連する収入カテゴリテーブル情報を取得する
- * @return Collection
- */
-private function findIncomeCategoriesWithCompany(): Collection
-{
-    if (!$this->company) {
-        return collect();
-    }
-
-    $incomeCategories = $this->company->incomeCategories->load('parentIncomeCategory');
-
-    return $incomeCategories->map(function ($incomeCategory) {
-        $parentIncomeCategory = $incomeCategory->parentIncomeCategory;
-        // ここで親カテゴリーの情報を子カテゴリーの情報と同じレベルに持ってくる
-        return [
-            'id' => $incomeCategory->id,
-            'cat_cd' => $incomeCategory->cat_cd,
-            'cat_name' => $incomeCategory->cat_name,
-            'type_cd' => $incomeCategory->type_cd,
-            'parent_id' => $parentIncomeCategory->id,
-            'parent_name' => $parentIncomeCategory->name,
-            'parent_name' => $parentIncomeCategory->name,
-            'parent_name' => $parentIncomeCategory->name,
-        ];
-    });
-}
-
     /**
-     * モデルを参照して関連する支出カテゴリテーブル情報を取得する
+     * モデルを参照して会社に紐づく収入カテゴリテーブル情報を取得する
      * @return Collection
      */
-    private function findExpenseCategoriesWithCompany(): Collection
+    public function findIncomeCategoriesWithCompany(): Collection
     {
-        return $this->company ? collect($this->company->expenseCategories->load('parentExpenseCategory')->toArray()) : collect();
+        $incomeCategories = $this->company ? collect(ParentIncomeCategory::with('incomeCategories')->where('company_id', $this->company->id)->get()->toArray()) : collect();
+        Log::info('incomeCategories=' . print_r($incomeCategories, true));
+        return $incomeCategories;
+//        return $this->company ? collect($this->company->incomeCategories->toArray()) : collect();
+    }
+
+    /**
+     * モデルを参照して会社に紐づく支出カテゴリテーブル情報を取得する
+     * @return Collection
+     */
+    public function findExpenseCategoriesWithCompany(): Collection
+    {
+        return $this->company ? collect(ParentExpenseCategory::with('expenseCategories')->where('company_id', $this->company->id)->get()->toArray()) : collect();
+//        return $this->company ? collect($this->company->expenseCategories->toArray()) : collect();
     }
 
     /**

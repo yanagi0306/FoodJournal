@@ -33,212 +33,262 @@ require_once __DIR__ . '/auth.php';
 
 Route::middleware('auth')->group(function() {
     Route::get('/profile', [ProfileController::class,
-                            'edit'])
+                            'edit',
+    ])
          ->name('profile.edit');
     Route::patch('/profile', [ProfileController::class,
-                              'update'])
+                              'update',
+    ])
          ->name('profile.update');
     Route::delete('/profile', [ProfileController::class,
-                               'destroy'])
+                               'destroy',
+    ])
          ->name('profile.destroy');
 });
 
 Route::middleware(['auth',
                    'verified',
-                   ShareAuthenticatedUser::class])->group(function() {
+                   ShareAuthenticatedUser::class,
+                  ])->group(function() {
     // トップページ
-    Route::get('/', TopController::class . '@index')
+    Route::get('/', [TopController::class, 'index'])
          ->name('top.index');
 
     // 実績管理
     // 売上実績画面
-    Route::get('/orders', OrderInfoController::class . '@index')
+    Route::get('/orders', [OrderInfoController::class, 'index'])
          ->name('orders.index');
-    Route::post('/orders/upload', OrderInfoController::class . '@upload')
+    Route::post('/orders/upload', [OrderInfoController::class, 'upload'])
          ->name('orders.upload');
-    Route::get('/orders/download', OrderInfoController::class . '@download')
+    Route::get('/orders/download', [OrderInfoController::class, 'download'])
          ->name('orders.download');
 
     // 仕入実績画面
-    Route::get('/purchases', PurchaseInfoController::class . '@index')
+    Route::get('/purchases', [PurchaseInfoController::class, 'index'])
          ->name('purchases.index');
-    Route::post('/purchases/upload', PurchaseInfoController::class . '@upload')
+    Route::post('/purchases/upload', [PurchaseInfoController::class, 'upload'])
          ->name('purchases.upload');
-    Route::get('/purchases/download_upload_history', PurchaseInfoController::class . '@download_upload_history')
+    Route::get('/purchases/download_upload_history', [PurchaseInfoController::class, 'download_upload_history'])
          ->name('purchases.download_upload_history');
 
     // 月次収入画面
     Route::get('/income_budgets/search/{store_id}/{date}', [IncomeBudgetController::class,
-                                                            '@search'])
+                                                            'search',
+    ])
          ->name('income_budgets.search');
     Route::patch('/income_budgets/confirm/{id}', [IncomeBudgetController::class,
-                                                  '@confirm'])
+                                                  'confirm',
+    ])
          ->name('income_budgets.confirm');
 
     // 月次支出画面
     Route::get('/expense_budgets/search/{store_id}/{date}', [ExpenseBudgetController::class,
-                                                             '@search'])
+                                                             'search',
+    ])
          ->name('expense_budgets.search');
     Route::patch('/expense_budgets/confirm/{id}', [ExpenseBudgetController::class,
-                                                   '@confirm'])
+                                                   'confirm',
+    ])
          ->name('expense_budgets.confirm');
 
     // 日次収入画面
     Route::get('/incomes/{store_id}/{date}', [IncomeInfoController::class,
-                                              '@index'])
+                                              'index',
+    ])
          ->name('incomes.index');
     Route::get('/incomes/create', [IncomeInfoController::class,
-                                   '@create'])
+                                   'create',
+    ])
          ->name('incomes.create');
     Route::post('/incomes', [IncomeInfoController::class,
-                             '@store'])
+                             'store',
+    ])
          ->name('incomes.store');
     Route::get('/incomes/{income}', [IncomeInfoController::class,
-                                     '@show'])
+                                     'show',
+    ])
          ->name('incomes.show');
     Route::get('/incomes/{income}/edit', [IncomeInfoController::class,
-                                          '@edit'])
+                                          'edit',
+    ])
          ->name('incomes.edit');
     Route::patch('/incomes/{income}', [IncomeInfoController::class,
-                                       '@update'])
+                                       'update',
+    ])
          ->name('incomes.update');
     Route::delete('/incomes/{income}', [IncomeInfoController::class,
-                                        '@destroy'])
+                                        'destroy',
+    ])
          ->name('incomes.destroy');
 
     // 日次支出画面
     Route::get('/expenses/{store_id}/{date}', [ExpenseInfoController::class,
-                                               '@index'])
+                                               'index',
+    ])
          ->name('expenses.index');
     Route::get('/expenses/create', [ExpenseInfoController::class,
-                                    '@create'])
+                                    'create',
+    ])
          ->name('expenses.create');
     Route::post('/expenses', [ExpenseInfoController::class,
-                              '@store'])
+                              'store',
+    ])
          ->name('expenses.store');
     Route::get('/expenses/{expense}', [ExpenseInfoController::class,
-                                       '@show'])
+                                       'show',
+    ])
          ->name('expenses.show');
     Route::get('/expenses/{expense}/edit', [ExpenseInfoController::class,
-                                            '@edit'])
+                                            'edit',
+    ])
          ->name('expenses.edit');
     Route::patch('/expenses/{expense}', [ExpenseInfoController::class,
-                                         '@update'])
+                                         'update',
+    ])
          ->name('expenses.update');
     Route::delete('/expenses/{expense}', [ExpenseInfoController::class,
-                                          '@destroy'])
+                                          'destroy',
+    ])
          ->name('expenses.destroy');
 
     // 予算管理
     // 収入予算画面
     Route::get('/income_budgets/{store_id}/{date}', [IncomeBudgetController::class,
-                                                     '@index'])
+                                                     'index',
+    ])
          ->name('income_budgets.index');
     Route::post('/income_budgets/{store_id}', [IncomeBudgetController::class,
-                                               '@save'])
+                                               'save',
+    ])
          ->name('income_budgets.save');
     Route::delete('/income_budgets/{income_budget}', [IncomeBudgetController::class,
-                                                      '@destroy'])
+                                                      'destroy',
+    ])
          ->name('income_budgets.destroy');
 
     // 支出予算画面
-    Route::get('/expense_budgets/{store_id}/{date}', [ExpenseBudgetController::class,
-                                                      '@index'])
+    Route::get('/expense_budgets', [ExpenseBudgetController::class,
+                                    'index',
+    ])
          ->name('expense_budgets.index');
     Route::post('/expense_budgets/{store_id}', [ExpenseBudgetController::class,
-                                                '@save'])
+                                                'save',
+    ])
          ->name('expense_budgets.save');
     Route::delete('/expense_budgets/{expense_budget}', [ExpenseBudgetController::class,
-                                                        '@destroy'])
+                                                        'destroy',
+    ])
          ->name('expense_budgets.destroy');
 
     // 収入予算一括登録画面
     Route::get('/income_budgets/csv', [IncomeBudgetController::class,
-                                       '@csv'])
+                                       'csv',
+    ])
          ->name('income_budgets.csv');
     Route::post('/income_budgets/download', [IncomeBudgetController::class,
-                                             '@download'])
+                                             'download',
+    ])
          ->name('income_budgets.download');
     Route::get('/income_budgets/csv/upload', [IncomeBudgetController::class,
-                                              '@upload'])
+                                              'upload',
+    ])
          ->name('income_budgets.upload');
 
     // 支出予算一括登録画面
     Route::get('/expense_budgets/csv', [ExpenseBudgetController::class,
-                                        '@csv'])
+                                        'csv',
+    ])
          ->name('expense_budgets.csv');
     Route::post('/expense_budgets/download', [ExpenseBudgetController::class,
-                                              '@download'])
+                                              'download',
+    ])
          ->name('expense_budgets.download');
     Route::get('/expense_budgets/csv/upload', [ExpenseBudgetController::class,
-                                               '@upload'])
+                                               'upload',
+    ])
          ->name('expense_budgets.upload');
 
     // 帳簿管理
     // 月次情報画面
     Route::get('/monthlies', [MonthlyController::class,
-                              '@index'])
+                              'index',
+    ])
          ->name('monthly.index');
 
     // 日次情報画面
     Route::get('/dailies', [DailyController::class,
-                            '@index'])
+                            'index',
+    ])
          ->name('daily.index');
 
     // 売上参照画面
     Route::get('/orders/search', [OrderInfoController::class,
-                                  '@search'])
+                                  'search',
+    ])
          ->name('order.search');
 
     // 仕入参照画面
     Route::get('/purchases/search', [PurchaseInfoController::class,
-                                     '@search'])
+                                     'search',
+    ])
          ->name('purchase.search');
 
     // カテゴリ管理
     // 収入カテゴリ画面
     Route::get('/income_categories', [IncomeCategoryController::class,
-                                      '@index'])
+                                      'index',
+    ])
          ->name('income_categories.index');
     Route::get('/income_categories/download', [IncomeCategoryController::class,
-                                               '@download'])
+                                               'download',
+    ])
          ->name('income_categories.download');
     Route::post('/income_categories/csv/upload', [IncomeCategoryController::class,
-                                                  '@upload'])
+                                                  'upload',
+    ])
          ->name('income_categories.upload');
 
     // 支出カテゴリ画面
     Route::get('/expense_categories', [ExpenseCategoryController::class,
-                                       '@index'])
+                                       'index',
+    ])
          ->name('expense_categories.index');
     Route::get('/expense_categories/download', [ExpenseCategoryController::class,
-                                                '@download'])
+                                                'download',
+    ])
          ->name('expense_categories.download');
     Route::post('/expense_categories/csv/upload', [ExpenseCategoryController::class,
-                                                   '@upload'])
+                                                   'upload',
+    ])
          ->name('expense_categories.upload');
 
     // 商品マスタ管理
     // 商品マスタカテゴリ画面
     Route::get('/product_categories', [ProductCategoryController::class,
-                                       '@index'])
+                                       'index',
+    ])
          ->name('product_categories.index');
     Route::get('/product_categories/csv/download', [ProductCategoryController::class,
-                                                    '@download'])
+                                                    'download',
+    ])
          ->name('product_categories.download');
     Route::post('/product_categories/csv/upload', [ProductCategoryController::class,
-                                                   '@upload'])
+                                                   'upload',
+    ])
          ->name('product_categories.upload');
 
     // 商品マスタ画面
     Route::get('/product_product_masters', [ProductMasterController::class,
-                                            '@index'])
+                                            'index',
+    ])
          ->name('product_masters.index');
     Route::get('/product_product_masters/csv/download', [ProductMasterController::class,
-                                                         '@download'])
+                                                         'download',
+    ])
          ->name('product_masters.download');
     Route::post('/product_product_masters/csv/upload', [ProductMasterController::class,
-                                                        '@upload'])
+                                                        'upload',
+    ])
          ->name('product_masters.upload');
 
 });

@@ -78,6 +78,7 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD:-password}
       - POSTGRES_HOST=${DB_HOST:-db}
       - POSTGRES_CONFIG_FILE=${POSTGRES_CONFIG_FILE:-/etc/postgresql/postgresql.conf}
+      - POSTGRES_HOST_AUTH_METHOD={POSTGRES_HOST_AUTH_METHOD:-trust}
     restart: always
 
   pgadmin4:

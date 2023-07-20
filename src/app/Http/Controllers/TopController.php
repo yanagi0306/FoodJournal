@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Inertia\Inertia;
+use Inertia\Response;
 
 
 /**
@@ -18,9 +18,9 @@ class TopController extends Controller
      * Handle the incoming request.
      *
      * @param Request $request
-     * @return \Inertia\Response
+     * @return Response
      */
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request): Response
     {
         return Inertia::render('Top');
     }
