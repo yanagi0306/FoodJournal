@@ -21,19 +21,7 @@ class ExpenseInfoController extends Controller
      */
     public function index(): Response
     {
-        // 会社情報から支出カテゴリ情報を取得
-        try {
-            $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
-            $expenseCategories = $companyInfo->findParentExpenseCategoriesWithCompany();
 
-        } catch (\Exception $e) {
-            Log::error("支出カテゴリ情報の取得に失敗しました。" . $e->getMessage());
-            return Inertia::render('Top/Index');
-        }
-
-        return Inertia::render('ExpenseInfo/Index', [
-            'expenseCategory' => $expenseCategories,
-        ]);
     }
 
     /**

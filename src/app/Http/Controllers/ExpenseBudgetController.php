@@ -115,8 +115,8 @@ class ExpenseBudgetController extends Controller
         // 会社に紐づく情報を取得
         try {
             $companyInfo             = new FetchesCompanyInfo($this->userInfo['company_id']);
-            $this->stores            = $companyInfo->findStoresWithCompany();
-            $this->expenseCategories = $companyInfo->findExpenseCategoriesWithCompany();
+            $this->stores            = $companyInfo->getTableInfo(FetchesCompanyInfo::TABLE_STORE);
+            $this->expenseCategories = $companyInfo->getTableInfo(FetchesCompanyInfo::TABLE_EXPENSE_CATEGORY);
 
         } catch (\Exception $e) {
             Log::error('システムエラーが発生しました。' . $e->getMessage() . "\n" . $e->getTraceAsString());

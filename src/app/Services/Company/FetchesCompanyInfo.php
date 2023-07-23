@@ -13,13 +13,15 @@ use Illuminate\Support\Facades\Log;
 class FetchesCompanyInfo
 {
     // クラス定数を追加
-    const TABLE_COMPANY           = 'company';
-    const TABLE_STORE             = 'stores';
-    const TABLE_CUSTOMER_TYPE     = 'customerTypes';
-    const TABLE_PAYMENT_METHOD    = 'paymentMethods';
-    const TABLE_PURCHASE_SUPPLIER = 'purchaseSuppliers';
-    const TABLE_INCOME_CATEGORY   = 'incomeCategories';
-    const TABLE_EXPENSE_CATEGORY  = 'expenseCategories';
+    const TABLE_COMPANY                 = 'company';
+    const TABLE_STORE                   = 'stores';
+    const TABLE_CUSTOMER_TYPE           = 'customerTypes';
+    const TABLE_PAYMENT_METHOD          = 'paymentMethods';
+    const TABLE_PURCHASE_SUPPLIER       = 'purchaseSuppliers';
+    const TABLE_PARENT_INCOME_CATEGORY  = 'parentIncomeCategories';
+    const TABLE_INCOME_CATEGORY         = 'incomeCategories';
+    const TABLE_PARENT_EXPENSE_CATEGORY = 'parentExpenseCategories';
+    const TABLE_EXPENSE_CATEGORY        = 'expenseCategories';
 
     private ?Company   $company;
     private Collection $stores;
@@ -27,7 +29,9 @@ class FetchesCompanyInfo
     private Collection $paymentMethods;
     private Collection $purchaseSuppliers;
     private Collection $incomeCategories;
+    private Collection $parentIncomeCategories;
     private Collection $expenseCategories;
+    private Collection $parentExpenseCategories;
 
     /**
      * 会社に関連テーブル情報一覧を取得する
@@ -36,13 +40,15 @@ class FetchesCompanyInfo
      */
     public function __construct(int $companyId)
     {
-        $this->company           = $this->findCompanyById($companyId);
-        $this->stores            = $this->findStoresWithCompany();
-        $this->customerTypes     = $this->findCustomersWithCompany();
-        $this->paymentMethods    = $this->findPaymentMethodsWithCompany();
-        $this->purchaseSuppliers = $this->findPurchaseSuppliersWithCompany();
-        $this->incomeCategories  = $this->findIncomeCategoriesWithCompany();
-        $this->expenseCategories = $this->findExpenseCategoriesWithCompany();
+        $this->company                 = $this->findCompanyById($companyId);
+        $this->stores                  = $this->findStoresWithCompany();
+        $this->customerTypes           = $this->findCustomersWithCompany();
+        $this->paymentMethods          = $this->findPaymentMethodsWithCompany();
+        $this->purchaseSuppliers       = $this->findPurchaseSuppliersWithCompany();
+        $this->incomeCategories        = $this->findIncomeCategoriesWithCompany();
+        $this->parentIncomeCategories  = $this->findParentIncomeCategoriesWithCompany();
+        $this->expenseCategories       = $this->findExpenseCategoriesWithCompany();
+        $this->parentExpenseCategories = $this->findParentExpenseCategoriesWithCompany();
     }
 
     /**
@@ -66,7 +72,7 @@ class FetchesCompanyInfo
      * モデルを参照して関連する店舗テーブル情報を取得する
      * @return Collection
      */
-    public function findStoresWithCompany(): Collection
+    private function findStoresWithCompany(): Collection
     {
         return $this->company ? collect($this->company->stores->toArray()) : collect();
     }
@@ -102,18 +108,36 @@ class FetchesCompanyInfo
      * モデルを参照して会社に紐づく収入カテゴリテーブル情報を取得する
      * @return Collection
      */
-    public function findIncomeCategoriesWithCompany(): Collection
+    private function findIncomeCategoriesWithCompany(): Collection
     {
-        return $this->company ? collect(ParentIncomeCategory::with('incomeCategories')->where('company_id', $this->company->id)->get()->toArray()) : collect();
+        return $this->company ? collect($this->company->incomeCategories->toArray()) : collect();
+    }
+
+    /**
+     * モデルを参照して会社に紐づく親収入カテゴリテーブル情報を取得する
+     * @return Collection
+     */
+    private function findParentIncomeCategoriesWithCompany(): Collection
+    {
+        return $this->company ? collect($this->company->parentIncomeCategories->toArray()) : collect();
     }
 
     /**
      * モデルを参照して会社に紐づく支出カテゴリテーブル情報を取得する
      * @return Collection
      */
-    public function findExpenseCategoriesWithCompany(): Collection
+    private function findExpenseCategoriesWithCompany(): Collection
     {
-        return $this->company ? collect(ParentExpenseCategory::with('expenseCategories')->where('company_id', $this->company->id)->get()->toArray()) : collect();
+        return $this->company ? collect($this->company->expenseCategories->toArray()) : collect();
+    }
+
+    /**
+     * モデルを参照して会社に紐づく親支出カテゴリテーブル情報を取得する
+     * @return Collection
+     */
+    private function findParentExpenseCategoriesWithCompany(): Collection
+    {
+        return $this->company ? collect($this->company->parentExpenseCategories->toArray()) : collect();
     }
 
     /**
@@ -123,6 +147,15 @@ class FetchesCompanyInfo
     public function getCompanyValue(string $column): mixed
     {
         return $this->company->$column;
+    }
+
+    /**
+     * 指定したテーブルの情報をを取得する
+     * @throws Exception
+     */
+    public function getTableInfo(string $table): mixed
+    {
+        return $this->company->$this->{$table};
     }
 
     /**
