@@ -112,7 +112,7 @@ class CsvOrderRow
             }
 
             $paymentMethod = $this->getPaymentMethodByProperty($property);
-            $paymentFee = bcmul((string)$value, (string)$paymentMethod['commission_rate'], 2);
+            $paymentFee    = bcmul((string)$value, (string)$paymentMethod['commission_rate'], 2);
 
             $orderPayments[$property] = [
                 'order_info_id'     => $orderId,

@@ -6,6 +6,7 @@ use App\Helpers\FormatHelper;
 use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
 use App\Services\Order\OrderUploaderFactory;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -51,7 +52,7 @@ class OrderInfoController extends Controller
 
         try {
             // 会社情報に紐づく情報を取得
-            $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
+            $companyInfo = $this->setCompanyInfo();
 
             // アップローダーインスタンスを取得
             $service       = OrderUploaderFactory::createUploader($uploadedFile, $companyInfo);
@@ -101,5 +102,23 @@ class OrderInfoController extends Controller
     public function search(): void
     {
         // ここに売上参照画面のロジックを追加します
+    }
+
+    /**
+     * 会社に関連する情報を定義する
+     * @return FetchesCompanyInfo
+     * @throws Exception
+     */
+    private function setCompanyInfo(): FetchesCompanyInfo
+    {
+        try {
+            $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
+            $companyInfo->setStoresWithCompany();
+            $companyInfo->setCustomersWithCompany();
+            $companyInfo->setPaymentMethodsWithCompany();
+        } catch (\Exception $e) {
+            throw new Exception('システムエラーが発生しました。' . $e->getMessage() . "\n" . $e->getTraceAsString());
+        }
+        return $companyInfo;
     }
 }

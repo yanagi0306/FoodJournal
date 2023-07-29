@@ -100,27 +100,26 @@ class CsvPurchaseRow
      */
     private function getExpenseCategoryId(string $categoryCd): int
     {
-        Log::info('categoryCd値:' . print_r($categoryCd, true));
-        Log::info('categoryCd型:' . print_r(gettype($categoryCd), true));
-        $expenseCategoryCode = $this->getExpenseCategoryCode($categoryCd);
+        $expenseCategory = $this->convertCategoryCodeFromAspit($categoryCd);
 
-        if (!$expenseCategoryCode) {
+        if (!$expenseCategory) {
             $validCodes = implode(', ', array_column(AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB, 'aspit_category_cd'));
             throw new Exception("カテゴリコードに誤りがあります。 値:{$categoryCd} 許可された値:(" . $validCodes . ')');
         }
-        return $this->companyInfo->getRecordFromColumnValue(FetchesCompanyInfo::TABLE_EXPENSE_CATEGORY, 'cat_cd', $expenseCategoryCode)['id'];
+
+        return $this->companyInfo->getChildRecordFromParentColumnValue(FetchesCompanyInfo::TABLE_PARENT_EXPENSE_CATEGORY, FetchesCompanyInfo::TABLE_EXPENSE_CATEGORY, 'cat_cd', $expenseCategory['parent_expense_category_cd'], 'cat_cd', $expenseCategory['expense_category_cd'])['id'];
     }
 
     /**
-     * 定数CATEGORY_MAPS_FROM_ASPIT_TO_DBを参照してexpense_category_codeを取得する
+     * 定数CATEGORY_MAPS_FROM_ASPIT_TO_DBを参照してAspitカテゴリコード→親カテゴリ、子カテゴリの配列に変換
      * @param string $categoryCd
-     * @return int|null
+     * @return array|null
      */
-    private function getExpenseCategoryCode(string $categoryCd): ?int
+    private function convertCategoryCodeFromAspit(string $categoryCd): ?array
     {
         foreach (AspitConstants::CATEGORY_MAPS_FROM_ASPIT_TO_DB as $category) {
             if (isset($category['aspit_category_cd']) && $category['aspit_category_cd'] == $categoryCd) {
-                return $category['expense_category_cd'];
+                return $category;
             }
         }
 

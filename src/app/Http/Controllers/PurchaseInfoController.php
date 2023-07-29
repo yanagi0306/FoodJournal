@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Company\FetchesCompanyInfo;
 use App\Services\Files\UploadHistory;
 use App\Services\Purchase\PurchaseUploaderFactory;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -50,7 +51,7 @@ class PurchaseInfoController extends Controller
 
         try {
             // 会社情報に紐づく情報を取得
-            $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
+            $companyInfo = $this->setCompanyInfo();
 
             // システム名を取得 (データベースや設定ファイルから)
             $service = PurchaseUploaderFactory::createUploader($uploadedFile, $companyInfo);
@@ -102,4 +103,21 @@ class PurchaseInfoController extends Controller
         // ここに仕入参照のロジックを追加します
     }
 
+    /**
+     * 会社に関連する情報を定義する
+     * @return FetchesCompanyInfo
+     * @throws Exception
+     */
+    private function setCompanyInfo(): FetchesCompanyInfo
+    {
+        try {
+            $companyInfo = new FetchesCompanyInfo($this->userInfo['company_id']);
+            $companyInfo->setStoresWithCompany();
+            $companyInfo->setPurchaseSuppliersWithCompany();
+            $companyInfo->setParentExpenseCategoriesWithCompany();
+        } catch (\Exception $e) {
+            throw new Exception('システムエラーが発生しました。' . $e->getMessage() . "\n" . $e->getTraceAsString());
+        }
+        return $companyInfo;
+    }
 }
