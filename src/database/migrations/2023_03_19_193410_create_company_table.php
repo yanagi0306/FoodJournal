@@ -17,13 +17,10 @@ return new class extends Migration {
             // カラム定義
             $table->id()->autoIncrement()->comment('会社ID');
             $table->string('company_name', 30)->comment('会社名');
-            $table->string('company_cd', 4)->comment('会社コード');
-            $table->string('purchase_store_cd', 4)->comment('仕入会社コード');
+            $table->unsignedInteger('order_company_cd')->comment('注文システム会社コード');
+            $table->unsignedInteger('purchase_store_cd')->comment('仕入システムコード');
             $table->string('mail', 255)->nullable()->comment('メールアドレス');
             $table->timestamps();
-
-            // ユニークキーの設定
-            $table->unique('company_cd');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';

@@ -16,8 +16,8 @@ return new class extends Migration {
         Schema::create('order_payment', function (Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('注文支払ID');
-            $table->unsignedBigInteger('order_id')->comment('注文ID');
-            $table->unsignedBigInteger('payment_method_id')->comment('支払い方法');
+            $table->unsignedInteger('order_id')->comment('注文ID');
+            $table->unsignedInteger('payment_method_id')->comment('支払方法');
             $table->integer('amount')->comment('支払額');
             $table->timestamps();
 
@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->unique(['order_id', 'payment_method_id']);
 
             // 外部キー制約の設定
-            $table->foreign('order_id')->references('id')->on('order')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('order_info')->onDelete('cascade');
             $table->foreign('payment_method_id')->references('id')->on('payment_method')->onDelete('cascade');
 
             // 文字コードと照合順序の設定

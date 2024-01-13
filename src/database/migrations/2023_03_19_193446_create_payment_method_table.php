@@ -16,11 +16,11 @@ return new class extends Migration {
         Schema::create('payment_method', function (Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('支払方法ID');
-            $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->string('payment_cd', 3)->comment('支払方法コード（表示の優先度）');
+            $table->unsignedInteger('company_id')->comment('会社ID');
+            $table->unsignedInteger('payment_cd')->comment('支払方法コード');
             $table->string('payment_name', 15)->comment('支払方法名');
             $table->decimal('commission_rate', 4, 4)->comment('支払手数料');
-            $table->integer('is_hidden')->nullable()->default(null)->comment('非表示フラグ（null: 表示, 1: 非表示）');
+            $table->unsignedInteger('is_hidden')->nullable()->default(null)->comment('非表示フラグ（null: 表示, 1: 非表示）');
             $table->timestamps();
 
             // ユニークキーの設定

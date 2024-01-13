@@ -15,18 +15,14 @@ return new class extends Migration {
     {
         Schema::create('store', function (Blueprint $table) {
             // カラム定義
-            $table->id()->autoIncrement()->comment('店舗ID');
+            $table->id()->comment('店舗ID');
             $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->string('store_cd', 4)->comment('店舗コード');
-            $table->string('purchase_store_cd', 4)->comment('仕入店舗コード（アスピット）');
+            $table->string('store_cd', 10)->comment('注文店舗コード');
+            $table->string('purchase_store_cd', 10)->comment('仕入店舗コード');
             $table->string('store_name', 30)->comment('店舗名');
             $table->string('mail', 30)->nullable()->comment('メールアドレス');
             $table->integer('is_closed')->nullable()->comment('閉店フラグ');
             $table->timestamps();
-
-            // ユニークキーの設定
-            $table->unique('store_cd');
-            $table->unique(['company_id', 'store_cd']);
 
             // 外部キー制約の設定
             $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');

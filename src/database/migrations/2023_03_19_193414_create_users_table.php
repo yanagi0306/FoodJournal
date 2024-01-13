@@ -17,8 +17,8 @@ return new class extends Migration {
 
             // カラム定義
             $table->id()->autoIncrement()->comment('ユーザーID');
-            $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->unsignedBigInteger('store_id')->comment('店舗ID');
+            $table->unsignedInteger('company_id')->comment('会社ID');
+            $table->unsignedInteger('store_id')->comment('店舗ID');
             $table->string('name', 30)->comment('ユーザー名');
             $table->string('email')->unique()->comment('メールアドレス');
             $table->timestamp('email_verified_at')->nullable();

@@ -16,11 +16,11 @@ return new class extends Migration {
         Schema::create('purchase_supplier', function (Blueprint $table) {
             // カラム定義
             $table->id()->autoIncrement()->comment('仕入業者ID');
-            $table->unsignedBigInteger('company_id')->comment('会社ID');
+            $table->unsignedInteger('company_id')->comment('会社ID');
             $table->string('supplier_cd', 30)->comment('仕入業者コード（仕入先CD）');
             $table->string('supplier_name', 30)->comment('仕入業者名');
-            $table->integer('is_no_slip_num')->nullable()->default(null)->comment('伝票番号を発行しない業者（null: 有, 1: 無）');
-            $table->integer('is_hidden')->nullable()->default(null)->comment('非表示フラグ（null: 表示, 1: 非表示）');
+            $table->unsignedInteger('is_no_slip_num')->nullable()->default(null)->comment('伝票番号を発行しない業者（null: 有, 1: 無）');
+            $table->unsignedInteger('is_hidden')->nullable()->default(null)->comment('非表示フラグ（null: 表示, 1: 非表示）');
             $table->timestamps();
 
             // ユニークキーの設定
