@@ -13,20 +13,20 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('order_payment', function (Blueprint $table) {
+        Schema::create('order_payments', function (Blueprint $table) {
             // カラム定義
-            $table->id()->autoIncrement()->comment('注文支払ID');
+            $table->id()->comment('注文支払ID');
             $table->unsignedInteger('order_id')->comment('注文ID');
-            $table->unsignedInteger('payment_method_id')->comment('支払方法');
-            $table->integer('amount')->comment('支払額');
+            $table->unsignedInteger('payment_method_id')->comment('注文支払方法');
+            $table->integer('order_amount')->comment('注文支払額');
             $table->timestamps();
 
             // ユニークキーの設定
             $table->unique(['order_id', 'payment_method_id']);
 
             // 外部キー制約の設定
-            $table->foreign('order_id')->references('id')->on('order_info')->onDelete('cascade');
-            $table->foreign('payment_method_id')->references('id')->on('payment_method')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreign('payment_method_id')->references('id')->on('payment_methods')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';
@@ -34,7 +34,7 @@ return new class extends Migration {
 
         });
         // テーブルコメントの設定
-        DB::statement("COMMENT ON TABLE order_payment IS '注文支払テーブル'");
+        DB::statement("COMMENT ON TABLE order_payments IS '注文支払テーブル'");
     }
 
     /**
@@ -44,6 +44,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_payment');
+        Schema::dropIfExists('order_payments');
     }
 };

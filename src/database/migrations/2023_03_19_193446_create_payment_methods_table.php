@@ -13,21 +13,22 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('purchase_supplier', function (Blueprint $table) {
+        Schema::create('payment_methods', function (Blueprint $table) {
             // カラム定義
-            $table->id()->autoIncrement()->comment('仕入業者ID');
+            $table->id()->comment('支払方法ID');
             $table->unsignedInteger('company_id')->comment('会社ID');
-            $table->string('supplier_cd', 30)->comment('仕入業者コード（仕入先CD）');
-            $table->string('supplier_name', 30)->comment('仕入業者名');
-            $table->unsignedInteger('is_no_slip_num')->nullable()->default(null)->comment('伝票番号を発行しない業者（null: 有, 1: 無）');
+            $table->string('payment_code', '2')->comment('支払方法コード');
+            $table->string('name', 30)->comment('支払方法名');
+            $table->string('abbr', 6)->comment('支払方法略名');
+            $table->decimal('commission_rate', 4, 4)->comment('支払手数料');
             $table->unsignedInteger('is_hidden')->nullable()->default(null)->comment('非表示フラグ（null: 表示, 1: 非表示）');
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['company_id', 'supplier_cd']);
+            $table->unique(['company_id', 'payment_code']);
 
             // 外部キー制約の設定
-            $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';
@@ -35,7 +36,7 @@ return new class extends Migration {
 
         });
         // テーブルコメントの設定
-        DB::statement("COMMENT ON TABLE purchase_supplier IS '仕入業者テーブル'");
+        DB::statement("COMMENT ON TABLE payment_methods IS '支払方法テーブル'");
     }
 
     /**
@@ -45,6 +46,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchase_supplier');
+        Schema::dropIfExists('payment_methods');
     }
 };

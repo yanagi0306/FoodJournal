@@ -13,9 +13,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('revenue_budget', function (Blueprint $table) {
+        Schema::create('revenue_budgets', function (Blueprint $table) {
             // カラム定義
-            $table->id()->autoIncrement()->comment('収支予算ID');
+            $table->id()->comment('収支予算ID');
             $table->unsignedInteger('company_id')->comment('会社ID');
             $table->unsignedBigInteger('store_id')->comment('店舗ID');
             $table->unsignedBigInteger('revenue_category_id')->comment('収支カテゴリID');
@@ -29,9 +29,9 @@ return new class extends Migration {
             $table->unique(['company_id', 'store_id', 'revenue_category_id', 'budget_month']);
 
             // 外部キー制約の設定
-            $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
-            $table->foreign('store_id')->references('id')->on('store')->onDelete('cascade');
-            $table->foreign('revenue_category_id')->references('id')->on('revenue_category')->onDelete('cascade');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->foreign('revenue_category_id')->references('id')->on('revenue_categories')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';
@@ -39,7 +39,7 @@ return new class extends Migration {
 
         });
         // テーブルコメントの設定
-        DB::statement("COMMENT ON TABLE revenue_budget IS '収支予算テーブル'");
+        DB::statement("COMMENT ON TABLE revenue_budgets IS '収支予算テーブル'");
     }
 
     /**
@@ -49,6 +49,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('revenue_budget');
+        Schema::dropIfExists('revenue_budgets');
     }
 };
