@@ -13,20 +13,21 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('parent_revenue_category', function (Blueprint $table) {
+        Schema::create('parent_revenue_categories', function (Blueprint $table) {
             // カラム定義
-            $table->id()->autoIncrement()->comment('親収支カテゴリID');
+            $table->id()->comment('親収支カテゴリID');
             $table->unsignedInteger('company_id')->comment('会社ID');
             $table->unsignedInteger('revenue_div')->comment('収支区分 1:収入 2:支出');
-            $table->string('prevenue_cat_code', 3)->comment('親収支カテゴリコード');
-            $table->string('prevenue_cat_name', 8)->comment('親収支カテゴリ名');
+            $table->string('category_code')->comment('親収支カテゴリコード');
+            $table->string('name', 30)->comment('親収支カテゴリ名');
+            $table->string('abbr', 6)->comment('親収支カテゴリ略名');
             $table->timestamps();
 
             // ユニークキーの設定
-            $table->unique(['company_id', 'prevenue_cat_code']);
+            $table->unique(['company_id', 'revenue_div', 'category_code']);
 
             // 外部キー制約の設定
-            $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';
@@ -34,7 +35,7 @@ return new class extends Migration {
 
         });
         // テーブルコメントの設定
-        DB::statement("COMMENT ON TABLE parent_revenue_category IS '親収支カテゴリテーブル'");
+        DB::statement("COMMENT ON TABLE parent_revenue_categories IS '親収支カテゴリテーブル'");
     }
 
     /**
@@ -44,6 +45,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('parent_revenue_category');
+        Schema::dropIfExists('parent_revenue_categories');
     }
 };

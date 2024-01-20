@@ -13,19 +13,20 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('store', function (Blueprint $table) {
+        Schema::create('stores', function (Blueprint $table) {
             // カラム定義
             $table->id()->comment('店舗ID');
-            $table->unsignedBigInteger('company_id')->comment('会社ID');
-            $table->string('store_cd', 10)->comment('注文店舗コード');
-            $table->string('purchase_store_cd', 10)->comment('仕入店舗コード');
-            $table->string('store_name', 30)->comment('店舗名');
+            $table->unsignedInteger('company_id')->comment('会社ID');
+            $table->string('order_store_code', 20)->nullable()->comment('注文システム店舗コード');
+            $table->string('purchase_store_code', 20)->nullable()->comment('仕入システム店舗コード');
+            $table->string('name', 30)->comment('店舗名');
+            $table->string('abbr', 6)->comment('店舗略名');
             $table->string('mail', 30)->nullable()->comment('メールアドレス');
             $table->integer('is_closed')->nullable()->comment('閉店フラグ');
             $table->timestamps();
 
             // 外部キー制約の設定
-            $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
 
             // 文字コードと照合順序の設定
             $table->charset = 'utf8';
@@ -33,7 +34,7 @@ return new class extends Migration {
 
         });
         // テーブルコメントの設定
-        DB::statement("COMMENT ON TABLE store IS '店舗情報テーブル'");
+        DB::statement("COMMENT ON TABLE stores IS '店舗情報テーブル'");
     }
 
     /**
@@ -43,6 +44,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('store');
+        Schema::dropIfExists('stores');
     }
 };
